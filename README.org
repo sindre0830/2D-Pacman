@@ -116,6 +116,8 @@ Before submission, please ensure:
    the size. The number of magic pellets and their positioning in the map is up
    to the grouop. When /Pacman/ eats any of these pellets will acquire the power
    to eat /ghosts/. The /ghosts/ eaten will be removed from the game.
+ - *Resizable screen:* make the screen resizable. The content should adapt to
+   fit the screen. Add an option for full-screen.
  - *Be creative*: any feature improving the game in terms of experience,
    usability, look-and-feel can potentially be considered as extra feature
    (consult first with the teaching team).
