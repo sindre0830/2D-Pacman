@@ -12,7 +12,7 @@
 # (GLEW and GLFW) in source code form and the intention of this
 # CMakeLists.txt file is to instruct CMake to generate a project
 # in which GLEW and GLFW will be compiled first and the resulting
-# binaries will be then be used to link with our executable Lab02 file.
+# binaries will be then be used to link with our executable 1_Assignment file.
 # As opposed to GLEW and GLFW, OpenGL is a well-known library, found
 # in most systems, therefore we can use the find_package command
 # to find it out in the system; therefore we don't need to build it
@@ -23,7 +23,7 @@
 cmake_minimum_required(VERSION 3.12)
 
 # Declare the name of the project.
-project(Lab02)
+project(1_Assignment)
 
 # Ask CMake to find the OpenGL package indicating
 # that this package is required. If OpenGL is not found, CMake
@@ -56,13 +56,13 @@ add_subdirectory(external/glew-cmake-2.1.0)
 # Up to this point we have either found or built our dependencies--
 
 
-# Add a new executable to our project (Lab02), which
+# Add a new executable to our project (1_Assignment), which
 # is based on main.cpp, shaders/triangle.h and shaders/square.h.
 # It is not strictly necessary to add the header files (.h) here,
 # but doing so guarantees that the VisualStudio project explorer
 # will see the header files and will allow us to edit them if we
 # need so.
-add_executable(Lab02
+add_executable(1_Assignment
 	main.cpp
 	shaders/triangle.h
 	shaders/square.h)
@@ -71,18 +71,18 @@ add_executable(Lab02
 # the compile definition of GLEW_STATIC. This is the way
 # it is specified in CMake. The PRIVATE keyword indicates
 # that this definition will not be propagated over to any
-# hypothetic target having Lab02 as dependency. This makes
-# sense because Lab02 is an executable and therefore,
+# hypothetic target having 1_Assignment as dependency. This makes
+# sense because 1_Assignment is an executable and therefore,
 # it is not meant to be used further by any other
 # library/executable.
-target_compile_definitions(Lab02 PRIVATE GLEW_STATIC)
+target_compile_definitions(1_Assignment PRIVATE GLEW_STATIC)
 
-# Here we indicate what are the libraries Lab02 need to
+# Here we indicate what are the libraries 1_Assignment need to
 # link against. PRIVATE has the same rationale as above.
 # The reader should note that it is not necessary to specify
 # linking or include directories. These properties are
 # automatically propagated along with the library.
-target_link_libraries(Lab02
+target_link_libraries(1_Assignment
   PRIVATE
   libglew_static
   glfw
