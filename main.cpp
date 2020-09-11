@@ -1,294 +1,170 @@
-#include "shaders/triangle.h"
-#include "shaders/square.h"
-
+#include <cstdlib>
+#include <ios>
+#include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <iostream>
-#include <set>
-#include <cmath>
-
-// -----------------------------------------------------------------------------
-// FUNCTION PROTOTYPES
-// -----------------------------------------------------------------------------
-GLuint CompileShader(const std::string& vertexShader,
-                     const std::string& fragmentShader);
-GLuint CreateTriangle();
-GLuint CreateSquare();
-
-void CleanVAO(GLuint &vao);
-
-void GLAPIENTRY MessageCallback(GLenum source,
-                                GLenum type,
-                                GLuint id,
-                                GLenum severity,
-                                GLsizei length,
-                                const GLchar* message,
-                                const void* userParam);
-
-// -----------------------------------------------------------------------------
-// ENTRY POINT
-// -----------------------------------------------------------------------------
-int main()
+// Error function for GLFW
+void GLFWErrorCallback(int code, const char* description)
 {
-    // Initialization of GLFW
-    if(!glfwInit())
-    {
-        std::cerr << "GLFW initialization failed." << '\n';
-        std::cin.get();
-
-        return EXIT_FAILURE;
-    }
-
-    // Setting window hints
-    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    auto window = glfwCreateWindow(1200, 1200, "Lab02", nullptr, nullptr);
-    if (window == nullptr)
-    {
-        std::cerr << "GLFW failed on window creation." << '\n';
-        std::cin.get();
-
-        glfwTerminate();
-
-        return EXIT_FAILURE;
-    }
-
-    // Setting the OpenGL context.
-    glfwMakeContextCurrent(window);
-
-    if(glewInit() != GLEW_OK)
-    {
-      std::cerr << "GLEW initialization failuare." << '\n';
-      std::cin.get();
-
-      return EXIT_FAILURE;
-    }
-
-    // Eanable capture of debug output.
-    glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(MessageCallback, 0);
-    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-
-    auto squareVAO = CreateSquare();
-    auto squareShaderProgram = CompileShader(squareVertexShaderSrc,
-                                             squareFragmentShaderSrc);
-
-    auto triangleVAO = CreateTriangle();
-    auto triangleShaderProgram = CompileShader(triangleVertexShaderSrc,
-                                               triangleFragmentShaderSrc);
-
-    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-
-    bool alternate = false;
-    double currentTime = 0.0;
-    double lastTime = 0.0;
-    glfwSetTime(0.0);
-    while(!glfwWindowShouldClose(window))
-    {
-        glfwPollEvents();
-
-        // Time management
-        currentTime = glfwGetTime();
-        if (currentTime - lastTime > 1.0)
-        {
-            alternate = !alternate;
-            lastTime = currentTime;
-        }
-
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        // Draw SQUARE
-        auto greenValue = (sin(currentTime) / 2.0f) + 0.5f;
-        auto vertexColorLocation = glGetUniformLocation(squareShaderProgram, "u_Color");
-        glUseProgram(squareShaderProgram);
-        glBindVertexArray(squareVAO);
-        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
-
-        // Draw TRIANGLE
-        auto alternateFlagLocation = glGetUniformLocation(triangleShaderProgram, "u_AlternateFlag");
-        glUseProgram(triangleShaderProgram);
-        glBindVertexArray(triangleVAO);
-        glUniform1ui(alternateFlagLocation, static_cast<unsigned int>(alternate));
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        glfwSwapBuffers(window);
-
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        {
-            break;
-        }
-    }
-
-    glUseProgram(0);
-    glDeleteProgram(triangleShaderProgram);
-    glDeleteProgram(squareShaderProgram);
-
-    CleanVAO(triangleVAO);
-    CleanVAO(squareVAO);
-
-    glfwTerminate();
-
-    return EXIT_SUCCESS;
+	std::cerr << "Error " << "0x" << std::hex << code << ':' << description << "\n";
 }
 
-
-// -----------------------------------------------------------------------------
-// COMPILE SHADER
-// -----------------------------------------------------------------------------
-GLuint CompileShader(const std::string& vertexShaderSrc,
-                     const std::string& fragmentShaderSrc)
-{
-
-    auto vertexSrc = vertexShaderSrc.c_str();
-    auto fragmentSrc = fragmentShaderSrc.c_str();
-
-    auto vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexSrc, nullptr);
-    glCompileShader(vertexShader);
-
-    auto fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentSrc, nullptr);
-    glCompileShader(fragmentShader);
-
-    auto shaderProgram = glCreateProgram();
-
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-
-    glLinkProgram(shaderProgram);
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
-    return shaderProgram;
-}
-
-// -----------------------------------------------------------------------------
-//  CREATE TRIANGLE
-// -----------------------------------------------------------------------------
-GLuint CreateTriangle()
-{
-
-    GLfloat triangle[3*3*2] =
-        {
-        -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f
-    };
-
-    GLuint vao;
-    glCreateVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-
-    GLuint vbo;
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*6, (const void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*6, (const void*)12);
-   
-    GLfloat alternateColor[4] = {0.0f, 0.0f, 1.0f, 1.0f};
-    glVertexAttrib4fv(2, alternateColor);
-
-    return vao;
-}
-
-// -----------------------------------------------------------------------------
-//  CREATE SQUARE
-// -----------------------------------------------------------------------------
-GLuint CreateSquare()
-{
-
-    GLfloat square[4*3] =
-        {
-        -0.5f, 0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.5f, 0.5f, 0.0f,
-    };
-
-    GLuint square_indices[6] = {0,1,2,0,2,3};
-
-    GLuint vao;
-    glCreateVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-
-    GLuint vbo;
-    glGenBuffers(1, &vbo);
-
-    GLuint ebo;
-    glGenBuffers(1, &ebo);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(square), square, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*3, (const void *)0);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(square_indices), square_indices, GL_STATIC_DRAW);
-
-    return vao;
-}
-
-// -----------------------------------------------------------------------------
-// Clean VAO
-// -----------------------------------------------------------------------------
-void CleanVAO(GLuint &vao)
-{
-    GLint nAttr = 0;
-    std::set<GLuint> vbos;
-
-    GLint eboId;
-    glGetVertexArrayiv(vao, GL_ELEMENT_ARRAY_BUFFER_BINDING, &eboId);
-    glDeleteBuffers(1, (GLuint*)&eboId);
-
-    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nAttr);
-    glBindVertexArray(vao);
-
-    for (int iAttr = 0; iAttr < nAttr; ++iAttr)
-    {
-        GLint vboId = 0;
-        glGetVertexAttribiv(iAttr, GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, &vboId);
-        if (vboId > 0)
-        {
-            vbos.insert(vboId);
-        }
-
-        glDisableVertexAttribArray(iAttr);
-    }
-
-    for(auto vbo : vbos)
-    {
-      glDeleteBuffers(1, &vbo);
-    }
-
-    glDeleteVertexArrays(1, &vao);
-}
-
-// -----------------------------------------------------------------------------
-// MessageCallback (for debugging purposes)
-// -----------------------------------------------------------------------------
+// Error function for OpenGL
 void GLAPIENTRY
-MessageCallback( GLenum source,
-                 GLenum type,
-                 GLuint id,
-                 GLenum severity,
-                 GLsizei length,
-                 const GLchar* message,
-                 const void* userParam )
+MessageCallback(GLenum source,
+	GLenum type,
+	GLuint id,
+	GLenum severity,
+	GLsizei length,
+	const GLchar* message,
+	const void* userParam)
 {
-    std::cerr << "GL CALLBACK:" << ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ) <<
-        "type = 0x" << type <<
-        ", severity = 0x" << severity <<
-        ", message =" << message << "\n";
+	std::cerr << "GL CALLBACK:" << (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "") <<
+		"type = 0x" << type <<
+		", severity = 0x" << severity <<
+		", message =" << message << "\n";
+}
+
+// Entry point
+int main(void)
+{
+
+	glfwSetErrorCallback(GLFWErrorCallback);
+
+	// Initialization of glfw.
+	if (!glfwInit())
+	{
+		std::cin.get();
+
+		return EXIT_FAILURE;
+	}
+
+	// Create a window
+	glfwWindowHint(GLFW_RESIZABLE, true);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	auto window = glfwCreateWindow(800, 600, "Hello Triangle", nullptr, nullptr);
+	if (window == nullptr)
+	{
+
+		glfwTerminate();
+
+		std::cin.get();
+
+		return EXIT_FAILURE;
+	}
+
+	//Set the OpenGL context
+	glfwMakeContextCurrent(window);
+
+	GLenum error = glewInit();
+	if (error != GLEW_OK)
+	{
+		std::cerr << "GLEW intialization failure:" << glewGetErrorString(error) << "\n";
+		std::cin.get();
+
+		glfwTerminate();
+
+		return EXIT_FAILURE;
+	}
+
+	// Enable capture of debug output.
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(MessageCallback, 0);
+
+	// Print OpenGL data
+	std::cout << "Vendor: " << glGetString(GL_VENDOR) << "\n";
+	std::cout << "Renderer: " << glGetString(GL_RENDERER) << "\n";
+	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
+
+	// Clear the background
+	glClearColor(0.5f, 0.0f, 0.0f, 1.0f);
+
+	// Create a triangle geometry
+	GLfloat triangle[3 * 2] = {
+	-0.5f, -0.5f,
+	0.5f, -0.5f,
+	0.0f, 0.5f
+	};
+
+	// Create a vertex array
+	GLuint vertexArrayId;
+	glGenVertexArrays(1, &vertexArrayId);
+	glBindVertexArray(vertexArrayId);
+
+	// Create a vertex buffer
+	GLuint vertexBufferId;
+	glGenBuffers(1, &vertexBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
+
+	// Populate the vertex buffer
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr);
+	glEnableVertexAttribArray(0);
+
+
+	// Vertex shader code
+	const std::string vertexShaderSrc = R"(
+#version 430 core
+
+layout(location = 0) in vec4 position;
+
+void main()
+{
+gl_Position = position;
+}
+)";
+	// Fragment shader code
+	const std::string fragmentShaderSrc = R"(
+#version 430 core
+
+out vec4 color;
+void main()
+{
+color = vec4(1);
+}
+)";
+
+	// Compile the vertex shader
+	auto vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	const GLchar* vss = vertexShaderSrc.c_str();
+	glShaderSource(vertexShader, 1, &vss, nullptr);
+	glCompileShader(vertexShader);
+
+	// Compile the fragment shader
+	auto fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	const GLchar* fss = fragmentShaderSrc.c_str();
+	glShaderSource(fragmentShader, 1, &fss, nullptr);
+	glCompileShader(fragmentShader);
+
+
+	// Create a shader program
+	auto shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+
+	glUseProgram(shaderProgram);
+
+	// Main loop
+	while (!glfwWindowShouldClose(window))
+	{
+		glfwPollEvents();
+
+		glClear(GL_COLOR_BUFFER_BIT);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
+
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		glfwSwapBuffers(window);
+
+		// Exit the loop if escape is pressed
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) break;
+	}
+
+	glfwTerminate();
+
+	return EXIT_SUCCESS;
 }
