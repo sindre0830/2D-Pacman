@@ -47,21 +47,53 @@ int gMap[36][28] = {
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
+int gScore;
 /* initilizing functions */
-void print();
+void output();
+char input();
 /**
  * Main program.
  */
 int main() {
-	print();
+	output();
+	char cmd = input();
+	while(cmd != 'Q') {
+		switch(cmd) {
+			case 'W':
+				break;
+			case 'A':
+				break;
+			case 'S':
+				break;
+			case 'D':
+				break;
+			default:
+				break;
+		}
+		cmd = input();
+	}
 	return 0;
 }
-
-void print() {
+/**
+ * Outputs current state of map and score.
+ */
+void output() {
 	for (int i = 0; i < 36; i++) {
 		for (int j = 0; j < 28; j++) {
 			std::cout << gMap[i][j] << ' ';
 		}
 		std::cout << std::endl;
 	}
+	std::cout << "Score: " << gScore << std::endl;
+}
+/**
+ * Inputs character from user.
+ */
+char input() {
+	/* local variable */
+	char cmdBuffer;
+
+	std::cin >> cmdBuffer;
+	std::cin.ignore(200, '\n');
+	return toupper(cmdBuffer);
 }
