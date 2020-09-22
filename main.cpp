@@ -87,12 +87,12 @@ void output() {
 	std::cout << "Score: " << gScore << std::endl;
 }
 /**
- * Inputs character from user.
+ * Return character input from user.
  */
 char input() {
 	/* local variable */
 	char cmdBuffer;
-
+	//request input while ignoring the \n
 	std::cin >> cmdBuffer;
 	std::cin.ignore(200, '\n');
 	return toupper(cmdBuffer);
