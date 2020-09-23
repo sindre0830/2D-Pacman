@@ -1,8 +1,10 @@
 /**
- * Project SandBox
- * Dangerous playground
+ * Assignment 1 - Pacman
+ * Fully functional pacman game
  *
  * @author Sindre Eiklid (sindreik@stud.ntnu.no)
+ * @author Casper Melhus
+ * @author Brage Heimly Næss
  */
 /* libraries */
 #include <GL/glew.h>
@@ -76,7 +78,7 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//create window
-	auto window = glfwCreateWindow(1200, 1200, "SandBox", nullptr, nullptr);
+	auto window = glfwCreateWindow(840, 1080, "SandBox", nullptr, nullptr);
 	if (window == nullptr)
 	{
 		std::cerr << "GLFW failed on window creation." << '\n';

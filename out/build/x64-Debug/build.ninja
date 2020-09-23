@@ -11,7 +11,7 @@
 # =============================================================================
 
 # =============================================================================
-# Project: 1_Assignment
+# Project: SandBox
 # Configuration: Debug
 # =============================================================================
 
@@ -30,42 +30,42 @@ ninja_required_version = 1.5
 include rules.ninja
 
 # =============================================================================
-# Object build statements for EXECUTABLE target 1_Assignment
+# Object build statements for EXECUTABLE target SandBox
 
 
 #############################################
-# Order-only phony target for 1_Assignment
+# Order-only phony target for SandBox
 
-build cmake_object_order_depends_target_1_Assignment: phony || cmake_object_order_depends_target_glfw cmake_object_order_depends_target_libglew_static
+build cmake_object_order_depends_target_SandBox: phony || cmake_object_order_depends_target_glfw cmake_object_order_depends_target_libglew_static
 
-build CMakeFiles\1_Assignment.dir\main.cpp.obj: CXX_COMPILER__1_Assignment ..\..\..\main.cpp || cmake_object_order_depends_target_1_Assignment
+build CMakeFiles\SandBox.dir\main.cpp.obj: CXX_COMPILER__SandBox ..\..\..\main.cpp || cmake_object_order_depends_target_SandBox
   DEFINES = -DGLEW_STATIC
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\..\..\external\glew-cmake-2.1.0\include -I..\..\..\external\glfw-3.3.2\include
-  OBJECT_DIR = CMakeFiles\1_Assignment.dir
-  OBJECT_FILE_DIR = CMakeFiles\1_Assignment.dir
-  TARGET_COMPILE_PDB = CMakeFiles\1_Assignment.dir\
-  TARGET_PDB = bin\1_Assignment.pdb
+  OBJECT_DIR = CMakeFiles\SandBox.dir
+  OBJECT_FILE_DIR = CMakeFiles\SandBox.dir
+  TARGET_COMPILE_PDB = CMakeFiles\SandBox.dir\
+  TARGET_PDB = bin\SandBox.pdb
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target 1_Assignment
+# Link build statements for EXECUTABLE target SandBox
 
 
 #############################################
-# Link the executable bin\1_Assignment.exe
+# Link the executable bin\SandBox.exe
 
-build bin\1_Assignment.exe: CXX_EXECUTABLE_LINKER__1_Assignment CMakeFiles\1_Assignment.dir\main.cpp.obj | lib\glewd.lib lib\glfw3.lib || lib\glewd.lib lib\glfw3.lib
+build bin\SandBox.exe: CXX_EXECUTABLE_LINKER__SandBox CMakeFiles\SandBox.dir\main.cpp.obj | lib\glewd.lib lib\glfw3.lib || lib\glewd.lib lib\glfw3.lib
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
   LINK_LIBRARIES = lib\glewd.lib lib\glfw3.lib opengl32.lib opengl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
-  OBJECT_DIR = CMakeFiles\1_Assignment.dir
+  OBJECT_DIR = CMakeFiles\SandBox.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = CMakeFiles\1_Assignment.dir\
-  TARGET_FILE = bin\1_Assignment.exe
-  TARGET_IMPLIB = lib\1_Assignment.lib
-  TARGET_PDB = bin\1_Assignment.pdb
+  TARGET_COMPILE_PDB = CMakeFiles\SandBox.dir\
+  TARGET_FILE = bin\SandBox.exe
+  TARGET_IMPLIB = lib\SandBox.lib
+  TARGET_PDB = bin\SandBox.pdb
 
 
 #############################################
@@ -2420,9 +2420,9 @@ build external\glew-cmake-2.1.0\list_install_components: phony
 # =============================================================================
 # Target aliases.
 
-build 1_Assignment: phony bin\1_Assignment.exe
+build SandBox: phony bin\SandBox.exe
 
-build 1_Assignment.exe: phony bin\1_Assignment.exe
+build SandBox.exe: phony bin\SandBox.exe
 
 build boing: phony bin\boing.exe
 
@@ -2616,7 +2616,7 @@ build external\glfw-3.3.2\tests\all: phony clipboard events msaa glfwinfo iconif
 #############################################
 # The main all target.
 
-build all: phony bin\1_Assignment.exe lib\glfw3.lib bin\boing.exe bin\simple.exe bin\gears.exe bin\wave.exe bin\particles.exe bin\heightmap.exe bin\splitview.exe bin\offscreen.exe bin\sharing.exe bin\clipboard.exe bin\events.exe bin\msaa.exe bin\glfwinfo.exe bin\iconify.exe bin\empty.exe bin\monitors.exe bin\reopen.exe bin\cursor.exe bin\gamma.exe bin\icon.exe bin\inputlag.exe bin\joysticks.exe bin\threads.exe bin\opacity.exe bin\triangle-vulkan.exe bin\tearing.exe bin\timeout.exe bin\title.exe bin\windows.exe external\glfw-3.3.2\docs\docs bin\glewmxd.dll lib\glewd.lib bin\glewd.dll lib\glewmxd.lib
+build all: phony bin\SandBox.exe lib\glfw3.lib bin\boing.exe bin\simple.exe bin\gears.exe bin\wave.exe bin\particles.exe bin\heightmap.exe bin\splitview.exe bin\offscreen.exe bin\sharing.exe bin\clipboard.exe bin\events.exe bin\msaa.exe bin\glfwinfo.exe bin\iconify.exe bin\empty.exe bin\monitors.exe bin\reopen.exe bin\cursor.exe bin\gamma.exe bin\icon.exe bin\inputlag.exe bin\joysticks.exe bin\threads.exe bin\opacity.exe bin\triangle-vulkan.exe bin\tearing.exe bin\timeout.exe bin\title.exe bin\windows.exe external\glfw-3.3.2\docs\docs bin\glewmxd.dll lib\glewd.lib bin\glewd.dll lib\glewmxd.lib
 
 
 #############################################
