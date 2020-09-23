@@ -12,6 +12,7 @@
 #include "shaders/square.h"
 #include <iostream>
 #include <set>
+#include <vector>
 /* global variables */
 const int
 	gRow = 28,
@@ -54,15 +55,19 @@ int gMap[36][28] = {
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
+int gWallSize, gPelletSize;
 /* defining functions */
+void readLevel();
 GLuint CompileShader(const std::string& vertexShader, const std::string& fragmentShader);
 GLuint CreateMaze();
+GLuint createPellets();
 void CleanVAO(GLuint &vao);
 void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 /**
  * Main program.
  */
 int main() {
+	readLevel();
 	//initialization of GLFW
 	if(!glfwInit())
 	{
@@ -104,8 +109,11 @@ int main() {
 	glDebugMessageCallback(MessageCallback, 0);
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 	//create square
-	auto squareVAO = CreateMaze();
+	auto mazeVAO = CreateMaze();
 	auto squareShaderProgram = CompileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
+	//create pellets
+	auto pelletVAO = createPellets();
+	auto pelletShaderProgram = CompileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
 	//set background color red
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//loop until user closes window
@@ -114,11 +122,17 @@ int main() {
 		glfwPollEvents();
 		//for every frame reset background color to the value in the buffer ???
 		glClear(GL_COLOR_BUFFER_BIT);
-		//draw SQUARE
+		//draw maze
 		auto vertexColorLocation = glGetUniformLocation(squareShaderProgram, "u_Color");
 		glUseProgram(squareShaderProgram);
-		glBindVertexArray(squareVAO);
+		glBindVertexArray(mazeVAO);
 		glUniform4f(vertexColorLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+		glDrawElements(GL_TRIANGLES, (6 * gRow * gCol), GL_UNSIGNED_INT, (const void*)0);
+		//draw pellets
+		auto vertexColorLocation1 = glGetUniformLocation(pelletShaderProgram, "u_Color");
+		glUseProgram(pelletShaderProgram);
+		glBindVertexArray(pelletVAO);
+		glUniform4f(vertexColorLocation1, 1.0f, 1.0f, 1.0f, 1.0f);
 		glDrawElements(GL_TRIANGLES, (6 * gRow * gCol), GL_UNSIGNED_INT, (const void*)0);
 		//???
 		glfwSwapBuffers(window);
@@ -128,9 +142,26 @@ int main() {
 	//clean memory
 	glUseProgram(0);
 	glDeleteProgram(squareShaderProgram);
-	CleanVAO(squareVAO);
+	glDeleteProgram(pelletShaderProgram);
+	CleanVAO(mazeVAO);
+	CleanVAO(pelletVAO);
 	glfwTerminate();
 	return EXIT_SUCCESS;
+}
+/**
+ * Read level design 
+ */
+void readLevel() {
+	for (int i = 0; i < gCol; i++) {
+		for (int j = 0; j < gRow; j++) {
+			if (gMap[i][j] == 1) {
+				gWallSize++;
+			} else if (gMap[i][j] == 0) {
+				gPelletSize++;
+			}
+		}
+	}
+	std::cout << "gWallSize = " << gWallSize << " gPelletSize = " << gPelletSize << std::endl;
 }
 /**
  * Compile shader.
@@ -190,7 +221,7 @@ GLuint CreateMaze() {
 				square[++n] = (x + rowInc);
 				square[++n] = y;
 				square[++n] = z;
-				//bottom right
+				//top right
 				square[++n] = (x + rowInc);
 				square[++n] = (y + colInc);
 				square[++n] = z;
@@ -225,6 +256,73 @@ GLuint CreateMaze() {
 	//??? seems to be 1 in tutorial, but doesn't work. Also switched place with the next line
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*3, (const void *)0);
+	return vao;
+}
+/**
+ * Create Pellets
+ */
+GLuint createPellets() {
+	/* local variables */
+	int n = -1;
+	float
+		x = -1.0f,
+		y = -1.0f,
+		z = 0.0f,
+		rowInc = 1.0f / (float)(gRow / 2),
+		colInc = 1.0f / (float)(gCol / 2);
+	GLfloat square[12 * gRow * gCol];
+	GLuint square_indices[6 * gRow * gCol];
+	//fills in square array
+	for (int i = 0; i < gCol; i++, x = -1.0f, y += colInc) {
+		for (int j = 0; j < gRow; j++, x += rowInc) {
+			if (gMap[i][j] == 0) {
+				//top left
+				square[++n] = x + (rowInc / 3.0f);
+				square[++n] = (y + colInc) - (colInc / 3.0f);
+				square[++n] = z;
+				//bottom left
+				square[++n] = x + (rowInc / 3.0f);
+				square[++n] = y + (colInc / 3.0f);
+				square[++n] = z;
+				//bottom right
+				square[++n] = (x + rowInc) - (rowInc / 3.0f);
+				square[++n] = y + (colInc / 3.0f);
+				square[++n] = z;
+				//top right
+				square[++n] = (x + rowInc) - (rowInc / 3.0f);
+				square[++n] = (y + colInc) - (colInc / 3.0f);
+				square[++n] = z;
+			}
+		}
+	}
+	//fills in square_indicies array
+	for (int i = 0, j = 0; i < (6 * gRow * gCol); i++, j += 4) {
+		//row 1
+		square_indices[i] = j;
+		square_indices[++i] = (j + 1);
+		square_indices[++i] = (j + 2);
+		//row 2
+		square_indices[++i] = j;
+		square_indices[++i] = (j + 2);
+		square_indices[++i] = (j + 3);
+	}
+	//creates 1 vertex array and binds it in memory
+	GLuint vao;
+	glCreateVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+	//generates buffer and inserts square array
+	GLuint vbo;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(square), square, GL_STATIC_DRAW);
+	//generates buffer and inserts square_indices array
+	GLuint ebo;
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(square_indices), square_indices, GL_STATIC_DRAW);
+	//??? seems to be 1 in tutorial, but doesn't work. Also switched place with the next line
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, (const void*)0);
 	return vao;
 }
 /**
