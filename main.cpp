@@ -4,7 +4,7 @@
  *
  * @author Sindre Eiklid (sindreik@stud.ntnu.no)
  * @author Casper Melhus
- * @author Brage Heimly Næss
+ * @author Brage Heimly Nï¿½ss
  */
 /* libraries */
 #include <GL/glew.h>
@@ -108,7 +108,7 @@ int main() {
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	glDebugMessageCallback(MessageCallback, 0);
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-	//create square
+	//create maze
 	auto mazeVAO = CreateMaze();
 	auto squareShaderProgram = CompileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
 	//create pellets
@@ -127,13 +127,13 @@ int main() {
 		glUseProgram(squareShaderProgram);
 		glBindVertexArray(mazeVAO);
 		glUniform4f(vertexColorLocation, 0.0f, 0.0f, 1.0f, 1.0f);
-		glDrawElements(GL_TRIANGLES, (6 * gRow * gCol), GL_UNSIGNED_INT, (const void*)0);
+		glDrawElements(GL_TRIANGLES, (6 * gWallSize), GL_UNSIGNED_INT, (const void*)0);
 		//draw pellets
 		auto vertexColorLocation1 = glGetUniformLocation(pelletShaderProgram, "u_Color");
 		glUseProgram(pelletShaderProgram);
 		glBindVertexArray(pelletVAO);
 		glUniform4f(vertexColorLocation1, 1.0f, 1.0f, 1.0f, 1.0f);
-		glDrawElements(GL_TRIANGLES, (6 * gRow * gCol), GL_UNSIGNED_INT, (const void*)0);
+		glDrawElements(GL_TRIANGLES, (6 * gPelletSize), GL_UNSIGNED_INT, (const void*)0);
 		//???
 		glfwSwapBuffers(window);
 		//break loop if 'ESC' key is pressed
@@ -149,7 +149,8 @@ int main() {
 	return EXIT_SUCCESS;
 }
 /**
- * Read level design 
+ * Read level design
+ * gWallSize = 708, gPelletSize = 299
  */
 void readLevel() {
 	for (int i = 0; i < gCol; i++) {
@@ -192,70 +193,71 @@ GLuint CompileShader(const std::string& vertexShaderSrc, const std::string& frag
 	return shaderProgram;
 }
 /**
- * Create square
+ * Create maze
  */
 GLuint CreateMaze() {
 	/* local variables */
-	int n = -1;
 	float
 		x = -1.0f,
 		y = -1.0f,
 		z = 0.0f,
-		rowInc = 1.0f / (float)(gRow / 2),
-		colInc = 1.0f / (float)(gCol / 2);
-	GLfloat square[12 * gRow * gCol];
-	GLuint square_indices[6 * gRow * gCol];
-	//fills in square array
+		rowInc = 1.0f / ((float)(gRow) / 2),
+		colInc = 1.0f / ((float)(gCol) / 2);
+	std::vector<GLfloat> arr;
+	std::vector<GLuint> arr_indices;
+	//fills in arr with coordinates
 	for (int i = 0; i < gCol; i++, x = -1.0f, y += colInc) {
 		for (int j = 0; j < gRow; j++, x += rowInc) {
 			if (gMap[i][j] == 1) {
-				//top left
-				square[++n] = x;
-				square[++n] = (y + colInc);
-				square[++n] = z;
-				//bottom left
-				square[++n] = x;
-				square[++n] = y;
-				square[++n] = z;
-				//bottom right
-				square[++n] = (x + rowInc);
-				square[++n] = y;
-				square[++n] = z;
-				//top right
-				square[++n] = (x + rowInc);
-				square[++n] = (y + colInc);
-				square[++n] = z;
+				//top left coordinate
+				arr.push_back(x);
+				arr.push_back(y + colInc);
+				arr.push_back(z);
+				//bottom left coordinate
+				arr.push_back(x);
+				arr.push_back(y);
+				arr.push_back(z);
+				//bottom right coordinate
+				arr.push_back(x + rowInc);
+				arr.push_back(y);
+				arr.push_back(z);
+				//top right coordinate
+				arr.push_back(x + rowInc);
+				arr.push_back(y + colInc);
+				arr.push_back(z);
 			}
 		}
 	}
-	//fills in square_indicies array
-	for (int i = 0, j = 0; i < (6 * gRow * gCol); i++, j += 4) {
+	//fills in map_indicies array
+	for (int i = 0, j = 0; i < gWallSize; i++, j += 4) {
 		//row 1
-		square_indices[i] = j;
-		square_indices[++i] = (j + 1);
-		square_indices[++i] = (j + 2);
+		arr_indices.push_back(j);
+		arr_indices.push_back(j + 1);
+		arr_indices.push_back(j + 2);
 		//row 2
-		square_indices[++i] = j;
-		square_indices[++i] = (j + 2);
-		square_indices[++i] = (j + 3);
+		arr_indices.push_back(j);
+		arr_indices.push_back(j + 2);
+		arr_indices.push_back(j + 3);
 	}
-	//creates 1 vertex array and binds it in memory
+	//create and bind the vertex array object
 	GLuint vao;
 	glCreateVertexArrays(1, &vao);
 	glBindVertexArray(vao);
-	//generates buffer and inserts square array
+	//create the vertex buffer object
 	GLuint vbo;
 	glGenBuffers(1, &vbo);
+	//set vbo to map data
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(square), square, GL_STATIC_DRAW);
-	//generates buffer and inserts square_indices array
+	glBufferData(GL_ARRAY_BUFFER, arr.size() * sizeof(arr), &arr[0], GL_STATIC_DRAW);
+	//create the element buffer object
 	GLuint ebo;
 	glGenBuffers(1, &ebo);
+	//set ebo to map_indices data
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(square_indices), square_indices, GL_STATIC_DRAW);
-	//??? seems to be 1 in tutorial, but doesn't work. Also switched place with the next line
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, arr_indices.size() * sizeof(arr_indices), &arr_indices[0], GL_STATIC_DRAW);
+	//set the vertex attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, (const void *)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*3, (const void *)0);
 	return vao;
 }
 /**
@@ -263,66 +265,67 @@ GLuint CreateMaze() {
  */
 GLuint createPellets() {
 	/* local variables */
-	int n = -1;
 	float
 		x = -1.0f,
 		y = -1.0f,
 		z = 0.0f,
-		rowInc = 1.0f / (float)(gRow / 2),
-		colInc = 1.0f / (float)(gCol / 2);
-	GLfloat square[12 * gRow * gCol];
-	GLuint square_indices[6 * gRow * gCol];
-	//fills in square array
+		rowInc = 1.0f / ((float)(gRow) / 2),
+		colInc = 1.0f / ((float)(gCol) / 2);
+	std::vector<GLfloat> arr;
+	std::vector<GLuint> arr_indices;
+	//fills in arr with coordinates
 	for (int i = 0; i < gCol; i++, x = -1.0f, y += colInc) {
 		for (int j = 0; j < gRow; j++, x += rowInc) {
 			if (gMap[i][j] == 0) {
-				//top left
-				square[++n] = x + (rowInc / 3.0f);
-				square[++n] = (y + colInc) - (colInc / 3.0f);
-				square[++n] = z;
-				//bottom left
-				square[++n] = x + (rowInc / 3.0f);
-				square[++n] = y + (colInc / 3.0f);
-				square[++n] = z;
-				//bottom right
-				square[++n] = (x + rowInc) - (rowInc / 3.0f);
-				square[++n] = y + (colInc / 3.0f);
-				square[++n] = z;
-				//top right
-				square[++n] = (x + rowInc) - (rowInc / 3.0f);
-				square[++n] = (y + colInc) - (colInc / 3.0f);
-				square[++n] = z;
+				//top left coordinate
+				arr.push_back((x + (rowInc / 3.0f)));
+				arr.push_back((y + colInc) - (colInc / 3.0f));
+				arr.push_back(z);
+				//bottom left coordinate
+				arr.push_back((x + (rowInc / 3.0f)));
+				arr.push_back(y + (colInc / 3.0f));
+				arr.push_back(z);
+				//bottom right coordinate
+				arr.push_back((x + rowInc) - (rowInc / 3.0f));
+				arr.push_back(y + (colInc / 3.0f));
+				arr.push_back(z);
+				//top right coordinate
+				arr.push_back((x + rowInc) - (rowInc / 3.0f));
+				arr.push_back((y + colInc) - (colInc / 3.0f));
+				arr.push_back(z);
 			}
 		}
 	}
-	//fills in square_indicies array
-	for (int i = 0, j = 0; i < (6 * gRow * gCol); i++, j += 4) {
+	//fills in map_indicies array
+	for (int i = 0, j = 0; i < gPelletSize; i++, j += 4) {
 		//row 1
-		square_indices[i] = j;
-		square_indices[++i] = (j + 1);
-		square_indices[++i] = (j + 2);
+		arr_indices.push_back(j);
+		arr_indices.push_back(j + 1);
+		arr_indices.push_back(j + 2);
 		//row 2
-		square_indices[++i] = j;
-		square_indices[++i] = (j + 2);
-		square_indices[++i] = (j + 3);
+		arr_indices.push_back(j);
+		arr_indices.push_back(j + 2);
+		arr_indices.push_back(j + 3);
 	}
-	//creates 1 vertex array and binds it in memory
+	//create and bind the vertex array object
 	GLuint vao;
 	glCreateVertexArrays(1, &vao);
 	glBindVertexArray(vao);
-	//generates buffer and inserts square array
+	//create the vertex buffer object
 	GLuint vbo;
 	glGenBuffers(1, &vbo);
+	//set vbo to map data
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(square), square, GL_STATIC_DRAW);
-	//generates buffer and inserts square_indices array
+	glBufferData(GL_ARRAY_BUFFER, arr.size() * sizeof(arr), &arr[0], GL_STATIC_DRAW);
+	//create the element buffer object
 	GLuint ebo;
 	glGenBuffers(1, &ebo);
+	//set ebo to map_indices data
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(square_indices), square_indices, GL_STATIC_DRAW);
-	//??? seems to be 1 in tutorial, but doesn't work. Also switched place with the next line
-	glEnableVertexAttribArray(0);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, arr_indices.size() * sizeof(arr_indices), &arr_indices[0], GL_STATIC_DRAW);
+	//set the vertex attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, (const void*)0);
+	glEnableVertexAttribArray(0);
 	return vao;
 }
 /**
