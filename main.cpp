@@ -33,7 +33,6 @@ int main() {
 	if(!glfwInit()) {
 		std::cerr << "GLFW initialization failed." << '\n';
 		std::cin.get();
-
 		return EXIT_FAILURE;
 	}
 	//setting window hints
@@ -47,18 +46,15 @@ int main() {
 	if (window == nullptr) {
 		std::cerr << "GLFW failed on window creation." << '\n';
 		std::cin.get();
-
 		glfwTerminate();
-
 		return EXIT_FAILURE;
 	}
-	//setting the OpenGL context
+	//setting the OpenGL context to the window
 	glfwMakeContextCurrent(window);
 	//initialization of GLEW
 	if(glewInit() != GLEW_OK) {
 	  std::cerr << "GLEW initialization failuare." << '\n';
 	  std::cin.get();
-
 	  return EXIT_FAILURE;
 	}
 	//eanable capture of debug output
@@ -72,11 +68,11 @@ int main() {
 	//create pellets
 	auto pelletVAO = gScenario.genPellet();
 	auto pelletShaderProgram = CompileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
-	//set background color red
+	//set background color black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//loop until user closes window
 	while(!glfwWindowShouldClose(window)) {
-		//???
+		//processes all pending events - source: https://www.glfw.org/docs/3.3/group__window.html#ga37bd57223967b4211d60ca1a0bf3c832
 		glfwPollEvents();
 		//for every frame reset background color to the value in the buffer ???
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -92,7 +88,7 @@ int main() {
 		glBindVertexArray(pelletVAO);
 		glUniform4f(vertexColorLocation1, 1.0f, 1.0f, 1.0f, 1.0f);
 		glDrawElements(GL_TRIANGLES, (6 * gPelletSize), GL_UNSIGNED_INT, (const void*)0);
-		//???
+		//swaps the front and back buffers of the specified window. - source: https://www.glfw.org/docs/3.3/group__window.html#ga15a5a1ee5b3c2ca6b15ca209a12efd14
 		glfwSwapBuffers(window);
 		//break loop if 'ESC' key is pressed
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) break;
