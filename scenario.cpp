@@ -154,20 +154,20 @@ GLuint Scenario::genPellet() {
 		for (int j = 0; j < gRow; j++, x += rowInc) {
 			if (gLevel[i][j] == 0) {
 				//top left coordinate
-				arr.push_back((x + (rowInc / 3.0f)));
-				arr.push_back((y + colInc) - (colInc / 3.0f));
+				arr.push_back((x + (rowInc / 2.5f)));
+				arr.push_back((y + colInc) - (colInc / 2.5f));
 				arr.push_back(z);
 				//bottom left coordinate
-				arr.push_back((x + (rowInc / 3.0f)));
-				arr.push_back(y + (colInc / 3.0f));
+				arr.push_back((x + (rowInc / 2.5f)));
+				arr.push_back(y + (colInc / 2.5f));
 				arr.push_back(z);
 				//bottom right coordinate
-				arr.push_back((x + rowInc) - (rowInc / 3.0f));
-				arr.push_back(y + (colInc / 3.0f));
+				arr.push_back((x + rowInc) - (rowInc / 2.5f));
+				arr.push_back(y + (colInc / 2.5f));
 				arr.push_back(z);
 				//top right coordinate
-				arr.push_back((x + rowInc) - (rowInc / 3.0f));
-				arr.push_back((y + colInc) - (colInc / 3.0f));
+				arr.push_back((x + rowInc) - (rowInc / 2.5f));
+				arr.push_back((y + colInc) - (colInc / 2.5f));
 				arr.push_back(z);
 			}
 		}
