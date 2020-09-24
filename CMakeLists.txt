@@ -64,7 +64,9 @@ add_subdirectory(external/glew-cmake-2.1.0)
 # need so.
 add_executable(SandBox
 	main.cpp
-	shaders/square.h)
+	scenario.cpp
+	shaders/square.h
+	headers/Scenario.h)
 
 # As seen in Lab01 static linking against glew required
 # the compile definition of GLEW_STATIC. This is the way

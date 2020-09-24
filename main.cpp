@@ -13,64 +13,24 @@
 #include <iostream>
 #include <set>
 #include <vector>
+#include "headers/Scenario.h"
+/* global objects */
+Scenario gScenario;
 /* global variables */
-const int
-	gRow = 28,
-	gCol = 36;
-int gMap[36][28] = {
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1},
-	{1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1},
-	{1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1},
-	{1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1},
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1},
-	{2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1},
-	{1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1},
-	{1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1},
-	{1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1},
-	{1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1},
-	{1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},
-	{1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-};
-int gWallSize, gPelletSize;
+int gCol, gRow, gWallSize, gPelletSize;
+std::vector<std::vector<int>> gLevel;
 /* defining functions */
-void readLevel();
 GLuint CompileShader(const std::string& vertexShader, const std::string& fragmentShader);
-GLuint CreateMaze();
-GLuint createPellets();
 void CleanVAO(GLuint &vao);
 void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 /**
  * Main program.
  */
 int main() {
-	readLevel();
+	//reads data from file
+	gScenario.readFile();
 	//initialization of GLFW
-	if(!glfwInit())
-	{
+	if(!glfwInit()) {
 		std::cerr << "GLFW initialization failed." << '\n';
 		std::cin.get();
 
@@ -83,9 +43,8 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//create window
-	auto window = glfwCreateWindow(840, 1080, "SandBox", nullptr, nullptr);
-	if (window == nullptr)
-	{
+	auto window = glfwCreateWindow(840, 1080, "Pac-Man", nullptr, nullptr);
+	if (window == nullptr) {
 		std::cerr << "GLFW failed on window creation." << '\n';
 		std::cin.get();
 
@@ -96,8 +55,7 @@ int main() {
 	//setting the OpenGL context
 	glfwMakeContextCurrent(window);
 	//initialization of GLEW
-	if(glewInit() != GLEW_OK)
-	{
+	if(glewInit() != GLEW_OK) {
 	  std::cerr << "GLEW initialization failuare." << '\n';
 	  std::cin.get();
 
@@ -108,11 +66,11 @@ int main() {
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	glDebugMessageCallback(MessageCallback, 0);
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-	//create maze
-	auto mazeVAO = CreateMaze();
+	//create map
+	auto mapVAO = gScenario.genMap();
 	auto squareShaderProgram = CompileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
 	//create pellets
-	auto pelletVAO = createPellets();
+	auto pelletVAO = gScenario.genPellet();
 	auto pelletShaderProgram = CompileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
 	//set background color red
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -125,7 +83,7 @@ int main() {
 		//draw maze
 		auto vertexColorLocation = glGetUniformLocation(squareShaderProgram, "u_Color");
 		glUseProgram(squareShaderProgram);
-		glBindVertexArray(mazeVAO);
+		glBindVertexArray(mapVAO);
 		glUniform4f(vertexColorLocation, 0.0f, 0.0f, 1.0f, 1.0f);
 		glDrawElements(GL_TRIANGLES, (6 * gWallSize), GL_UNSIGNED_INT, (const void*)0);
 		//draw pellets
@@ -143,26 +101,10 @@ int main() {
 	glUseProgram(0);
 	glDeleteProgram(squareShaderProgram);
 	glDeleteProgram(pelletShaderProgram);
-	CleanVAO(mazeVAO);
+	CleanVAO(mapVAO);
 	CleanVAO(pelletVAO);
 	glfwTerminate();
 	return EXIT_SUCCESS;
-}
-/**
- * Read level design
- * gWallSize = 708, gPelletSize = 299
- */
-void readLevel() {
-	for (int i = 0; i < gCol; i++) {
-		for (int j = 0; j < gRow; j++) {
-			if (gMap[i][j] == 1) {
-				gWallSize++;
-			} else if (gMap[i][j] == 0) {
-				gPelletSize++;
-			}
-		}
-	}
-	std::cout << "gWallSize = " << gWallSize << " gPelletSize = " << gPelletSize << std::endl;
 }
 /**
  * Compile shader.
@@ -191,142 +133,6 @@ GLuint CompileShader(const std::string& vertexShaderSrc, const std::string& frag
 	glDeleteShader(fragmentShader);
 
 	return shaderProgram;
-}
-/**
- * Create maze
- */
-GLuint CreateMaze() {
-	/* local variables */
-	float
-		x = -1.0f,
-		y = -1.0f,
-		z = 0.0f,
-		rowInc = 1.0f / ((float)(gRow) / 2),
-		colInc = 1.0f / ((float)(gCol) / 2);
-	std::vector<GLfloat> arr;
-	std::vector<GLuint> arr_indices;
-	//fills in arr with coordinates
-	for (int i = 0; i < gCol; i++, x = -1.0f, y += colInc) {
-		for (int j = 0; j < gRow; j++, x += rowInc) {
-			if (gMap[i][j] == 1) {
-				//top left coordinate
-				arr.push_back(x);
-				arr.push_back(y + colInc);
-				arr.push_back(z);
-				//bottom left coordinate
-				arr.push_back(x);
-				arr.push_back(y);
-				arr.push_back(z);
-				//bottom right coordinate
-				arr.push_back(x + rowInc);
-				arr.push_back(y);
-				arr.push_back(z);
-				//top right coordinate
-				arr.push_back(x + rowInc);
-				arr.push_back(y + colInc);
-				arr.push_back(z);
-			}
-		}
-	}
-	//fills in map_indicies array
-	for (int i = 0, j = 0; i < gWallSize; i++, j += 4) {
-		//row 1
-		arr_indices.push_back(j);
-		arr_indices.push_back(j + 1);
-		arr_indices.push_back(j + 2);
-		//row 2
-		arr_indices.push_back(j);
-		arr_indices.push_back(j + 2);
-		arr_indices.push_back(j + 3);
-	}
-	//create and bind the vertex array object
-	GLuint vao;
-	glCreateVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-	//create the vertex buffer object
-	GLuint vbo;
-	glGenBuffers(1, &vbo);
-	//set vbo to map data
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, arr.size() * sizeof(arr), &arr[0], GL_STATIC_DRAW);
-	//create the element buffer object
-	GLuint ebo;
-	glGenBuffers(1, &ebo);
-	//set ebo to map_indices data
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, arr_indices.size() * sizeof(arr_indices), &arr_indices[0], GL_STATIC_DRAW);
-	//set the vertex attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, (const void *)0);
-	glEnableVertexAttribArray(0);
-	return vao;
-}
-/**
- * Create Pellets
- */
-GLuint createPellets() {
-	/* local variables */
-	float
-		x = -1.0f,
-		y = -1.0f,
-		z = 0.0f,
-		rowInc = 1.0f / ((float)(gRow) / 2),
-		colInc = 1.0f / ((float)(gCol) / 2);
-	std::vector<GLfloat> arr;
-	std::vector<GLuint> arr_indices;
-	//fills in arr with coordinates
-	for (int i = 0; i < gCol; i++, x = -1.0f, y += colInc) {
-		for (int j = 0; j < gRow; j++, x += rowInc) {
-			if (gMap[i][j] == 0) {
-				//top left coordinate
-				arr.push_back((x + (rowInc / 3.0f)));
-				arr.push_back((y + colInc) - (colInc / 3.0f));
-				arr.push_back(z);
-				//bottom left coordinate
-				arr.push_back((x + (rowInc / 3.0f)));
-				arr.push_back(y + (colInc / 3.0f));
-				arr.push_back(z);
-				//bottom right coordinate
-				arr.push_back((x + rowInc) - (rowInc / 3.0f));
-				arr.push_back(y + (colInc / 3.0f));
-				arr.push_back(z);
-				//top right coordinate
-				arr.push_back((x + rowInc) - (rowInc / 3.0f));
-				arr.push_back((y + colInc) - (colInc / 3.0f));
-				arr.push_back(z);
-			}
-		}
-	}
-	//fills in map_indicies array
-	for (int i = 0, j = 0; i < gPelletSize; i++, j += 4) {
-		//row 1
-		arr_indices.push_back(j);
-		arr_indices.push_back(j + 1);
-		arr_indices.push_back(j + 2);
-		//row 2
-		arr_indices.push_back(j);
-		arr_indices.push_back(j + 2);
-		arr_indices.push_back(j + 3);
-	}
-	//create and bind the vertex array object
-	GLuint vao;
-	glCreateVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-	//create the vertex buffer object
-	GLuint vbo;
-	glGenBuffers(1, &vbo);
-	//set vbo to map data
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, arr.size() * sizeof(arr), &arr[0], GL_STATIC_DRAW);
-	//create the element buffer object
-	GLuint ebo;
-	glGenBuffers(1, &ebo);
-	//set ebo to map_indices data
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, arr_indices.size() * sizeof(arr_indices), &arr_indices[0], GL_STATIC_DRAW);
-	//set the vertex attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, (const void*)0);
-	glEnableVertexAttribArray(0);
-	return vao;
 }
 /**
  * Clear trash from memory.
