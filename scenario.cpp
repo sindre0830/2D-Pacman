@@ -1,5 +1,5 @@
 /* libraries */
-#include "headers/Scenario.h"
+#include "headers/scenario.h"
 #include <iostream>
 #include <vector>
 /* global variables */
