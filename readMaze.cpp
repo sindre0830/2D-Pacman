@@ -16,27 +16,26 @@ int main() {
 
     int row = 0;
     int col = 0;       //Size of map
-    int buffer;
-    int gMap[row][col];
+ //   int buffer;
+    vector gMap[row][col];
 
-    fstream fileMap("levels_level0.txt", ios::in);
+    ifstream file;
+    file.open("levels/level0");
 
-    if (fileMap) {
+    if (file) {
 
-        for (int i = 0; i < row; i++)    {
-            for (int j = 0; j < col; j++)   {
-                fileMap >> gMap[i][j];
+        for (int i = 0; i < col; i++)    {
+            for (int j = 0; j < row; j++)   {
+                file >> gMap[i][j];
+                cout << gMap[i][j] << ' ';
             }
 
-            fileMap.ignore();
-
+            file.ignore();
         }
-        fileMap.close();
+        file.close();
     }
-    else std::cout << "Unable to find map file!\n" std::endl;
-}
- else
- cout << "\n\tFant ikke filen 'levels_level0.txt'!\n\n";
-
- return 0;
+    else {
+        cout << "Unable to find map file!\n";
+    }
+    return 0;
 }
