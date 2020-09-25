@@ -55,14 +55,11 @@ int main() {
 	  return EXIT_FAILURE;
 	}
 	//eanable capture of debug output
-	glEnable(GL_DEBUG_OUTPUT);
-	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-	glDebugMessageCallback(MessageCallback, 0);
-	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-	//create map
+	enableDebug();
+	//generate map
 	auto mapVAO = gScenario.genMap();
 	auto squareShaderProgram = CompileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
-	//create pellets
+	//generate pellets
 	auto pelletVAO = gScenario.genPellet();
 	auto pelletShaderProgram = CompileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
 	//set background color black
