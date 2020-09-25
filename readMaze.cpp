@@ -9,33 +9,35 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
 int main() {
-
-    int row = 0;
-    int col = 0;       //Size of map
- //   int buffer;
-    vector gMap[row][col];
-
+    int row, col, buffer;
+    vector<vector<int>> gLevel;
+    char test;
     ifstream file;
     file.open("levels/level0");
-
     if (file) {
 
+        file >> row;
+        file.ignore();
+        file >> col;
+        file.ignore();
         for (int i = 0; i < col; i++)    {
+            vector<int> arrRow;
             for (int j = 0; j < row; j++)   {
-                file >> gMap[i][j];
-                cout << gMap[i][j] << ' ';
+                file >> buffer;
+                arrRow.push_back(buffer);
+                file.ignore();
             }
-
-            file.ignore();
+            gLevel.push_back(arrRow);
         }
         file.close();
-    }
-    else {
+    } else {
         cout << "Unable to find map file!\n";
     }
+    cout << "oi " << gLevel[4][1];
     return 0;
 }
