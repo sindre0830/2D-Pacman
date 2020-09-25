@@ -2,11 +2,82 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "headers/pacman.h"
+/**
+ * Destroy the 'Pacman' object.
+ */
 Pacman::~Pacman() {}
-int Pacman::collisonCheck() {}
-void Pacman::movUp() {}
-void Pacman::movDown() {}
-void Pacman::movRight() {}
-void Pacman::movLeft() {}
-void Pacman::mov() {}
-void Pacman::draw() {}
+/**
+ * Generate pacman.
+ */
+GLuint Pacman::genAsset() {
+    GLfloat square[4 * 7] =
+    {
+    //position              //color                 //texture coord
+    -0.1f,	0.1f,	0.0f,	1.0f,	0.0f,	0.0f,	1.0f,
+    -0.1f,	-0.1f,	0.0f,	1.0f,	0.0f,	0.0f,	0.0f,
+    0.1f,	-0.1f,	0.0f,	1.0f,	0.0f,	1.0f,	0.0f,
+    0.1f,	0.1f,	0.0f,	1.0f,	0.0f,	1.0f,	1.0f
+    };
+
+    GLuint square_indices[6] = { 0,1,2,0,2,3 };
+
+    GLuint vao;
+    glCreateVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    GLuint vbo;
+    glGenBuffers(1, &vbo);
+
+    GLuint ebo;
+    glGenBuffers(1, &ebo);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(square), square, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(square_indices), square_indices, GL_STATIC_DRAW);
+
+    return vao;
+}
+/**
+ * Move the asset to a direction untill collision.
+ */
+void Pacman::mov() {
+
+}
+/**
+ * Check if the asset will collide with wall or pellet.
+ */
+int Pacman::collisonCheck() {
+	return 1;
+}
+/**
+ * Draw asset.
+ */
+void Pacman::draw() {
+
+}
+/**
+ * Change direction of asset to UP.
+ */
+void Pacman::movUp() {
+
+}
+/**
+ * Change direction of asset to DOWN.
+ */
+void Pacman::movDown() {
+
+}
+/**
+ * Change direction of asset to RIGHT.
+ */
+void Pacman::movRight() {
+
+}
+/**
+ * Change direction of asset to LEFT.
+ */
+void Pacman::movLeft() {
+
+}

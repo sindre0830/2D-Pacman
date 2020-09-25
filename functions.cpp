@@ -1,6 +1,68 @@
 #include "headers/functions.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <stb_image.h>
 #include <iostream>
 #include <set>
+GLuint load_opengl_texture(const std::string& filepath, GLuint slot) {
+    /**
+     *  - Use the STB Image library to load a texture in here
+     *  - Initialize the texture into an OpenGL texture
+     *    - This means creating a texture with glGenTextures or glCreateTextures (4.5)
+     *    - And transferring the loaded texture data into this texture
+     *    - And setting the texture format
+     *  - Finally return the valid texture
+     */
+
+     /** Image width, height, bit depth */
+    int w, h, bpp;
+    auto pixels = stbi_load(filepath.c_str(), &w, &h,&bpp, STBI_rgb_alpha);
+
+    /*Generate a texture object and upload the loaded image to it.*/
+    GLuint tex;
+    glGenTextures(1, &tex);
+    glActiveTexture(GL_TEXTURE0 + slot);//Texture Unit
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+    /** Set parameters for the texture */
+    //Wrapping
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    //Filtering 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    /** Very important to free the memory returned by STBI, otherwise we leak */
+    if(pixels) stbi_image_free(pixels);
+
+    return tex;
+}
+void Transform(const float x, const float y, const GLuint shaderprogram) {
+    //Presentation below purely for ease of viewing individual components of calculation, and not at all necessary.
+
+    //Translation moves our object.        base matrix      Vector for movement along each axis
+    glm::mat4 translation = glm::translate(glm::mat4(1), glm::vec3(x, y, 0.f));
+
+    //Rotate the object                    base matrix      degrees to rotate          axis to rotate around
+    //glm::mat4 rotation = glm::rotate(glm::mat4(1), glm::radians(time) * 10, glm::vec3(0, 0, 1));
+
+    //Scale the object                     base matrix      vector containing how much to scale along each axis (here the same for all axis)
+    //glm::mat4 scale = glm::scale(glm::mat4(1), glm::vec3(sin(time)));
+
+    //Create transformation matrix      These must be multiplied in this order, or the results will be incorrect
+    glm::mat4 transformation = translation/* * rotation * scale*/;
+
+
+    //Get uniform to place transformation matrix in
+    //Must be called after calling glUseProgram         shader program in use   Name of Uniform
+    GLuint transformationmat = glGetUniformLocation(shaderprogram, "u_TransformationMat");
+
+    //Send data from matrices to uniform
+    //                 Location of uniform  How many matrices we are sending    value_ptr to our transformation matrix
+    glUniformMatrix4fv(transformationmat, 1, false, glm::value_ptr(transformation));
+}
 /**
  * Eanable capture of debug output.
  */
@@ -11,7 +73,7 @@ void enableDebug() {
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 }
 /**
- * Compile shader.
+ * Compile vertex and fragment shader.
  */
 GLuint CompileShader(const std::string& vertexShaderSrc, const std::string& fragmentShaderSrc) {
 
@@ -31,7 +93,9 @@ GLuint CompileShader(const std::string& vertexShaderSrc, const std::string& frag
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 
-	glLinkProgram(shaderProgram);
+	glBindFragDataLocation(shaderProgram, 0, "outColor");
+    glLinkProgram(shaderProgram);
+    glUseProgram(shaderProgram);
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);

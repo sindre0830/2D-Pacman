@@ -9,7 +9,7 @@
 class Pacman {
     private:
         int xPos, yPos;
-        enum direction{right, left, up, down};
+        //enum direction{right, left, up, down};
     public:
         ~Pacman();
         int collisonCheck();
@@ -19,5 +19,6 @@ class Pacman {
         void movLeft();
         void mov();
         void draw();
+        GLuint genAsset();
 };
 #endif

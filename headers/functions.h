@@ -5,6 +5,8 @@
 #include <GLFW/glfw3.h>
 #include <string>
 /* defining functions */
+GLuint load_opengl_texture(const std::string& filepath, GLuint slot);
+void Transform(const float x, const float y, const GLuint shaderprogram);
 void enableDebug();
 GLuint CompileShader(const std::string& vertexShader, const std::string& fragmentShader);
 void CleanVAO(GLuint &vao);
