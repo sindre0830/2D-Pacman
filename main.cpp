@@ -13,7 +13,7 @@
 #include <iostream>
 #include <set>
 #include <vector>
-#include "headers/Scenario.h"
+#include "headers/scenario.h"
 /* global objects */
 Scenario gScenario;
 /* global variables */

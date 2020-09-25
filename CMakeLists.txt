@@ -66,7 +66,7 @@ add_executable(SandBox
 	main.cpp
 	scenario.cpp
 	shaders/square.h
-	headers/Scenario.h)
+	headers/scenario.h)
 
 # As seen in Lab01 static linking against glew required
 # the compile definition of GLEW_STATIC. This is the way
