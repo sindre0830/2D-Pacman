@@ -2,6 +2,7 @@
 #include "headers/scenario.h"
 #include <iostream>
 #include <vector>
+#include <fstream>
 /* global variables */
 extern int gCol, gRow, gWallSize, gPelletSize;
 extern std::vector<std::vector<int>> gLevel;
@@ -13,6 +14,7 @@ Scenario::~Scenario() {}
  * Reads data from level file
  */
 void Scenario::readFile() {
+	
     gRow = 28;
     gCol = 36;
     gLevel = {
@@ -52,7 +54,34 @@ void Scenario::readFile() {
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-	};
+	}; 
+	
+	/*
+	std::ifstream file;
+	file.open("/levels/level0");
+	if (file) {
+		int buffer;
+		file >> gRow;
+		file.ignore();
+		file >> gCol;
+		file.ignore();
+		for (int i = 0; i < gCol; i++) {
+			std::vector<int> arrRow;
+			for (int j = 0; j < gRow; j++) {
+				file >> buffer;
+				arrRow.push_back(buffer);
+				file.ignore();
+			}
+			gLevel.push_back(arrRow);
+		}
+		file.close();
+	} else {
+		std::cout << "Unable to find map file!\n"; //std::endl;
+		std::cin.get();
+	}
+	*/
+
+
     //find amount of walls(1) and pellets(0)
     for (int i = 0; i < gCol; i++) {
 		for (int j = 0; j < gRow; j++) {
