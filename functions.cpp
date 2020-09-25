@@ -2,6 +2,15 @@
 #include <iostream>
 #include <set>
 /**
+ * Eanable capture of debug output.
+ */
+void enableDebug() {
+    glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	glDebugMessageCallback(MessageCallback, 0);
+	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+}
+/**
  * Compile shader.
  */
 GLuint CompileShader(const std::string& vertexShaderSrc, const std::string& fragmentShaderSrc) {
