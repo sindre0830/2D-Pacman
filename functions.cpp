@@ -8,6 +8,7 @@
 GLuint load_opengl_texture(const std::string& filepath, GLuint slot) {
 	//load pixel data from a stored image
     int w, h, bpp;
+	stbi_set_flip_vertically_on_load(true);
     auto pixels = stbi_load(filepath.c_str(), &w, &h,&bpp, STBI_rgb_alpha);
     //generate the texture
 	GLuint tex{};
@@ -21,6 +22,7 @@ GLuint load_opengl_texture(const std::string& filepath, GLuint slot) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
     /** Very important to free the memory returned by STBI, otherwise we leak */
     if(pixels) stbi_image_free(pixels);
     return tex;

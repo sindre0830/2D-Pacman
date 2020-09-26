@@ -12,10 +12,10 @@ Pacman::~Pacman() {}
 GLuint Pacman::genAsset() {
     GLfloat square[4 * 7] = {
 		//position      //color                 //texture coord
-		-0.5f,	-0.5f,	1.0f,	1.0f,	1.0f,	0.0f,	0.0f,
-		0.5f,	-0.5f,	1.0f,	1.0f,	1.0f,	1.0f,	0.0f,
-		0.5f,	0.5f,	1.0f,	1.0f,	1.0f,	1.0f,	1.0f,
-		-0.5f,	0.5f,	1.0f,	1.0f,	1.0f,	0.0f,	1.0f
+		-0.5f,	-0.5f,	1.0f,	1.0f,	1.0f,	0.02f,	0.03f,
+		0.5f,	-0.5f,	1.0f,	1.0f,	1.0f,	0.15f,	0.03f,
+		0.5f,	0.5f,	1.0f,	1.0f,	1.0f,	0.15f,	0.245f,
+		-0.5f,	0.5f,	1.0f,	1.0f,	1.0f,	0.02f,	0.245f
     };
 
     GLuint vbo;
