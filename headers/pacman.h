@@ -5,17 +5,19 @@
 #include <GLFW/glfw3.h>
 #include "headers/functions.h"
 #include <vector>
+#include <cmath>
 /**
  * 'Pacman' class.
  */
 class Pacman {
     private:
-        int direction;
+        int direction, clock;
+        float speed;
+        bool changeDirection;
     public:
         ~Pacman();
         Pacman();
         GLuint genAsset();
-        int collisonCheck();
         void draw(GLuint shader, GLuint vao, GLFWwindow *window);
         void mov(GLuint shader);
 };

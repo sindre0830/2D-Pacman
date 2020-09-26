@@ -2,7 +2,7 @@
 #include "headers/scenario.h"
 /* global variables */
 extern int gCol, gRow, gWallSize, gPelletSize;
-extern float gRowInc, gColInc, gPacX, gPacY;
+extern float gRowInc, gColInc, gPacX, gPacY, gPacRow, gPacCol;
 extern std::vector<std::vector<int>> gLevel;
 /**
  * @brief Destroy the Scenario object
@@ -53,6 +53,8 @@ void Scenario::readFile() {
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 	}; 
+	//reverse order of array
+	std::reverse(gLevel.begin(),gLevel.end());
 	//set increment value
 	gRowInc = 1.0f / ((float)(gRow) / 2);
 	gColInc = 1.0f / ((float)(gCol) / 2);
@@ -128,6 +130,8 @@ GLuint Scenario::genMap() {
 			} else if (gLevel[i][j] == 2) {
 				gPacX = x;
 				gPacY = y;
+				gPacRow = j;
+				gPacCol = i;
 			}
 		}
 	}

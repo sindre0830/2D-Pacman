@@ -16,8 +16,8 @@
 Scenario gScenario;
 Pacman gPacman;
 /* global variables */
-int gCol, gRow, gWallSize, gPelletSize;
-float gRowInc, gColInc, gPacX, gPacY;
+int gCol, gRow, gWallSize, gPelletSize, gScore;
+float gRowInc, gColInc, gPacX, gPacY, gPacRow, gPacCol;
 std::vector<std::vector<int>> gLevel;
 /**
  * Main program.
@@ -65,7 +65,7 @@ int main() {
 	//generate pacman
 	auto pacmanVAO = gPacman.genAsset();
 	GLuint pacmanShaderProgram = compileShader(assetVertexShaderSrc, assetFragmentShaderSrc);
-	//specify the layout of the vertex data, including the texture coordinates
+	//specify the layout of the vertex data
     GLint posAttrib = glGetAttribLocation(pacmanShaderProgram, "aPosition");
     glEnableVertexAttribArray(posAttrib);
     glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
@@ -97,6 +97,12 @@ int main() {
 		glfwSwapBuffers(window);
 		//break loop if 'ESC' key is pressed
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) break;
+	}
+	for (int i = 0; i < gCol; i++) {
+		for (int j = 0; j < gRow; j++) {
+			std::cout << gLevel[i][j];
+		}
+		std::cout << std::endl;
 	}
 	//clear memory
 	glUseProgram(0);
