@@ -62,7 +62,22 @@ GLuint Pacman::genAsset() {
  * Move the asset to a direction untill collision.
  */
 void Pacman::mov() {
-
+/**
+std::cin >> key;
+switch (key) {
+      case 'w':
+        moveResult = movePlayer(Pacman::movUp);
+        break;
+      case 'a':
+        moveResult = movePlayer(Pacman::movLeft);
+        break;
+      case 's':
+        moveResult = movePlayer(Pacman::movDown);
+        break;
+      case 'd':
+        moveResult = movePlayer(Pacman::movRight);
+        break;
+*/
 }
 /**
  * Check if the asset will collide with wall or pellet.
