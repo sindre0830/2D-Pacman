@@ -73,14 +73,17 @@ GLuint Pacman::genAsset() {
  * Move the asset to a direction untill collision.
  */
 void Pacman::mov(GLuint pacmanShaderProgram) {
+	float
+		rowInc = 1.0f / ((float)(gRow) / 2),
+		colInc = 1.0f / ((float)(gCol) / 2);
 	if(dir == 0) {
-		Transform(gPacX, (gPacY += 0.001f), pacmanShaderProgram);
+		Transform(gPacX, (gPacY += colInc / 100), pacmanShaderProgram);
 	} else if (dir == 1) {
-		Transform((gPacX -= 0.001f), gPacY, pacmanShaderProgram);
+		Transform((gPacX -= rowInc / 100), gPacY, pacmanShaderProgram);
 	} else if (dir == 2) {
-		Transform(gPacX, (gPacY -= 0.001f), pacmanShaderProgram);
+		Transform(gPacX, (gPacY -= colInc / 100), pacmanShaderProgram);
 	} else if (dir == 3) {
-		Transform((gPacX += 0.001f), gPacY, pacmanShaderProgram);
+		Transform((gPacX += rowInc / 100), gPacY, pacmanShaderProgram);
 	}
 }
 /**
