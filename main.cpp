@@ -22,7 +22,7 @@ Scenario gScenario;
 Pacman gPacman;
 /* global variables */
 int gCol, gRow, gWallSize, gPelletSize;
-float gPacX, gPacY;
+float gRowInc, gColInc, gPacX, gPacY;
 std::vector<std::vector<int>> gLevel;
 /**
  * Main program.
@@ -93,7 +93,7 @@ int main() {
 		//for every frame reset background color to the value in the buffer ???
 		glClear(GL_COLOR_BUFFER_BIT);
 		//draw maze
-		gScenario.draw(squareShaderProgram, mapVAO, gWallSize, 0.0f, 0.0f, 1.0f);
+		gScenario.draw(squareShaderProgram, mapVAO, gWallSize, 0.09f, 0.09f, 0.4f);
 		//draw pellets
 		gScenario.draw(pelletShaderProgram, pelletVAO, gPelletSize, 1.0f, 1.0f, 1.0f);
 		//draw pacman

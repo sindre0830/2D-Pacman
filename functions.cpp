@@ -5,6 +5,28 @@
 #include <stb_image.h>
 #include <iostream>
 #include <set>
+GLuint createVAO(std::vector<GLfloat> arr, std::vector<GLuint> arr_indices) {
+	//create and bind the vertex array object
+	GLuint vao;
+	glCreateVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+	//create the vertex buffer object
+	GLuint vbo;
+	glGenBuffers(1, &vbo);
+	//set vbo to arr data
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, arr.size() * sizeof(arr), &arr[0], GL_STATIC_DRAW);
+	//create the element buffer object
+	GLuint ebo;
+	glGenBuffers(1, &ebo);
+	//set ebo to arr_indices data
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, arr_indices.size() * sizeof(arr_indices), &arr_indices[0], GL_STATIC_DRAW);
+	//set the vertex attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, (const void*)0);
+	glEnableVertexAttribArray(0);
+	return vao;
+}
 GLuint load_opengl_texture(const std::string& filepath, GLuint slot) {
 	//flip image
 	stbi_set_flip_vertically_on_load(true);

@@ -4,7 +4,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <string>
+#include <vector>
 /* defining functions */
+GLuint createVAO(std::vector<GLfloat> arr, std::vector<GLuint> arr_indices); 
 GLuint load_opengl_texture(const std::string& filepath, GLuint slot);
 void Transform(const float x, const float y, const GLuint shaderprogram);
 void enableDebug();
