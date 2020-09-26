@@ -8,16 +8,17 @@
  */
 class Pacman {
     private:
-        int xPos, yPos;
+        int xPos, yPos, dir;
         //enum direction{right, left, up, down};
     public:
         ~Pacman();
+        Pacman();
         int collisonCheck();
         void movUp();
         void movDown();
         void movRight();
         void movLeft();
-        void mov();
+        void mov(GLuint pacmanShaderProgram);
         void draw(GLuint pacmanShaderProgram, GLuint pacmanVAO, GLFWwindow *window);
         GLuint genAsset();
 };

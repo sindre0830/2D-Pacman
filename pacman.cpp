@@ -10,6 +10,13 @@ extern float gPacX, gPacY;
  */
 Pacman::~Pacman() {}
 /**
+ * Declare variables on construction.
+ */
+Pacman::Pacman() {
+	//0 = w, 1 = a, 2 = s, 3 = d
+	dir = 3;
+}
+/**
  * Generate pacman.
  */
 GLuint Pacman::genAsset() {
@@ -24,8 +31,10 @@ GLuint Pacman::genAsset() {
 		gPacX + rowInc,	gPacY,			1.0f,	1.0f,	1.0f,	0.15f,	0.245f,
 		gPacX + rowInc,	gPacY + colInc,	1.0f,	1.0f,	1.0f,	0.02f,	0.245f
     };
+	//reset values to be used in Pacman::draw()
 	gPacX = 0.0f;
 	gPacY = 0.0f;
+
     GLuint vbo;
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -63,23 +72,16 @@ GLuint Pacman::genAsset() {
 /**
  * Move the asset to a direction untill collision.
  */
-void Pacman::mov() {
-/**
-std::cin >> key;
-switch (key) {
-      case 'w':
-        moveResult = movePlayer(Pacman::movUp);
-        break;
-      case 'a':
-        moveResult = movePlayer(Pacman::movLeft);
-        break;
-      case 's':
-        moveResult = movePlayer(Pacman::movDown);
-        break;
-      case 'd':
-        moveResult = movePlayer(Pacman::movRight);
-        break;
-*/
+void Pacman::mov(GLuint pacmanShaderProgram) {
+	if(dir == 0) {
+		Transform(gPacX, (gPacY += 0.001f), pacmanShaderProgram);
+	} else if (dir == 1) {
+		Transform((gPacX -= 0.001f), gPacY, pacmanShaderProgram);
+	} else if (dir == 2) {
+		Transform(gPacX, (gPacY -= 0.001f), pacmanShaderProgram);
+	} else if (dir == 3) {
+		Transform((gPacX += 0.001f), gPacY, pacmanShaderProgram);
+	}
 }
 /**
  * Check if the asset will collide with wall or pellet.
@@ -94,15 +96,19 @@ void Pacman::draw(GLuint pacmanShaderProgram, GLuint pacmanVAO, GLFWwindow *wind
     auto samplerSlotLocation0 = glGetUniformLocation(pacmanShaderProgram, "uTextureA");
 	glUseProgram(pacmanShaderProgram);
 	glBindVertexArray(pacmanVAO);
+	//change direction
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		Transform(gPacX, (gPacY += 0.001f), pacmanShaderProgram);
+		dir = 0;
 	} if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		Transform((gPacX -= 0.001f), gPacY, pacmanShaderProgram);
+		dir = 1;
 	} if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		Transform(gPacX, (gPacY -= 0.001f), pacmanShaderProgram);
+		dir = 2;
 	} if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		Transform((gPacX += 0.001f), gPacY, pacmanShaderProgram);
+		dir = 3;
 	}
+	//move asset
+	mov(pacmanShaderProgram);
+
 	glUniform1i(samplerSlotLocation0, 0);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
 }
