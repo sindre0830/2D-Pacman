@@ -18,7 +18,7 @@ class Pacman {
         void movRight();
         void movLeft();
         void mov();
-        void draw();
+        void draw(GLuint pacmanShaderProgram, GLuint pacmanVAO, GLFWwindow *window);
         GLuint genAsset();
 };
 #endif

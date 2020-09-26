@@ -88,9 +88,6 @@ int main() {
 
 	//set background color black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	float 
-		x = 0.0f,
-		y = 0.0f;
 	//loop until user closes window
 	while(!glfwWindowShouldClose(window)) {
 		//processes all pending events - source: https://www.glfw.org/docs/3.3/group__window.html#ga37bd57223967b4211d60ca1a0bf3c832
@@ -109,25 +106,8 @@ int main() {
 		glBindVertexArray(pelletVAO);
 		glUniform4f(vertexColorLocation1, 1.0f, 1.0f, 1.0f, 1.0f);
 		glDrawElements(GL_TRIANGLES, (6 * gPelletSize), GL_UNSIGNED_INT, (const void*)0);
-
-
 		//draw pacman
-        auto samplerSlotLocation0 = glGetUniformLocation(pacmanShaderProgram, "uTextureA");
-        glUseProgram(pacmanShaderProgram);
-        glBindVertexArray(pacmanVAO);
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			Transform(x, (y += 0.005f), pacmanShaderProgram);
-		} if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			Transform((x -= 0.005f), y, pacmanShaderProgram);
-		} if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			Transform(x, (y -= 0.005f), pacmanShaderProgram);
-		} if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			Transform((x += 0.005f), y, pacmanShaderProgram);
-		}
-        glUniform1i(samplerSlotLocation0, 0);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
-
-
+		gPacman.draw(pacmanShaderProgram, pacmanVAO, window);
 		//swaps the front and back buffers of the specified window. - source: https://www.glfw.org/docs/3.3/group__window.html#ga15a5a1ee5b3c2ca6b15ca209a12efd14
 		glfwSwapBuffers(window);
 		//break loop if 'ESC' key is pressed

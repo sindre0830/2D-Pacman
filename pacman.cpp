@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "headers/pacman.h"
+#include "headers/functions.h"
 extern int gCol, gRow;
 extern float gPacX, gPacY;
 /**
@@ -23,7 +24,8 @@ GLuint Pacman::genAsset() {
 		gPacX + rowInc,	gPacY,			1.0f,	1.0f,	1.0f,	0.15f,	0.245f,
 		gPacX + rowInc,	gPacY + colInc,	1.0f,	1.0f,	1.0f,	0.02f,	0.245f
     };
-
+	gPacX = 0.0f;
+	gPacY = 0.0f;
     GLuint vbo;
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -88,8 +90,21 @@ int Pacman::collisonCheck() {
 /**
  * Draw asset.
  */
-void Pacman::draw() {
-
+void Pacman::draw(GLuint pacmanShaderProgram, GLuint pacmanVAO, GLFWwindow *window) {
+    auto samplerSlotLocation0 = glGetUniformLocation(pacmanShaderProgram, "uTextureA");
+	glUseProgram(pacmanShaderProgram);
+	glBindVertexArray(pacmanVAO);
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		Transform(gPacX, (gPacY += 0.001f), pacmanShaderProgram);
+	} if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		Transform((gPacX -= 0.001f), gPacY, pacmanShaderProgram);
+	} if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		Transform(gPacX, (gPacY -= 0.001f), pacmanShaderProgram);
+	} if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		Transform((gPacX += 0.001f), gPacY, pacmanShaderProgram);
+	}
+	glUniform1i(samplerSlotLocation0, 0);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
 }
 /**
  * Change direction of asset to UP.
