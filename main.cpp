@@ -7,16 +7,11 @@
  * @author Brage Heimly N�ss
  */
 /* libraries */
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "headers/functions.h"
+#include "headers/scenario.h"
+#include "headers/pacman.h"
 #include "shaders/square.h"
 #include "shaders/asset.h"
-#include <iostream>
-#include <set>
-#include <vector>
-#include "headers/scenario.h"
-#include "headers/functions.h"
-#include "headers/pacman.h"
 /* global objects */
 Scenario gScenario;
 Pacman gPacman;
@@ -63,14 +58,14 @@ int main() {
 	enableDebug();
 	//generate map
 	auto mapVAO = gScenario.genMap();
-	auto squareShaderProgram = CompileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
+	auto squareShaderProgram = compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
 	//generate pellets
 	auto pelletVAO = gScenario.genPellet();
-	auto pelletShaderProgram = CompileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
+	auto pelletShaderProgram = compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
 	//generate pacman
 	auto pacmanVAO = gPacman.genAsset();
-	GLuint pacmanShaderProgram = CompileShader(assetVertexShaderSrc, assetFragmentShaderSrc);
-	// Specify the layout of the vertex data, including the texture coordinates
+	GLuint pacmanShaderProgram = compileShader(assetVertexShaderSrc, assetFragmentShaderSrc);
+	//specify the layout of the vertex data, including the texture coordinates
     GLint posAttrib = glGetAttribLocation(pacmanShaderProgram, "aPosition");
     glEnableVertexAttribArray(posAttrib);
     glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
@@ -82,8 +77,8 @@ int main() {
     GLint texAttrib = glGetAttribLocation(pacmanShaderProgram, "aTexcoord");
     glEnableVertexAttribArray(texAttrib);
     glVertexAttribPointer(texAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
-    /*Load the texture image, create OpenGL texture, and bind it to the current context*/
-    auto texture0 = load_opengl_texture("assets/pacman.png", 0);
+    //load the texture image, create OpenGL texture, and bind it to the current context
+    auto texture0 = loadTexture("assets/pacman.png", 0);
 	//set background color black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//loop until user closes window
@@ -109,9 +104,9 @@ int main() {
 	glDeleteProgram(pelletShaderProgram);
 	glDeleteProgram(pacmanShaderProgram);
     glDeleteTextures(1, &texture0);
-	CleanVAO(mapVAO);
-	CleanVAO(pelletVAO);
-	CleanVAO(pacmanVAO);
+	cleanVAO(mapVAO);
+	cleanVAO(pelletVAO);
+	cleanVAO(pacmanVAO);
 	glfwTerminate();
 	return EXIT_SUCCESS;
 }

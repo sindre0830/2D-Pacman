@@ -3,23 +3,20 @@
 /* libraries */
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "headers/functions.h"
+#include <vector>
 /**
  * 'Pacman' class.
  */
 class Pacman {
     private:
-        int xPos, yPos, dir;
-        //enum direction{right, left, up, down};
+        int direction;
     public:
         ~Pacman();
         Pacman();
-        int collisonCheck();
-        void movUp();
-        void movDown();
-        void movRight();
-        void movLeft();
-        void mov(GLuint pacmanShaderProgram);
-        void draw(GLuint pacmanShaderProgram, GLuint pacmanVAO, GLFWwindow *window);
         GLuint genAsset();
+        int collisonCheck();
+        void draw(GLuint shader, GLuint vao, GLFWwindow *window);
+        void mov(GLuint shader);
 };
 #endif

@@ -1,21 +1,18 @@
 /* libraries */
 #include "headers/scenario.h"
-#include "headers/functions.h"
-#include <iostream>
-#include <vector>
-#include <fstream>
 /* global variables */
 extern int gCol, gRow, gWallSize, gPelletSize;
 extern float gRowInc, gColInc, gPacX, gPacY;
 extern std::vector<std::vector<int>> gLevel;
 /**
- * Destroy the 'Scenario' object.
+ * @brief Destroy the Scenario object
  */
 Scenario::~Scenario() {}
 /**
- * Reads data from level file
+ * @brief Reads data from level file.
  */
 void Scenario::readFile() {
+	//set values from file
     gRow = 28;
     gCol = 36;
     gLevel = {
@@ -96,9 +93,9 @@ void Scenario::readFile() {
 	*/
 }
 /**
- * @brief 
+ * @brief Generate the walls from the 2D array to the window.
  * 
- * @return GLuint 
+ * @return GLuint VAO
  */
 GLuint Scenario::genMap() {
     /* local variables */
@@ -148,9 +145,9 @@ GLuint Scenario::genMap() {
 	return createVAO(arr, arr_indices);
 }
 /**
- * @brief 
+ * @brief Generate the pellets from the 2D array to the window.
  * 
- * @return GLuint 
+ * @return GLuint VAO
  */
 GLuint Scenario::genPellet() {
 	/* local variables */
@@ -197,11 +194,14 @@ GLuint Scenario::genPellet() {
 	return createVAO(arr, arr_indices);
 }
 /**
- * @brief 
+ * @brief Draw VAO and shader program with custom color.
  * 
- * @param shader 
- * @param vao 
- * @param window 
+ * @param shader 	shader program
+ * @param vao 		virtual array object
+ * @param n 		size
+ * @param r 		red
+ * @param g 		green
+ * @param b 		blue
  */
 void Scenario::draw(GLuint shader, GLuint vao, int n, float r, float g, float b) {
 	auto vertexColorLocation = glGetUniformLocation(shader, "u_Color");

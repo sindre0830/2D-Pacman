@@ -1,10 +1,13 @@
+/* libraries */
 #include "headers/functions.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <stb_image.h>
-#include <iostream>
-#include <set>
+/**
+ * @brief Create the VAO, VBO and EBO. Bind the objects to memory.
+ * 
+ * @param arr
+ * @param arr_indices
+ * @return GLuint
+ */
 GLuint createVAO(std::vector<GLfloat> arr, std::vector<GLuint> arr_indices) {
 	//create and bind the vertex array object
 	GLuint vao;
@@ -27,7 +30,14 @@ GLuint createVAO(std::vector<GLfloat> arr, std::vector<GLuint> arr_indices) {
 	glEnableVertexAttribArray(0);
 	return vao;
 }
-GLuint load_opengl_texture(const std::string& filepath, GLuint slot) {
+/**
+ * @brief Loads texture from filepath through CMake.
+ * 
+ * @param filepath
+ * @param slot
+ * @return GLuint
+ */
+GLuint loadTexture(const std::string& filepath, GLuint slot) {
 	//flip image
 	stbi_set_flip_vertically_on_load(true);
 	//load pixel data from a stored image
@@ -45,48 +55,43 @@ GLuint load_opengl_texture(const std::string& filepath, GLuint slot) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    /** Very important to free the memory returned by STBI, otherwise we leak */
+    //free the memory returned by STBI
     if(pixels) stbi_image_free(pixels);
     return tex;
 }
-void Transform(const float x, const float y, const GLuint shaderprogram) {
-    //Presentation below purely for ease of viewing individual components of calculation, and not at all necessary.
-
-    //Translation moves our object.        base matrix      Vector for movement along each axis
+/**
+ * @brief Translate the shader on the y- and x-axis.
+ * 
+ * @param x 
+ * @param y 
+ * @param shader 
+ */
+void transform(const float x, const float y, const GLuint shader) {
+    //Translation moves our object
     glm::mat4 translation = glm::translate(glm::mat4(1), glm::vec3(x, y, 0.f));
-
-    //Rotate the object                    base matrix      degrees to rotate          axis to rotate around
-    //glm::mat4 rotation = glm::rotate(glm::mat4(1), glm::radians(time) * 10, glm::vec3(0, 0, 1));
-
-    //Scale the object                     base matrix      vector containing how much to scale along each axis (here the same for all axis)
-    //glm::mat4 scale = glm::scale(glm::mat4(1), glm::vec3(sin(time)));
-
-    //Create transformation matrix      These must be multiplied in this order, or the results will be incorrect
-    glm::mat4 transformation = translation/* * rotation * scale*/;
-
-
-    //Get uniform to place transformation matrix in
-    //Must be called after calling glUseProgram         shader program in use   Name of Uniform
-    GLuint transformationmat = glGetUniformLocation(shaderprogram, "u_TransformationMat");
-
+    //Create transformation matrix
+    glm::mat4 transformation = translation;
+    GLuint transformationmat = glGetUniformLocation(shader, "u_TransformationMat");
     //Send data from matrices to uniform
-    //                 Location of uniform  How many matrices we are sending    value_ptr to our transformation matrix
     glUniformMatrix4fv(transformationmat, 1, false, glm::value_ptr(transformation));
 }
 /**
- * Eanable capture of debug output.
+ * @brief Eanable capture of debug output.
  */
 void enableDebug() {
     glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-	glDebugMessageCallback(MessageCallback, 0);
+	glDebugMessageCallback(messageCallback, 0);
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 }
 /**
- * Compile vertex and fragment shader.
+ * @brief Compile the vertex and fragment shader.
+ * 
+ * @param vertexShaderSrc 
+ * @param fragmentShaderSrc 
+ * @return GLuint 
  */
-GLuint CompileShader(const std::string& vertexShaderSrc, const std::string& fragmentShaderSrc) {
+GLuint compileShader(const std::string& vertexShaderSrc, const std::string& fragmentShaderSrc) {
 
 	auto vertexSrc = vertexShaderSrc.c_str();
 	auto fragmentSrc = fragmentShaderSrc.c_str();
@@ -114,9 +119,11 @@ GLuint CompileShader(const std::string& vertexShaderSrc, const std::string& frag
 	return shaderProgram;
 }
 /**
- * Clear trash from memory.
+ * @brief Clear data from memory.
+ * 
+ * @param vao 
  */
-void CleanVAO(GLuint &vao) {
+void cleanVAO(GLuint &vao) {
 	GLint nAttr = 0;
 	std::set<GLuint> vbos;
 
@@ -147,9 +154,17 @@ void CleanVAO(GLuint &vao) {
 	glDeleteVertexArrays(1, &vao);
 }
 /**
- * Generates error msg.
+ * @brief Customize the error message.
+ * 
+ * @param source 
+ * @param type 
+ * @param id 
+ * @param severity 
+ * @param length 
+ * @param message 
+ * @param userParam 
  */
-void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam ) {
+void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam ) {
 	std::cerr << "GL CALLBACK:" << ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ) <<
 		"type = 0x" << type <<
 		", severity = 0x" << severity <<

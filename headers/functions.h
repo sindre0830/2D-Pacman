@@ -3,14 +3,19 @@
 /* libraries */
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <iostream>
+#include <set>
 #include <string>
 #include <vector>
 /* defining functions */
 GLuint createVAO(std::vector<GLfloat> arr, std::vector<GLuint> arr_indices); 
-GLuint load_opengl_texture(const std::string& filepath, GLuint slot);
-void Transform(const float x, const float y, const GLuint shaderprogram);
+GLuint loadTexture(const std::string& filepath, GLuint slot);
+void transform(const float x, const float y, const GLuint shader);
 void enableDebug();
-GLuint CompileShader(const std::string& vertexShader, const std::string& fragmentShader);
-void CleanVAO(GLuint &vao);
-void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+GLuint compileShader(const std::string& vertexShader, const std::string& fragmentShader);
+void cleanVAO(GLuint &vao);
+void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 #endif
