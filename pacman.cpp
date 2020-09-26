@@ -10,14 +10,31 @@ Pacman::~Pacman() {}
  * Generate pacman.
  */
 GLuint Pacman::genAsset() {
-    GLfloat square[4 * 7] =
-    {
-    //position              //color                 //texture coord
-    -0.1f,	0.1f,	0.0f,	1.0f,	0.0f,	0.0f,	1.0f,
-    -0.1f,	-0.1f,	0.0f,	1.0f,	0.0f,	0.0f,	0.0f,
-    0.1f,	-0.1f,	0.0f,	1.0f,	0.0f,	1.0f,	0.0f,
-    0.1f,	0.1f,	0.0f,	1.0f,	0.0f,	1.0f,	1.0f
+    GLfloat square[4 * 7] = {
+		//position      //color                 //texture coord
+		-0.5f,	-0.5f,	1.0f,	1.0f,	1.0f,	0.0f,	0.0f,
+		0.5f,	-0.5f,	1.0f,	1.0f,	1.0f,	1.0f,	0.0f,
+		0.5f,	0.5f,	1.0f,	1.0f,	1.0f,	1.0f,	1.0f,
+		-0.5f,	0.5f,	1.0f,	1.0f,	1.0f,	0.0f,	1.0f
     };
+
+    GLuint vbo;
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(square), square, GL_STATIC_DRAW);
+
+	/*glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 7, (const void*)0);	//position
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 7, (const void*)8);	//color
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 7, (const void*)20);	//texture coord
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);*/
+
+
+
+
+
 
     GLuint square_indices[6] = { 0,1,2,0,2,3 };
 
@@ -25,14 +42,10 @@ GLuint Pacman::genAsset() {
     glCreateVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    GLuint vbo;
-    glGenBuffers(1, &vbo);
 
     GLuint ebo;
     glGenBuffers(1, &ebo);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(square), square, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(square_indices), square_indices, GL_STATIC_DRAW);

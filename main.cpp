@@ -116,11 +116,11 @@ int main() {
         glBindVertexArray(pacmanVAO);
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 			Transform(x, (y += 0.005f), pacmanShaderProgram);
-		} else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		} if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 			Transform((x -= 0.005f), y, pacmanShaderProgram);
-		} else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		} if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 			Transform(x, (y -= 0.005f), pacmanShaderProgram);
-		} else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		} if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 			Transform((x += 0.005f), y, pacmanShaderProgram);
 		}
         glUniform1i(samplerSlotLocation0, 0);
