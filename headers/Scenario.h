@@ -11,6 +11,7 @@ class Scenario {
     public:
         ~Scenario();
         void readFile();
+        void draw(GLuint shader, GLuint vao, int n, float r, float g, float b);
         GLuint genMap();
         GLuint genPellet();
 };

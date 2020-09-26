@@ -67,7 +67,6 @@ int main() {
 	//generate pellets
 	auto pelletVAO = gScenario.genPellet();
 	auto pelletShaderProgram = CompileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
-
 	//generate pacman
 	auto pacmanVAO = gPacman.genAsset();
 	GLuint pacmanShaderProgram = CompileShader(assetVertexShaderSrc, assetFragmentShaderSrc);
@@ -85,7 +84,6 @@ int main() {
     glVertexAttribPointer(texAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
     /*Load the texture image, create OpenGL texture, and bind it to the current context*/
     auto texture0 = load_opengl_texture("assets/pacman.png", 0);
-
 	//set background color black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//loop until user closes window
@@ -95,17 +93,9 @@ int main() {
 		//for every frame reset background color to the value in the buffer ???
 		glClear(GL_COLOR_BUFFER_BIT);
 		//draw maze
-		auto vertexColorLocation = glGetUniformLocation(squareShaderProgram, "u_Color");
-		glUseProgram(squareShaderProgram);
-		glBindVertexArray(mapVAO);
-		glUniform4f(vertexColorLocation, 0.0f, 0.0f, 1.0f, 1.0f);
-		glDrawElements(GL_TRIANGLES, (6 * gWallSize), GL_UNSIGNED_INT, (const void*)0);
+		gScenario.draw(squareShaderProgram, mapVAO, gWallSize, 0.0f, 0.0f, 1.0f);
 		//draw pellets
-		auto vertexColorLocation1 = glGetUniformLocation(pelletShaderProgram, "u_Color");
-		glUseProgram(pelletShaderProgram);
-		glBindVertexArray(pelletVAO);
-		glUniform4f(vertexColorLocation1, 1.0f, 1.0f, 1.0f, 1.0f);
-		glDrawElements(GL_TRIANGLES, (6 * gPelletSize), GL_UNSIGNED_INT, (const void*)0);
+		gScenario.draw(pelletShaderProgram, pelletVAO, gPelletSize, 1.0f, 1.0f, 1.0f);
 		//draw pacman
 		gPacman.draw(pacmanShaderProgram, pacmanVAO, window);
 		//swaps the front and back buffers of the specified window. - source: https://www.glfw.org/docs/3.3/group__window.html#ga15a5a1ee5b3c2ca6b15ca209a12efd14
@@ -113,7 +103,7 @@ int main() {
 		//break loop if 'ESC' key is pressed
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) break;
 	}
-	//clean memory
+	//clear memory
 	glUseProgram(0);
 	glDeleteProgram(squareShaderProgram);
 	glDeleteProgram(pelletShaderProgram);

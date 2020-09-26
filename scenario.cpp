@@ -237,3 +237,17 @@ GLuint Scenario::genPellet() {
 	glEnableVertexAttribArray(0);
 	return vao;
 }
+/**
+ * @brief 
+ * 
+ * @param shader 
+ * @param vao 
+ * @param window 
+ */
+void Scenario::draw(GLuint shader, GLuint vao, int n, float r, float g, float b) {
+	auto vertexColorLocation = glGetUniformLocation(shader, "u_Color");
+	glUseProgram(shader);
+	glBindVertexArray(vao);
+	glUniform4f(vertexColorLocation, r, g, b, 1.0f);
+	glDrawElements(GL_TRIANGLES, (6 * n), GL_UNSIGNED_INT, (const void*)0);
+}
