@@ -6,6 +6,7 @@
 /* global variables */
 extern int gCol, gRow, gWallSize, gPelletSize;
 extern std::vector<std::vector<int>> gLevel;
+extern float gPacX, gPacY;
 /**
  * Destroy the 'Scenario' object.
  */
@@ -128,6 +129,9 @@ GLuint Scenario::genMap() {
 				arr.push_back(x + rowInc);
 				arr.push_back(y + colInc);
 				arr.push_back(z);
+			} else if (gLevel[i][j] == 2) {
+				gPacX = x;
+				gPacY = y;
 			}
 		}
 	}

@@ -22,6 +22,7 @@ Scenario gScenario;
 Pacman gPacman;
 /* global variables */
 int gCol, gRow, gWallSize, gPelletSize;
+float gPacX, gPacY;
 std::vector<std::vector<int>> gLevel;
 /**
  * Main program.

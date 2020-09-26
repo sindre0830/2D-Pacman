@@ -6,9 +6,10 @@
 #include <iostream>
 #include <set>
 GLuint load_opengl_texture(const std::string& filepath, GLuint slot) {
+	//flip image
+	stbi_set_flip_vertically_on_load(true);
 	//load pixel data from a stored image
     int w, h, bpp;
-	stbi_set_flip_vertically_on_load(true);
     auto pixels = stbi_load(filepath.c_str(), &w, &h,&bpp, STBI_rgb_alpha);
     //generate the texture
 	GLuint tex{};

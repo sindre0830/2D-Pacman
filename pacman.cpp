@@ -2,6 +2,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "headers/pacman.h"
+extern int gCol, gRow;
+extern float gPacX, gPacY;
 /**
  * Destroy the 'Pacman' object.
  */
@@ -10,12 +12,16 @@ Pacman::~Pacman() {}
  * Generate pacman.
  */
 GLuint Pacman::genAsset() {
+	float
+		rowInc = 1.0f / ((float)(gRow) / 2),
+		colInc = 1.0f / ((float)(gCol) / 2);
+
     GLfloat square[4 * 7] = {
-		//position      //color                 //texture coord
-		-0.5f,	-0.5f,	1.0f,	1.0f,	1.0f,	0.02f,	0.03f,
-		0.5f,	-0.5f,	1.0f,	1.0f,	1.0f,	0.15f,	0.03f,
-		0.5f,	0.5f,	1.0f,	1.0f,	1.0f,	0.15f,	0.245f,
-		-0.5f,	0.5f,	1.0f,	1.0f,	1.0f,	0.02f,	0.245f
+		//position						//color                 //texture coord
+		gPacX,			gPacY + colInc,	1.0f,	1.0f,	1.0f,	0.02f,	0.03f,
+		gPacX,			gPacY,			1.0f,	1.0f,	1.0f,	0.15f,	0.03f,
+		gPacX + rowInc,	gPacY,			1.0f,	1.0f,	1.0f,	0.15f,	0.245f,
+		gPacX + rowInc,	gPacY + colInc,	1.0f,	1.0f,	1.0f,	0.02f,	0.245f
     };
 
     GLuint vbo;
