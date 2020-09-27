@@ -89,20 +89,23 @@ int main() {
 	while(!glfwWindowShouldClose(window)) {
 		//processes all pending events - source: https://www.glfw.org/docs/3.3/group__window.html#ga37bd57223967b4211d60ca1a0bf3c832
 		glfwPollEvents();
-		//for every frame reset background color to the value in the buffer ???
-		glClear(GL_COLOR_BUFFER_BIT);
-		//draw maze
-		gScenario.draw(squareShaderProgram, mapVAO, gWallSize, 0.09f, 0.09f, 0.4f);
-		//draw pellets
-		if (atePellet) {
-			atePellet = false;
-			cleanVAO(pelletVAO);
-			auto pelletVAO = gScenario.genPellet();
+		//branch if there isn't pellets in the array
+		if (gPelletSize) {
+			//for every frame reset background color to the value in the buffer ???
+			glClear(GL_COLOR_BUFFER_BIT);
+			//draw maze
+			gScenario.draw(squareShaderProgram, mapVAO, gWallSize, 0.09f, 0.09f, 0.4f);
+			//draw pellets
+			if (atePellet) {
+				atePellet = false;
+				cleanVAO(pelletVAO);
+				auto pelletVAO = gScenario.genPellet();
+			}
+			gScenario.draw(pelletShaderProgram, pelletVAO, gPelletSize, 1.0f, 1.0f, 1.0f);
+			//draw pacman
+			gPacman.draw(pacmanShaderProgram, pacmanVAO, window);
+			//swaps the front and back buffers of the specified window. - source: https://www.glfw.org/docs/3.3/group__window.html#ga15a5a1ee5b3c2ca6b15ca209a12efd14
 		}
-		gScenario.draw(pelletShaderProgram, pelletVAO, gPelletSize, 1.0f, 1.0f, 1.0f);
-		//draw pacman
-		gPacman.draw(pacmanShaderProgram, pacmanVAO, window);
-		//swaps the front and back buffers of the specified window. - source: https://www.glfw.org/docs/3.3/group__window.html#ga15a5a1ee5b3c2ca6b15ca209a12efd14
 		glfwSwapBuffers(window);
 		//break loop if 'ESC' key is pressed
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) break;
