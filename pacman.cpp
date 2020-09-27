@@ -1,9 +1,10 @@
 /* libraries */
 #include "headers/pacman.h"
 /* global variables */
-extern int gCol, gRow, gScore;
+extern int gCol, gRow, gScore, gPelletSize;
 extern float gRowInc, gColInc, gPacX, gPacY, gPacRow, gPacCol;
 extern std::vector<std::vector<int>> gLevel;
+extern bool atePellet;
 /**
  * @brief Destroy the Pacman object
  */
@@ -81,7 +82,11 @@ void Pacman::mov(GLuint shader) {
 			//update grid
 			if(clock == (int)(speed)) {
 				if(gPacCol + 1 <= gCol) {
-					if(gLevel[++gPacCol][gPacRow] == 0) gScore++;
+					if(gLevel[++gPacCol][gPacRow] == 0) {
+						gScore++;
+						gPelletSize--;
+						atePellet = true;
+					}
 					gLevel[gPacCol][gPacRow] = 2;
 				}
 				//reset clock
@@ -97,7 +102,11 @@ void Pacman::mov(GLuint shader) {
 			//update grid
 			if(clock == (int)(speed)) {
 				if(gPacRow - 1 >= 0) {
-					if(gLevel[gPacCol][--gPacRow] == 0) gScore++;
+					if(gLevel[gPacCol][--gPacRow] == 0) {
+						gScore++;
+						gPelletSize--;
+						atePellet = true;
+					}
 					gLevel[gPacCol][gPacRow] = 2;
 				}
 				//reset clock
@@ -113,7 +122,11 @@ void Pacman::mov(GLuint shader) {
 			//update grid
 			if(clock == (int)(speed)) {
 				if(gPacCol - 1 >= 0) {
-					if(gLevel[--gPacCol][gPacRow] == 0) gScore++;
+					if(gLevel[--gPacCol][gPacRow] == 0) {
+						gScore++;
+						gPelletSize--;
+						atePellet = true;
+					}
 					gLevel[gPacCol][gPacRow] = 2;
 				}
 				//reset clock
@@ -129,7 +142,11 @@ void Pacman::mov(GLuint shader) {
 			//update grid
 			if(clock == (int)(speed)) {
 				if(gPacRow + 1 < gRow) {
-					if(gLevel[gPacCol][++gPacRow] == 0) gScore++;
+					if(gLevel[gPacCol][++gPacRow] == 0) {
+						gScore++;
+						gPelletSize--;
+						atePellet = true;
+					}
 					gLevel[gPacCol][gPacRow] = 2;
 				}
 				//reset clock

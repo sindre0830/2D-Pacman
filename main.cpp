@@ -95,6 +95,7 @@ int main() {
 		gScenario.draw(squareShaderProgram, mapVAO, gWallSize, 0.09f, 0.09f, 0.4f);
 		//draw pellets
 		if (atePellet) {
+			atePellet = false;
 			cleanVAO(pelletVAO);
 			auto pelletVAO = gScenario.genPellet();
 		}
@@ -106,12 +107,7 @@ int main() {
 		//break loop if 'ESC' key is pressed
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) break;
 	}
-	for (int i = 0; i < gCol; i++) {
-		for (int j = 0; j < gRow; j++) {
-			std::cout << gLevel[i][j];
-		}
-		std::cout << std::endl;
-	}
+	std::cout << "Score: " << gScore << std::endl;
 	//clear memory
 	glUseProgram(0);
 	glDeleteProgram(squareShaderProgram);
