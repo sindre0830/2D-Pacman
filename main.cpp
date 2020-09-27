@@ -40,6 +40,8 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//create window
 	auto window = glfwCreateWindow(gRow * 35, gCol * 35, "Pac-Man", nullptr, nullptr);
+	//setting the OpenGL context to the window
+	glfwMakeContextCurrent(window);
 	//branch if window is created
 	if (window == nullptr) {
 		std::cerr << "GLFW failed on window creation." << '\n';
@@ -47,8 +49,6 @@ int main() {
 		glfwTerminate();
 		return EXIT_FAILURE;
 	}
-	//setting the OpenGL context to the window
-	glfwMakeContextCurrent(window);
 	//branch if GLEW is initialized
 	if(glewInit() != GLEW_OK) {
 	  std::cerr << "GLEW initialization failuare." << '\n';
