@@ -54,6 +54,9 @@ int main() {
 	  std::cin.get();
 	  return EXIT_FAILURE;
 	}
+	//configure global opengl state
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//eanable capture of debug output
 	enableDebug();
 	//generate map
