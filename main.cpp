@@ -18,6 +18,7 @@ Pacman gPacman;
 /* global variables */
 int gCol, gRow, gWallSize, gPelletSize, gScore;
 float gRowInc, gColInc, gPacX, gPacY, gPacRow, gPacCol;
+bool atePellet = false;
 std::vector<std::vector<int>> gLevel;
 /**
  * Main program.
@@ -38,7 +39,7 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//create window
-	auto window = glfwCreateWindow(840, 1080, "Pac-Man", nullptr, nullptr);
+	auto window = glfwCreateWindow(gRow * 35, gCol * 35, "Pac-Man", nullptr, nullptr);
 	//branch if window is created
 	if (window == nullptr) {
 		std::cerr << "GLFW failed on window creation." << '\n';
@@ -90,6 +91,10 @@ int main() {
 		//draw maze
 		gScenario.draw(squareShaderProgram, mapVAO, gWallSize, 0.09f, 0.09f, 0.4f);
 		//draw pellets
+		if (atePellet) {
+			cleanVAO(pelletVAO);
+			auto pelletVAO = gScenario.genPellet();
+		}
 		gScenario.draw(pelletShaderProgram, pelletVAO, gPelletSize, 1.0f, 1.0f, 1.0f);
 		//draw pacman
 		gPacman.draw(pacmanShaderProgram, pacmanVAO, window);
