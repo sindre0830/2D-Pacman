@@ -16,7 +16,7 @@ Pacman::~Pacman() {}
 Pacman::Pacman() {
 	direction = 3;
 	clock = 0;
-	speed = 50.0f;
+	speed = 150.0f;
 }
 /**
  * @brief Generate Pac-Man from the 2D array to the window.
