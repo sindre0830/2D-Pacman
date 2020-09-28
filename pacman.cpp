@@ -1,5 +1,6 @@
 /* libraries */
 #include "headers/pacman.h"
+#include <glm/gtx/matrix_transform_2d.hpp>
 /* global variables */
 extern int gCol, gRow, gScore, gPelletSize;
 extern float gRowInc, gColInc, gPacX, gPacY, gPacRow, gPacCol;
@@ -51,6 +52,7 @@ void Pacman::draw(GLuint shader, GLuint vao, GLFWwindow *window) {
 	mov(shader);
 	//change direction on key press if clock has reset and it wont hit a wall
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && clock == 0 && gPacCol <= gCol && gLevel[gPacCol + 1][gPacRow] != 1) {
+		texFocus(0.5f, 0.5f, shader);
 		direction = 0;
 	} else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && clock == 0 && gPacRow >= 0 && gLevel[gPacCol][gPacRow - 1] != 1) {
 		direction = 1;
@@ -158,10 +160,8 @@ void Pacman::mov(GLuint shader) {
 
 void Pacman::texFocus(const float x, const float y, const GLuint shader) {
 	//Translation moves our object
-	glm::mat4 translation = glm::translate(glm::mat4(1), glm::vec3(x, y, 0.f));
-	//Create transformation matrix
-	glm::mat4 transformation = translation;
-	GLuint transformationmat = glGetUniformLocation(shader, "u_TransformationMat");
+	glm::mat3 translation = glm::translate(glm::mat3(1), glm::vec2(x, y));
+	GLuint transformationmat = glGetUniformLocation(shader, "u_TransformationTex");
 	//Send data from matrices to uniform
-	glUniformMatrix4fv(transformationmat, 1, false, glm::value_ptr(transformation));
+	glUniformMatrix3fv(transformationmat, 1, false, glm::value_ptr(translation));
 }

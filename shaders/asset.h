@@ -16,11 +16,15 @@ out vec3 vsColor;
 out vec2 vsTexcoord;
 
 uniform mat4 u_TransformationMat = mat4(1);
+uniform mat3 u_TransformationTex = mat3(1);
 
 void main() {
 	//Pass the color and texture data for the fragment shader
 	vsColor = aColor;
-	vsTexcoord = aTexcoord;
+
+	vec3 new_texture_coordinates = u_TransformationTex * vec3(aTexcoord, 1.0f);
+	vsTexcoord = vec2(new_texture_coordinates);
+	
 	//We multiply our matrices with our position to change the positions of vertices to their final destinations.
 	gl_Position = u_TransformationMat * vec4(aPosition, 0.0f, 1.0f);
 }

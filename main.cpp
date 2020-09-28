@@ -59,7 +59,7 @@ int main() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//eanable capture of debug output
-	//enableDebug();
+	enableDebug();
 	//generate map
 	auto mapVAO = gScenario.genMap();
 	auto squareShaderProgram = compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
