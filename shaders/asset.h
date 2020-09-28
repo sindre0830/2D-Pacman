@@ -38,13 +38,10 @@ out vec4 outColor;
 
 /** Binding specifies what texture slot the texture should be at (in this case TEXTURE0) */
 uniform sampler2D uTextureA;
-uniform sampler2D uTextureB;
 
 void main() {
 	vec4 textColorA = texture(uTextureA, vsTexcoord);
-	vec4 textColorB = texture(uTextureB, vsTexcoord);
-	vec4 textColormix = mix(textColorA,textColorB, 0.5);
-	outColor = textColormix * vec4(vsColor, 1.0);
+	outColor = textColorA * vec4(vsColor, 1.0);
 }
 )";
 

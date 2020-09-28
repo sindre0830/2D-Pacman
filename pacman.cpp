@@ -24,11 +24,11 @@ Pacman::Pacman() {
  */
 GLuint Pacman::genAsset() {
     std::vector<GLfloat> arr = {
-		//position								//color                 //texture coord
-		gPacX,				gPacY + gColInc,	1.0f,	1.0f,	1.0f,	0.02f,	0.03f,	//0.02f,	0.03f,
-		gPacX,				gPacY,				1.0f,	1.0f,	1.0f,	0.15f,	0.03f,	//0.15f,	0.03f,
-		gPacX + gRowInc,	gPacY,				1.0f,	1.0f,	1.0f,	0.15f,	0.245f,	//0.15f,	0.245f,
-		gPacX + gRowInc,	gPacY + gColInc,	1.0f,	1.0f,	1.0f,	0.02f,	0.245f	//0.02f,	0.245f
+		//position								//color                 //texture coord	//Down https://learnopengl.com/Getting-started/Textures
+		gPacX,				gPacY + gColInc,	1.0f,	1.0f,	1.0f,	1.0f,	1.0f,	//0.02f,	0.03f,
+		gPacX,				gPacY,				1.0f,	1.0f,	1.0f,	1.0f,	0.0f,	//0.15f,	0.03f,
+		gPacX + gRowInc,	gPacY,				1.0f,	1.0f,	1.0f,	0.0f,	0.0f,	//0.15f,	0.245f,
+		gPacX + gRowInc,	gPacY + gColInc,	1.0f,	1.0f,	1.0f,	0.0f,	1.0f	//0.02f,	0.245f
     };
     std::vector<GLuint> arr_indices = {0, 1, 2, 0, 2, 3};
 	//reset values to be used in Pacman::draw()
