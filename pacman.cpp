@@ -26,10 +26,10 @@ Pacman::Pacman() {
 GLuint Pacman::genAsset() {
     std::vector<GLfloat> arr = {
 		//position								//color                 //texture coord	//Down https://learnopengl.com/Getting-started/Textures
-		/*gPacX,				gPacY + gColInc,*/-0.5f, 0.5f,	1.0f,	1.0f,	1.0f,	0.0f,	0.0f,	//0.02f,	0.03f,
-		/*gPacX,				gPacY,			*/-0.5f, -0.5f,	1.0f,	1.0f,	1.0f,	1.0f,	0.0f,	//0.15f,	0.03f,
-		/*gPacX + gRowInc,	gPacY,				*/0.5f, -0.5f,	1.0f,	1.0f,	1.0f,	1.0f,	1.0f,	//0.15f,	0.245f,
-		/*gPacX + gRowInc,	gPacY + gColInc,	*/0.5f, 0.5f,	1.0f,	1.0f,	1.0f,	0.0f,	1.0f	//0.02f,	0.245f
+		gPacX,				gPacY + gColInc,	1.0f,	1.0f,	1.0f,	0.0f,	0.25f,	//0.02f,	0.03f,
+		gPacX,				gPacY,				1.0f,	1.0f,	1.0f,	0.0f,	0.0f,	//0.15f,	0.03f,
+		gPacX + gRowInc,	gPacY,				1.0f,	1.0f,	1.0f,	0.16f,	0.0f,	//0.15f,	0.245f,
+		gPacX + gRowInc,	gPacY + gColInc,	1.0f,	1.0f,	1.0f,	0.16f,	0.25f	//0.02f,	0.245f
     };
     std::vector<GLuint> arr_indices = {0, 1, 2, 0, 2, 3};
 	//reset values to be used in Pacman::draw()
@@ -49,19 +49,19 @@ void Pacman::draw(GLuint shader, GLuint vao, GLFWwindow *window) {
 	glUseProgram(shader);
 	glBindVertexArray(vao);
 	//move asset
-	//mov(shader);
+	mov(shader);
 	//change direction on key press if clock has reset and it wont hit a wall
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && clock == 0 && gPacCol <= gCol && gLevel[gPacCol + 1][gPacRow] != 1) {
-		texFocus(0.0f, 0.25f, shader);
+		texFocus(0.0f, 0.5f, shader);
 		direction = 0;
 	} else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && clock == 0 && gPacRow >= 0 && gLevel[gPacCol][gPacRow - 1] != 1) {
-		texFocus(0.0f, 0.75f, shader);
+		texFocus(0.0f, 0.25f, shader);
 		direction = 1;
 	} else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && clock == 0 && gPacCol >= 0 && gLevel[gPacCol - 1][gPacRow] != 1) {
-		texFocus(0.0f, 0.0f, shader);
+		texFocus(0.0f, 0.75f, shader);
 		direction = 2;
 	} else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && clock == 0 && gPacRow <= gRow && gLevel[gPacCol][gPacRow + 1] != 1) {
-		texFocus(0.0f, 0.5f, shader);
+		texFocus(0.0f, 0.0f, shader);
 		direction = 3;
 	}
 	//update clock
