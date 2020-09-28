@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_transform_2d.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <set>
@@ -14,6 +15,7 @@
 GLuint createVAO(std::vector<GLfloat> arr, std::vector<GLuint> arr_indices); 
 GLuint loadTexture(const std::string& filepath, GLuint slot);
 void transform(const float x, const float y, const GLuint shader);
+void texFocus(const float x, const float y, const GLuint shader);
 void enableDebug();
 GLuint compileShader(const std::string& vertexShader, const std::string& fragmentShader);
 void cleanVAO(GLuint &vao);

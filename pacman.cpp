@@ -1,6 +1,5 @@
 /* libraries */
 #include "headers/pacman.h"
-#include <glm/gtx/matrix_transform_2d.hpp>
 /* global variables */
 extern int gCol, gRow, gScore, gPelletSize;
 extern float gRowInc, gColInc, gPacX, gPacY, gPacRow, gPacCol;
@@ -159,12 +158,4 @@ void Pacman::mov(GLuint shader) {
 			}
 		}  else clock = 0;
 	}
-}
-
-void Pacman::texFocus(const float x, const float y, const GLuint shader) {
-	//Translation moves our object
-	glm::mat3 translation = glm::translate(glm::mat3(1), glm::vec2(x, y));
-	GLuint transformationmat = glGetUniformLocation(shader, "u_TransformationTex");
-	//Send data from matrices to uniform
-	glUniformMatrix3fv(transformationmat, 1, false, glm::value_ptr(translation));
 }

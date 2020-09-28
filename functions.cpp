@@ -75,6 +75,14 @@ void transform(const float x, const float y, const GLuint shader) {
     //Send data from matrices to uniform
     glUniformMatrix4fv(transformationmat, 1, false, glm::value_ptr(transformation));
 }
+
+void texFocus(const float x, const float y, const GLuint shader) {
+	//Translation moves our object
+	glm::mat3 translation = glm::translate(glm::mat3(1), glm::vec2(x, y));
+	GLuint transformationmat = glGetUniformLocation(shader, "u_TransformationTex");
+	//Send data from matrices to uniform
+	glUniformMatrix3fv(transformationmat, 1, false, glm::value_ptr(translation));
+}
 /**
  * @brief Eanable capture of debug output.
  */
