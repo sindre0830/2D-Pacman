@@ -25,10 +25,10 @@ Pacman::Pacman() {
 GLuint Pacman::genAsset() {
     std::vector<GLfloat> arr = {
 		//position								//color                 //texture coord
-		gPacX,				gPacY + gColInc,	1.0f,	1.0f,	1.0f,	0.02f,	0.03f,
-		gPacX,				gPacY,				1.0f,	1.0f,	1.0f,	0.15f,	0.03f,
-		gPacX + gRowInc,	gPacY,				1.0f,	1.0f,	1.0f,	0.15f,	0.245f,
-		gPacX + gRowInc,	gPacY + gColInc,	1.0f,	1.0f,	1.0f,	0.02f,	0.245f
+		gPacX,				gPacY + gColInc,	1.0f,	1.0f,	1.0f,	0.02f,	0.03f,	//0.02f,	0.03f,
+		gPacX,				gPacY,				1.0f,	1.0f,	1.0f,	0.15f,	0.03f,	//0.15f,	0.03f,
+		gPacX + gRowInc,	gPacY,				1.0f,	1.0f,	1.0f,	0.15f,	0.245f,	//0.15f,	0.245f,
+		gPacX + gRowInc,	gPacY + gColInc,	1.0f,	1.0f,	1.0f,	0.02f,	0.245f	//0.02f,	0.245f
     };
     std::vector<GLuint> arr_indices = {0, 1, 2, 0, 2, 3};
 	//reset values to be used in Pacman::draw()
@@ -154,4 +154,14 @@ void Pacman::mov(GLuint shader) {
 			}
 		}  else clock = 0;
 	}
+}
+
+void Pacman::texFocus(const float x, const float y, const GLuint shader) {
+	//Translation moves our object
+	glm::mat4 translation = glm::translate(glm::mat4(1), glm::vec3(x, y, 0.f));
+	//Create transformation matrix
+	glm::mat4 transformation = translation;
+	GLuint transformationmat = glGetUniformLocation(shader, "u_TransformationMat");
+	//Send data from matrices to uniform
+	glUniformMatrix4fv(transformationmat, 1, false, glm::value_ptr(transformation));
 }

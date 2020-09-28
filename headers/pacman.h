@@ -20,5 +20,6 @@ class Pacman {
         GLuint genAsset();
         void draw(GLuint shader, GLuint vao, GLFWwindow *window);
         void mov(GLuint shader);
+		void texFocus(const float x, const float y, const GLuint shader);
 };
 #endif
