@@ -14,15 +14,19 @@ add_subdirectory(external/glm-0.9.9.8)
 
 add_executable(${PROJECT_NAME}
 	main.cpp
-	scenario.cpp
 	functions.cpp
-	pacman.cpp
+	headers/functions.h
+	framework.cpp
+	headers/framework.h
+	scenario.cpp
+	headers/scenario.h
 	wall.cpp
+	headers/wall.h
 	pellet.cpp
 	headers/pellet.h
-	headers/wall.h
-	headers/scenario.h
-	headers/functions.h
+	asset.cpp
+	headers/asset.h
+	pacman.cpp
 	headers/pacman.h
 	shaders/square.h
 	shaders/asset.h)

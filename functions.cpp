@@ -1,6 +1,7 @@
 /* libraries */
 #include "headers/functions.h"
 #include <stb_image.h>
+#include <fstream>
 /* global variables */
 extern int gCol, gRow, gWallSize, gPelletSize;
 extern float gRowInc, gColInc, gPacX, gPacY, gPacRow, gPacCol;
@@ -12,7 +13,7 @@ extern std::vector<std::vector<int>> gLevel;
  * @param arr_indices
  * @return GLuint
  */
-GLuint createVAO(std::vector<GLfloat> arr, std::vector<GLuint> arr_indices) {
+GLuint createVAO(const std::vector<GLfloat>& arr, const std::vector<GLuint>& arr_indices) {
 	//create and bind the vertex array object
 	GLuint vao;
 	glCreateVertexArrays(1, &vao);
@@ -28,7 +29,7 @@ GLuint createVAO(std::vector<GLfloat> arr, std::vector<GLuint> arr_indices) {
 	glGenBuffers(1, &ebo);
 	//set ebo to arr_indices data
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, arr_indices.size() * sizeof(GLfloat), arr_indices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, arr_indices.size() * sizeof(GLuint), arr_indices.data(), GL_STATIC_DRAW);
 	//set the vertex attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, (const void*)0);
 	glEnableVertexAttribArray(0);
@@ -243,9 +244,8 @@ void readFile() {
 		}
 	}
 	//!!!file read attempt
-	/*
-	std::ifstream file;
-	file.open("/levels/level0");
+	/*std::ifstream file;
+	file.open("levels/level0");
 	if (file) {
 		int buffer;
 		file >> gRow;
@@ -265,6 +265,5 @@ void readFile() {
 	} else {
 		std::cout << "Unable to find map file!\n"; //std::endl;
 		std::cin.get();
-	}
-	*/
+	}*/
 }

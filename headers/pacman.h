@@ -4,12 +4,13 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "headers/functions.h"
+#include "headers/asset.h"
 #include <vector>
 #include <cmath>
 /**
  * 'Pacman' class.
  */
-class Pacman {
+class Pacman : public Asset {
     private:
         int direction, clock;
         float speed;

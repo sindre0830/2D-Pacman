@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 /* defining functions */
-GLuint createVAO(std::vector<GLfloat> arr, std::vector<GLuint> arr_indices); 
+GLuint createVAO(const std::vector<GLfloat> &arr, const std::vector<GLuint> &arr_indices); 
 GLuint loadTexture(const std::string& filepath, GLuint slot);
 void transform(const float x, const float y, const GLuint shader);
 void texFocus(const float x, const float y, const GLuint shader);

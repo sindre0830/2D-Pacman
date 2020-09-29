@@ -8,6 +8,8 @@
  */
 /* libraries */
 #include "headers/functions.h"
+#include "headers/framework.h"
+#include "headers/asset.h"
 #include "headers/pacman.h"
 #include "headers/wall.h"
 #include "headers/pellet.h"
@@ -64,10 +66,10 @@ int main() {
 	enableDebug();
 	//generate map
 	GLuint mapVAO = gWall.genObject();
-	GLuint squareShaderProgram = compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
+	GLuint squareShaderProgram = gWall.compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
 	//generate pellets
 	GLuint pelletVAO = gPellet.genObject();
-	GLuint pelletShaderProgram = compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
+	GLuint pelletShaderProgram = gPellet.compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
 	//generate pacman
 	GLuint pacmanVAO = gPacman.genAsset();
 	GLuint pacmanShaderProgram = compileShader(assetVertexShaderSrc, assetFragmentShaderSrc);
@@ -82,7 +84,7 @@ int main() {
 
     GLint texAttrib = glGetAttribLocation(pacmanShaderProgram, "aTexcoord");
     glEnableVertexAttribArray(texAttrib);
-    glVertexAttribPointer(texAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
+    glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
     //load the texture image, create OpenGL texture, and bind it to the current context
     auto texture0 = loadTexture("assets/pacman.png", 0);
 	//set background color black
