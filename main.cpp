@@ -8,12 +8,14 @@
  */
 /* libraries */
 #include "headers/functions.h"
-#include "headers/scenario.h"
 #include "headers/pacman.h"
+#include "headers/wall.h"
+#include "headers/pellet.h"
 #include "shaders/square.h"
 #include "shaders/asset.h"
 /* global objects */
-Scenario gScenario;
+Wall gWall;
+Pellet gPellet;
 Pacman gPacman;
 /* global variables */
 int gCol, gRow, gWallSize, gPelletSize, gScore;
@@ -31,7 +33,7 @@ int main() {
 		return EXIT_FAILURE;
 	}
 	//reads data from file
-	gScenario.readFile();
+	readFile();
 	//setting window hints
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
@@ -61,13 +63,13 @@ int main() {
 	//eanable capture of debug output
 	enableDebug();
 	//generate map
-	auto mapVAO = gScenario.genMap();
-	auto squareShaderProgram = compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
+	GLuint mapVAO = gWall.genObject();
+	GLuint squareShaderProgram = compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
 	//generate pellets
-	auto pelletVAO = gScenario.genPellet();
-	auto pelletShaderProgram = compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
+	GLuint pelletVAO = gPellet.genObject();
+	GLuint pelletShaderProgram = compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
 	//generate pacman
-	auto pacmanVAO = gPacman.genAsset();
+	GLuint pacmanVAO = gPacman.genAsset();
 	GLuint pacmanShaderProgram = compileShader(assetVertexShaderSrc, assetFragmentShaderSrc);
 	//specify the layout of the vertex data
     GLint posAttrib = glGetAttribLocation(pacmanShaderProgram, "aPosition");
@@ -94,14 +96,14 @@ int main() {
 			//for every frame reset background color to the value in the buffer ???
 			glClear(GL_COLOR_BUFFER_BIT);
 			//draw maze
-			gScenario.draw(squareShaderProgram, mapVAO, gWallSize, 0.09f, 0.09f, 0.4f);
+			gWall.drawObject(squareShaderProgram, mapVAO, gWallSize, 0.09f, 0.09f, 0.4f);
 			//draw pellets
 			if (atePellet) {
 				atePellet = false;
 				cleanVAO(pelletVAO);
-				auto pelletVAO = gScenario.genPellet();
+				auto pelletVAO = gPellet.genObject();
 			}
-			gScenario.draw(pelletShaderProgram, pelletVAO, gPelletSize, 1.0f, 1.0f, 1.0f);
+			gPellet.drawObject(pelletShaderProgram, pelletVAO, gPelletSize, 1.0f, 1.0f, 1.0f);
 			//draw pacman
 			gPacman.draw(pacmanShaderProgram, pacmanVAO, window);
 			//swaps the front and back buffers of the specified window. - source: https://www.glfw.org/docs/3.3/group__window.html#ga15a5a1ee5b3c2ca6b15ca209a12efd14

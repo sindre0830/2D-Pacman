@@ -17,6 +17,10 @@ add_executable(${PROJECT_NAME}
 	scenario.cpp
 	functions.cpp
 	pacman.cpp
+	wall.cpp
+	pellet.cpp
+	headers/pellet.h
+	headers/wall.h
 	headers/scenario.h
 	headers/functions.h
 	headers/pacman.h

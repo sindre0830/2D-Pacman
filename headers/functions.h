@@ -20,4 +20,5 @@ void enableDebug();
 GLuint compileShader(const std::string& vertexShader, const std::string& fragmentShader);
 void cleanVAO(GLuint &vao);
 void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+void readFile();
 #endif
