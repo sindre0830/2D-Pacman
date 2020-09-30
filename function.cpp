@@ -1,5 +1,6 @@
 /* libraries */
 #include "header/function.h"
+#include <fstream>
 
 extern int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize;
 extern float g_rowInc, g_colInc;
@@ -65,28 +66,28 @@ void readFile() {
 		}
 	}
 	//!!!file read attempt
-	/*std::ifstream file;
-	file.open("levels/level0");
+	std::ifstream file;
+	file.open("level/level0");
 	if (file) {
 		int buffer;
-		file >> gRow;
+		file >> g_levelRow;
 		file.ignore();
-		file >> gCol;
+		file >> g_levelCol;
 		file.ignore();
-		for (int i = 0; i < gCol; i++) {
+		for (int i = 0; i < g_levelCol; i++) {
 			std::vector<int> arrRow;
-			for (int j = 0; j < gRow; j++) {
+			for (int j = 0; j < g_levelRow; j++) {
 				file >> buffer;
 				arrRow.push_back(buffer);
 				file.ignore();
 			}
-			gLevel.push_back(arrRow);
+			g_level.push_back(arrRow);
 		}
 		file.close();
 	} else {
 		std::cout << "Unable to find map file!\n"; //std::endl;
 		std::cin.get();
-	}*/
+	}
 }
 /**
  * @brief Eanable capture of debug output.

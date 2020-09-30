@@ -58,3 +58,9 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy
 	${CMAKE_SOURCE_DIR}/sprite/pacman.png
 	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/sprite/pacman.png)
+
+add_custom_command(
+	TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy
+	${CMAKE_SOURCE_DIR}/level/level0
+	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/level/level0)
