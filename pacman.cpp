@@ -93,16 +93,16 @@ void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
 	//move asset
 	movObject(shader);
 	//change direction on key press if clock has reset and it wont hit a wall
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && clock == 0 && colPos <= g_levelCol && g_level[colPos + 1][rowPos] != 1) {
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && clock == 0 && colPos + 1 < g_levelCol && g_level[colPos + 1][rowPos] != 1) {
 		translateTex(0.0f, 0.5f, shader);
 		direction = 0;
-	} else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && clock == 0 && rowPos >= 0 && g_level[colPos][rowPos - 1] != 1) {
+	} else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && clock == 0 && rowPos - 1 >= 0 && g_level[colPos][rowPos - 1] != 1) {
 		translateTex(0.0f, 0.25f, shader);
 		direction = 1;
-	} else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && clock == 0 && colPos >= 0 && g_level[colPos - 1][rowPos] != 1) {
+	} else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && clock == 0 && colPos - 1 >= 0 && g_level[colPos - 1][rowPos] != 1) {
 		translateTex(0.0f, 0.75f, shader);
 		direction = 2;
-	} else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && clock == 0 && rowPos <= g_levelRow && g_level[colPos][rowPos + 1] != 1) {
+	} else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && clock == 0 && rowPos + 1 < g_levelRow && g_level[colPos][rowPos + 1] != 1) {
 		translateTex(0.0f, 0.0f, shader);
 		direction = 3;
 	}
