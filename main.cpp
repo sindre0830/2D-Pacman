@@ -7,23 +7,20 @@
  * @author Brage Heimly N�ss
  */
 /* libraries */
-#include "headers/functions.h"
-#include "headers/framework.h"
-#include "headers/asset.h"
-#include "headers/pacman.h"
-#include "headers/wall.h"
-#include "headers/pellet.h"
-#include "shaders/square.h"
-#include "shaders/asset.h"
+#include "header/wall.h"
+#include "header/pellet.h"
+#include "header/pacman.h"
+#include "header/function.h"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <iostream>
 /* global objects */
-Wall gWall;
-Pellet gPellet;
-Pacman gPacman;
+int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize, g_gameScore;
+float g_rowInc, g_colInc;
+std::vector<std::vector<int>> g_level;
+bool g_atePellet = false;
 /* global variables */
-int gCol, gRow, gWallSize, gPelletSize, gScore;
-float gRowInc, gColInc, gPacX, gPacY, gPacRow, gPacCol;
-bool atePellet = false;
-std::vector<std::vector<int>> gLevel;
+
 /**
  * Main program.
  */
@@ -34,8 +31,9 @@ int main() {
 		std::cin.get();
 		return EXIT_FAILURE;
 	}
-	//reads data from file
+	//set values from file
 	readFile();
+	std::cout << "wall: " << g_wallSize << " pellet: " << g_pelletSize << std::endl;
 	//setting window hints
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
@@ -43,7 +41,7 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//create window
-	auto window = glfwCreateWindow(gRow * 35, gCol * 35, "Pac-Man", nullptr, nullptr);
+	auto window = glfwCreateWindow(g_levelRow * 35, g_levelCol * 35, "Pac-Man", nullptr, nullptr);
 	//setting the OpenGL context to the window
 	glfwMakeContextCurrent(window);
 	//branch if window is created
@@ -64,66 +62,40 @@ int main() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//eanable capture of debug output
 	enableDebug();
-	//generate map
-	GLuint mapVAO = gWall.genObject();
-	GLuint squareShaderProgram = gWall.compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
-	//generate pellets
-	GLuint pelletVAO = gPellet.genObject();
-	GLuint pelletShaderProgram = gPellet.compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
-	//generate pacman
-	GLuint pacmanVAO = gPacman.genAsset();
-	GLuint pacmanShaderProgram = compileShader(assetVertexShaderSrc, assetFragmentShaderSrc);
-	//specify the layout of the vertex data
-    GLint posAttrib = glGetAttribLocation(pacmanShaderProgram, "aPosition");
-    glEnableVertexAttribArray(posAttrib);
-    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
-
-    GLint colorAttrib = glGetAttribLocation(pacmanShaderProgram, "aColor");
-    glEnableVertexAttribArray(colorAttrib);
-    glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-
-    GLint texAttrib = glGetAttribLocation(pacmanShaderProgram, "aTexcoord");
-    glEnableVertexAttribArray(texAttrib);
-    glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
-    //load the texture image, create OpenGL texture, and bind it to the current context
-    auto texture0 = loadTexture("assets/pacman.png", 0);
+	//construct wall
+	Wall wall;
+	//construct pellets
+	Pellet pellet;
+	//construct pacman
+	Pacman pacman;
 	//set background color black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//loop until user closes window
 	while(!glfwWindowShouldClose(window)) {
 		//processes all pending events - source: https://www.glfw.org/docs/3.3/group__window.html#ga37bd57223967b4211d60ca1a0bf3c832
 		glfwPollEvents();
-		//branch if there isn't pellets in the array
-		if (gPelletSize) {
-			//for every frame reset background color to the value in the buffer ???
-			glClear(GL_COLOR_BUFFER_BIT);
-			//draw maze
-			gWall.drawObject(squareShaderProgram, mapVAO, gWallSize, 0.09f, 0.09f, 0.4f);
-			//draw pellets
-			if (atePellet) {
-				atePellet = false;
-				cleanVAO(pelletVAO);
-				auto pelletVAO = gPellet.genObject();
-			}
-			gPellet.drawObject(pelletShaderProgram, pelletVAO, gPelletSize, 1.0f, 1.0f, 1.0f);
-			//draw pacman
-			gPacman.draw(pacmanShaderProgram, pacmanVAO, window);
-			//swaps the front and back buffers of the specified window. - source: https://www.glfw.org/docs/3.3/group__window.html#ga15a5a1ee5b3c2ca6b15ca209a12efd14
+		//for every frame reset background color to the value in the buffer ???
+		glClear(GL_COLOR_BUFFER_BIT);
+		//draw wall
+		wall.drawObject();
+		//remove eaten pellets
+		if(g_atePellet) {
+			pellet.clearObject();
+			pellet.setupObject();
+			g_atePellet = false;
 		}
+		//draw pellets
+		pellet.drawObject();
+		//draw pacman
+		pacman.drawObject(window);
+		//go to next buffer
 		glfwSwapBuffers(window);
 		//break loop if 'ESC' key is pressed
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) break;
 	}
-	std::cout << "Score: " << gScore << std::endl;
+	std::cout << "\nFinal score was: " << g_gameScore << "\n";
 	//clear memory
 	glUseProgram(0);
-	glDeleteProgram(squareShaderProgram);
-	glDeleteProgram(pelletShaderProgram);
-	glDeleteProgram(pacmanShaderProgram);
-    glDeleteTextures(1, &texture0);
-	cleanVAO(mapVAO);
-	cleanVAO(pelletVAO);
-	cleanVAO(pacmanVAO);
 	glfwTerminate();
 	return EXIT_SUCCESS;
 }

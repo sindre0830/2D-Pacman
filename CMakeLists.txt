@@ -14,22 +14,29 @@ add_subdirectory(external/glm-0.9.9.8)
 
 add_executable(${PROJECT_NAME}
 	main.cpp
-	functions.cpp
-	headers/functions.h
+	
+	function.cpp
+	header/function.h
+
 	framework.cpp
-	headers/framework.h
+	header/framework.h
+
 	scenario.cpp
-	headers/scenario.h
+	header/scenario.h
 	wall.cpp
-	headers/wall.h
+	header/wall.h
 	pellet.cpp
-	headers/pellet.h
-	asset.cpp
-	headers/asset.h
+	header/pellet.h
+
+	character.cpp
+	header/character.h
+
 	pacman.cpp
-	headers/pacman.h
-	shaders/square.h
-	shaders/asset.h)
+	header/pacman.h
+
+	shader/asset.h
+	shader/pellet.h
+	shader/square.h)
 
 target_include_directories(${PROJECT_NAME}
 	PRIVATE
@@ -49,5 +56,5 @@ target_link_libraries(${PROJECT_NAME}
 add_custom_command(
 	TARGET ${PROJECT_NAME} POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
-	${CMAKE_SOURCE_DIR}/assets/pacman.png
-	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets/pacman.png)
+	${CMAKE_SOURCE_DIR}/sprite/pacman.png
+	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/sprite/pacman.png)

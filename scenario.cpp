@@ -1,12 +1,9 @@
-/* libraries */
-#include "headers/scenario.h"
-/* global variables */
-extern int gCol, gRow, gWallSize, gPelletSize;
-extern float gRowInc, gColInc, gPacX, gPacY, gPacRow, gPacCol;
-extern std::vector<std::vector<int>> gLevel;
-/**
- * @brief Destroy the Scenario object
- */
+#include "header/scenario.h"
+
+extern int  g_levelRow, g_levelCol;
+extern float g_rowInc, g_colInc;
+extern std::vector<std::vector<int>> g_level;
+
 Scenario::~Scenario() {}
 /**
  * @brief Draw VAO and shader program with custom color.
@@ -18,10 +15,41 @@ Scenario::~Scenario() {}
  * @param g 		green
  * @param b 		blue
  */
-void Scenario::drawObject(GLuint shader, GLuint vao, int n, float r, float g, float b) {
-	auto vertexColorLocation = glGetUniformLocation(shader, "u_Color");
+void Scenario::draw(const GLuint &shader, const GLuint &vao, const int n) {
 	glUseProgram(shader);
 	glBindVertexArray(vao);
-	glUniform4f(vertexColorLocation, r, g, b, 1.0f);
 	glDrawElements(GL_TRIANGLES, (6 * n), GL_UNSIGNED_INT, (const void*)0);
+}
+
+std::vector<GLfloat> Scenario::genCoordinates(const int target, const float xSize, const float ySize) {
+    /* local data */
+	float
+		x = -1.0f,
+		y = -1.0f,
+		z = 0.0f;
+	std::vector<GLfloat> arr;
+	//fills in arr with coordinates
+	for (int i = 0; i < g_levelCol; i++, x = -1.0f, y += g_colInc) {
+		for (int j = 0; j < g_levelRow; j++, x += g_rowInc) {
+			if (g_level[i][j] == target) {
+				//top left coordinate
+				arr.push_back(x + xSize);
+				arr.push_back((y + g_colInc) - ySize);
+				arr.push_back(z);
+				//bottom left coordinate
+				arr.push_back(x + xSize);
+				arr.push_back(y + ySize);
+				arr.push_back(z);
+				//bottom right coordinate
+				arr.push_back((x + g_rowInc) - xSize);
+				arr.push_back(y + ySize);
+				arr.push_back(z);
+				//top right coordinate
+				arr.push_back((x + g_rowInc) - xSize);
+				arr.push_back((y + g_colInc) - ySize);
+				arr.push_back(z);
+			}
+		}
+	}
+	return arr;
 }

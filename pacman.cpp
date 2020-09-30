@@ -1,14 +1,20 @@
 /* libraries */
-#include "headers/pacman.h"
+#include "header/pacman.h"
+#include "shader/asset.h"
+#include <iostream>
 /* global variables */
-extern int gCol, gRow, gScore, gPelletSize;
-extern float gRowInc, gColInc, gPacX, gPacY, gPacRow, gPacCol;
-extern std::vector<std::vector<int>> gLevel;
-extern bool atePellet;
+extern int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize, g_gameScore;
+extern float g_rowInc, g_colInc;
+extern std::vector<std::vector<int>> g_level;
+extern bool g_atePellet;
 /**
  * @brief Destroy the Pacman object
  */
-Pacman::~Pacman() {}
+Pacman::~Pacman() {
+    glDeleteProgram(pacmanShaderProgram);
+    glDeleteTextures(1, &texture0);
+    cleanVAO(pacmanVAO);
+}
 /**
  * @brief Declare variables on construction of Pacman object.
  */
@@ -16,25 +22,64 @@ Pacman::Pacman() {
 	direction = 3;
 	clock = 0;
 	speed = 150.0f;
+    getPosition();
+    pacmanVAO = genObject();
+    pacmanShaderProgram = compileShader(assetVertexShaderSrc, assetFragmentShaderSrc);
+	//specify the layout of the vertex data
+    GLint posAttrib = glGetAttribLocation(pacmanShaderProgram, "aPosition");
+    glEnableVertexAttribArray(posAttrib);
+    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
+
+    GLint colorAttrib = glGetAttribLocation(pacmanShaderProgram, "aColor");
+    glEnableVertexAttribArray(colorAttrib);
+    glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+
+    GLint texAttrib = glGetAttribLocation(pacmanShaderProgram, "aTexcoord");
+    glEnableVertexAttribArray(texAttrib);
+    glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
+    //load the texture image, create OpenGL texture, and bind it to the current context
+    texture0 = loadTexture("sprite/pacman.png", 0);
 }
 /**
  * @brief Generate Pac-Man from the 2D array to the window.
  * 
  * @return GLuint 
  */
-GLuint Pacman::genAsset() {
-    std::vector<GLfloat> arr = {
+GLuint Pacman::genObject() {
+    std::vector<GLfloat> arr = genCoordinates(xPos, yPos, .0f, .0f); /*{
 		//position								//color                 //texture coord	//Down https://learnopengl.com/Getting-started/Textures
-		gPacX,				gPacY + gColInc,	1.0f,	1.0f,	1.0f,	0.0f,	0.25f,	//0.02f,	0.03f,
-		gPacX,				gPacY,				1.0f,	1.0f,	1.0f,	0.0f,	0.0f,	//0.15f,	0.03f,
-		gPacX + gRowInc,	gPacY,				1.0f,	1.0f,	1.0f,	0.16f,	0.0f,	//0.15f,	0.245f,
-		gPacX + gRowInc,	gPacY + gColInc,	1.0f,	1.0f,	1.0f,	0.16f,	0.25f	//0.02f,	0.245f
-    };
-    std::vector<GLuint> arr_indices = {0, 1, 2, 0, 2, 3};
+		xPos,				yPos + g_colInc,	1.0f,	1.0f,	1.0f,	0.0f,	0.25f,	//0.02f,	0.03f,
+		xPos,				yPos,				1.0f,	1.0f,	1.0f,	0.0f,	0.0f,	//0.15f,	0.03f,
+		xPos + g_rowInc,	yPos,				1.0f,	1.0f,	1.0f,	0.16f,	0.0f,	//0.15f,	0.245f,
+		xPos + g_rowInc,	yPos + g_colInc,	1.0f,	1.0f,	1.0f,	0.16f,	0.25f	//0.02f,	0.245f
+    };*/
+    std::vector<GLuint> arrIndices = genIndices(1);
 	//reset values to be used in Pacman::draw()
-	gPacX = 0.0f;
-	gPacY = 0.0f;
-    return createVAO(arr, arr_indices);
+	xPos = 0.0f;
+	yPos = 0.0f;
+    return createVAO(arr, arrIndices);
+}
+
+void Pacman::getPosition() {
+	/* local variables */
+	float
+		x = -1.0f,
+		y = -1.0f;
+	for (int i = 0; i < g_levelCol; i++, x = -1.0f, y += g_colInc) {
+		for (int j = 0; j < g_levelRow; j++, x += g_rowInc) {
+			if (g_level[i][j] == 2) {
+				xPos = x;
+				yPos = y;
+				rowPos = j;
+				colPos = i;
+				return;
+			}
+		}
+	}
+}
+
+void Pacman::drawObject(GLFWwindow *window) {
+    draw(pacmanShaderProgram, pacmanVAO, window);
 }
 /**
  * @brief Draw asset according to the direction it is facing.
@@ -43,24 +88,24 @@ GLuint Pacman::genAsset() {
  * @param vao
  * @param window
  */
-void Pacman::draw(GLuint shader, GLuint vao, GLFWwindow *window) {
+void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
     auto samplerSlotLocation0 = glGetUniformLocation(shader, "uTextureA");
 	glUseProgram(shader);
 	glBindVertexArray(vao);
 	//move asset
-	mov(shader);
+	movObject(shader);
 	//change direction on key press if clock has reset and it wont hit a wall
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && clock == 0 && gPacCol <= gCol && gLevel[gPacCol + 1][gPacRow] != 1) {
-		texFocus(0.0f, 0.5f, shader);
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && clock == 0 && colPos <= g_levelCol && g_level[colPos + 1][rowPos] != 1) {
+		translateTex(0.0f, 0.5f, shader);
 		direction = 0;
-	} else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && clock == 0 && gPacRow >= 0 && gLevel[gPacCol][gPacRow - 1] != 1) {
-		texFocus(0.0f, 0.25f, shader);
+	} else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && clock == 0 && rowPos >= 0 && g_level[colPos][rowPos - 1] != 1) {
+		translateTex(0.0f, 0.25f, shader);
 		direction = 1;
-	} else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && clock == 0 && gPacCol >= 0 && gLevel[gPacCol - 1][gPacRow] != 1) {
-		texFocus(0.0f, 0.75f, shader);
+	} else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && clock == 0 && colPos >= 0 && g_level[colPos - 1][rowPos] != 1) {
+		translateTex(0.0f, 0.75f, shader);
 		direction = 2;
-	} else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && clock == 0 && gPacRow <= gRow && gLevel[gPacCol][gPacRow + 1] != 1) {
-		texFocus(0.0f, 0.0f, shader);
+	} else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && clock == 0 && rowPos <= g_levelRow && g_level[colPos][rowPos + 1] != 1) {
+		translateTex(0.0f, 0.0f, shader);
 		direction = 3;
 	}
 	//update clock
@@ -76,22 +121,22 @@ void Pacman::draw(GLuint shader, GLuint vao, GLFWwindow *window) {
  * 
  * @param shader
  */
-void Pacman::mov(GLuint shader) {
+void Pacman::movObject(GLuint &shader) {
 	//move up (W)
 	if(direction == 0) {
 		//check if next location will be a wall or go out of bound
-		if(gPacCol + 1 <= gCol && gLevel[gPacCol + 1][gPacRow] != 1) {
+		if(colPos + 1 <= g_levelCol && g_level[colPos + 1][rowPos] != 1) {
 			//translate up on the y-axis
-			transform(gPacX, (gPacY += gColInc / speed), shader);
+			translatePos(xPos, (yPos += g_colInc / speed), shader);
 			//update grid
 			if(clock == (int)(speed)) {
-				if(gPacCol + 1 <= gCol) {
-					if(gLevel[++gPacCol][gPacRow] == 0) {
-						gScore++;
-						gPelletSize--;
-						atePellet = true;
+				if(colPos + 1 <= g_levelCol) {
+					if(g_level[++colPos][rowPos] == 0) {
+						g_gameScore++;
+						g_pelletSize--;
+						g_atePellet = true;
 					}
-					gLevel[gPacCol][gPacRow] = 2;
+					g_level[colPos][rowPos] = 2;
 				}
 				//reset clock
 				clock = 0;
@@ -100,18 +145,18 @@ void Pacman::mov(GLuint shader) {
 	//move left (A)
 	} else if (direction == 1) {
 		//check if next location will be a wall
-		if(gPacRow - 1 >= 0 && gLevel[gPacCol][gPacRow - 1] != 1) {
+		if(rowPos - 1 >= 0 && g_level[colPos][rowPos - 1] != 1) {
 			//translate left on the x-axis
-			transform((gPacX -= gRowInc / speed), gPacY, shader);
+			translatePos((xPos -= g_rowInc / speed), yPos, shader);
 			//update grid
 			if(clock == (int)(speed)) {
-				if(gPacRow - 1 >= 0) {
-					if(gLevel[gPacCol][--gPacRow] == 0) {
-						gScore++;
-						gPelletSize--;
-						atePellet = true;
+				if(rowPos - 1 >= 0) {
+					if(g_level[colPos][--rowPos] == 0) {
+						g_gameScore++;
+						g_pelletSize--;
+						g_atePellet = true;
 					}
-					gLevel[gPacCol][gPacRow] = 2;
+					g_level[colPos][rowPos] = 2;
 				}
 				//reset clock
 				clock = 0;	
@@ -120,18 +165,18 @@ void Pacman::mov(GLuint shader) {
 	//move down (S)
 	} else if (direction == 2) {
 		//check if next location will be a wall
-		if(gPacCol - 1 >= 0 && gLevel[gPacCol - 1][gPacRow] != 1) {
+		if(colPos - 1 >= 0 && g_level[colPos - 1][rowPos] != 1) {
 			//translate down on the y-axis
-			transform(gPacX, (gPacY -= gColInc / speed), shader);
+			translatePos(xPos, (yPos -= g_colInc / speed), shader);
 			//update grid
 			if(clock == (int)(speed)) {
-				if(gPacCol - 1 >= 0) {
-					if(gLevel[--gPacCol][gPacRow] == 0) {
-						gScore++;
-						gPelletSize--;
-						atePellet = true;
+				if(colPos - 1 >= 0) {
+					if(g_level[--colPos][rowPos] == 0) {
+						g_gameScore++;
+						g_pelletSize--;
+						g_atePellet = true;
 					}
-					gLevel[gPacCol][gPacRow] = 2;
+					g_level[colPos][rowPos] = 2;
 				}
 				//reset clock
 				clock = 0;
@@ -140,18 +185,18 @@ void Pacman::mov(GLuint shader) {
 	//move right (D)
 	} else if (direction == 3) {
 		//check if next location will be a wall
-		if(gPacRow + 1 < gRow && gLevel[gPacCol][gPacRow + 1] != 1) {
+		if(rowPos + 1 < g_levelRow && g_level[colPos][rowPos + 1] != 1) {	//DOESN'T WORK HERE
 			//translate right on the x-axis
-			transform((gPacX += gRowInc / speed), gPacY, shader);
+			translatePos((xPos += g_rowInc / speed), yPos, shader);
 			//update grid
 			if(clock == (int)(speed)) {
-				if(gPacRow + 1 < gRow) {
-					if(gLevel[gPacCol][++gPacRow] == 0) {
-						gScore++;
-						gPelletSize--;
-						atePellet = true;
+				if(rowPos + 1 < g_levelRow) {
+					if(g_level[colPos][++rowPos] == 0) {
+						g_gameScore++;
+						g_pelletSize--;
+						g_atePellet = true;
 					}
-					gLevel[gPacCol][gPacRow] = 2;
+					g_level[colPos][rowPos] = 2;
 				}
 				//reset clock
 				clock = 0;
