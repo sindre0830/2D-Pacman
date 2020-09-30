@@ -27,17 +27,14 @@ Pacman::Pacman() {
 
     pacmanShaderProgram = compileShader(assetVertexShaderSrc, assetFragmentShaderSrc);
 	//specify the layout of the vertex data
-    GLint posAttrib = glGetAttribLocation(pacmanShaderProgram, "aPosition");
-    glEnableVertexAttribArray(posAttrib);
-    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
 
-    GLint colorAttrib = glGetAttribLocation(pacmanShaderProgram, "aColor");
-    glEnableVertexAttribArray(colorAttrib);
-    glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
 
-    GLint texAttrib = glGetAttribLocation(pacmanShaderProgram, "aTexcoord");
-    glEnableVertexAttribArray(texAttrib);
-    glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
     //load the texture image, create OpenGL texture, and bind it to the current context
     texture0 = loadTexture("sprite/pacman.png", 0);
 }

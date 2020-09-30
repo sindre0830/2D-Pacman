@@ -14,8 +14,7 @@ Pellet::Pellet() {
     pelletVAO = genObject();
     pelletShaderProgram = compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
 	//set the vertex attribute
-    GLint posAttrib = glGetAttribLocation(pelletShaderProgram, "a_Position");
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLuint) * 3, (const void*)0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLuint), (const void*)0);
 	glEnableVertexAttribArray(0);
 }
 
@@ -23,7 +22,7 @@ void Pellet::setupObject() {
     pelletVAO = genObject();
 	//set the vertex attribute
     GLint posAttrib = glGetAttribLocation(pelletShaderProgram, "a_Position");
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLuint) * 3, (const void*)0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLuint), (const void*)0);
 	glEnableVertexAttribArray(0);
 }
 

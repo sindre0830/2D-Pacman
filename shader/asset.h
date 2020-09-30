@@ -7,9 +7,9 @@ static const std::string assetVertexShaderSrc = R"(
 #version 430 core
 
 /** Inputs */
-in vec2 aPosition;
-in vec3 aColor;
-in vec2 aTexcoord;
+layout(location = 0) in vec2 aPosition;
+layout(location = 1) in vec3 aColor;
+layout(location = 2) in vec2 aTexcoord;
 
 /** Outputs */
 out vec3 vsColor;

@@ -11,9 +11,6 @@ Scenario::~Scenario() {}
  * @param shader 	shader program
  * @param vao 		virtual array object
  * @param n 		size
- * @param r 		red
- * @param g 		green
- * @param b 		blue
  */
 void Scenario::draw(const GLuint &shader, const GLuint &vao, const int n) {
 	glUseProgram(shader);
@@ -25,8 +22,7 @@ std::vector<GLfloat> Scenario::genCoordinates(const int target, const float xSiz
     /* local data */
 	float
 		x = -1.0f,
-		y = -1.0f,
-		z = 0.0f;
+		y = -1.0f;
 	std::vector<GLfloat> arr;
 	//fills in arr with coordinates
 	for (int i = 0; i < g_levelCol; i++, x = -1.0f, y += g_colInc) {
@@ -35,19 +31,15 @@ std::vector<GLfloat> Scenario::genCoordinates(const int target, const float xSiz
 				//top left coordinate
 				arr.push_back(x + xSize);
 				arr.push_back((y + g_colInc) - ySize);
-				arr.push_back(z);
 				//bottom left coordinate
 				arr.push_back(x + xSize);
 				arr.push_back(y + ySize);
-				arr.push_back(z);
 				//bottom right coordinate
 				arr.push_back((x + g_rowInc) - xSize);
 				arr.push_back(y + ySize);
-				arr.push_back(z);
 				//top right coordinate
 				arr.push_back((x + g_rowInc) - xSize);
 				arr.push_back((y + g_colInc) - ySize);
-				arr.push_back(z);
 			}
 		}
 	}
