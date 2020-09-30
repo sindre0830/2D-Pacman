@@ -44,6 +44,8 @@ int main() {
 	auto window = glfwCreateWindow(g_levelRow * 35, g_levelCol * 35, "Pac-Man", nullptr, nullptr);
 	//setting the OpenGL context to the window
 	glfwMakeContextCurrent(window);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//branch if window is created
 	if (window == nullptr) {
 		std::cerr << "GLFW failed on window creation." << '\n';
@@ -58,8 +60,7 @@ int main() {
 	  return EXIT_FAILURE;
 	}
 	//configure global opengl state
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	//eanable capture of debug output
 	enableDebug();
 	//construct wall
