@@ -7,9 +7,7 @@ extern std::vector<std::vector<int>> g_level;
 /**
  * @brief Reads data from level file.
  */
-void readFile() {
-
-	//!!!file read attempt
+bool readFile() {
 	std::ifstream file;
 	file.open("level/level0");
 	if (file) {
@@ -33,17 +31,13 @@ void readFile() {
 			g_level.push_back(arrRow);
 		}
 		file.close();
-	}
-	else {
-		std::cout << "Unable to find map file!\n"; //std::endl;
-		std::cin.get();
-	}
-
-	//reverse order of array
-	std::reverse(g_level.begin(), g_level.end());
-	//set increment value
-	g_rowInc = 1.f / ((float)(g_levelRow) / 2.f);
-	g_colInc = 1.f / ((float)(g_levelCol) / 2.f);
+		//reverse order of array
+		std::reverse(g_level.begin(), g_level.end());
+		//set increment value
+		g_rowInc = 1.f / ((float)(g_levelRow) / 2.f);
+		g_colInc = 1.f / ((float)(g_levelCol) / 2.f);
+		return true;
+	} else return false;
 }
 /**
  * @brief Eanable capture of debug output.
@@ -67,8 +61,9 @@ void enableDebug() {
  * @param userParam 
  */
 void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam ) {
-	std::cerr << "GL CALLBACK:" << ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ) <<
-		"type = 0x" << type <<
-		", severity = 0x" << severity <<
-		", message =" << message << "\n";
+	std::cerr 
+		<< "GL CALLBACK:" << ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ) 
+		<< "type = 0x" << type 
+		<< ", severity = 0x" << severity 
+		<< ", message =" << message << '\n';
 }

@@ -25,16 +25,20 @@ bool g_atePellet = false;
  * Main program.
  */
 int main() {
-	//branch if GLFW is initialized
-	if(!glfwInit()) {
-		std::cerr << "GLFW initialization failed." << '\n';
+	//branch if file isn't found
+	if (!readFile()) {
+		std::cerr << "File initialization failed.\n";
 		std::cin.get();
 		return EXIT_FAILURE;
 	}
-	//set values from file
-	readFile();
 	std::cout << "wall: " << g_wallSize << " pellet: " << g_pelletSize << std::endl;
-	//setting window hints
+	//branch if GLFW isn't initialized
+	if(!glfwInit()) {
+		std::cerr << "GLFW initialization failed.\n";
+		std::cin.get();
+		return EXIT_FAILURE;
+	}
+	//set window hints
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -46,18 +50,18 @@ int main() {
 	glfwMakeContextCurrent(window);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//branch if window is created
+	//branch if window isn't created
 	if (window == nullptr) {
-		std::cerr << "GLFW failed on window creation." << '\n';
+		std::cerr << "GLFW failed on window creation.\n";
 		std::cin.get();
 		glfwTerminate();
 		return EXIT_FAILURE;
 	}
-	//branch if GLEW is initialized
+	//branch if GLEW isn't initialized
 	if(glewInit() != GLEW_OK) {
-	  std::cerr << "GLEW initialization failuare." << '\n';
-	  std::cin.get();
-	  return EXIT_FAILURE;
+		std::cerr << "GLEW initialization failuare.\n";
+		std::cin.get();
+		return EXIT_FAILURE;
 	}
 	//eanable capture of debug output
 	enableDebug();
@@ -92,7 +96,7 @@ int main() {
 		//break loop if 'ESC' key is pressed
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) break;
 	}
-	std::cout << "\nFinal score was: " << g_gameScore << "\n";
+	std::cout << "\nFinal score was: " << g_gameScore << '\n';
 	//clear memory
 	glUseProgram(0);
 	glfwTerminate();
