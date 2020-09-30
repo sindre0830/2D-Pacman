@@ -59,8 +59,6 @@ int main() {
 	  std::cin.get();
 	  return EXIT_FAILURE;
 	}
-	//configure global opengl state
-
 	//eanable capture of debug output
 	enableDebug();
 	//construct wall
