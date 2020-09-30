@@ -36,7 +36,7 @@ add_executable(${PROJECT_NAME}
 
 	shader/asset.h
 	shader/pellet.h
-	shader/square.h)
+	shader/wall.h)
 
 target_include_directories(${PROJECT_NAME}
 	PRIVATE

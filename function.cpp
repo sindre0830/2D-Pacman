@@ -22,6 +22,11 @@ void readFile() {
 			std::vector<int> arrRow;
 			for (int j = 0; j < g_levelRow; j++) {
 				file >> buffer;
+				if (buffer == 1) {
+					g_wallSize++;
+				} else if (buffer == 0) {
+					g_pelletSize++;
+				}
 				arrRow.push_back(buffer);
 				file.ignore();
 			}
@@ -39,17 +44,6 @@ void readFile() {
 	//set increment value
 	g_rowInc = 1.f / ((float)(g_levelRow) / 2.f);
 	g_colInc = 1.f / ((float)(g_levelCol) / 2.f);
-	//find amount of walls(1) and pellets(0)
-	for (int i = 0; i < g_levelCol; i++) {
-		for (int j = 0; j < g_levelRow; j++) {
-			if (g_level[i][j] == 1) {
-				g_wallSize++;
-			}
-			else if (g_level[i][j] == 0) {
-				g_pelletSize++;
-			}
-		}
-	}
 }
 /**
  * @brief Eanable capture of debug output.
