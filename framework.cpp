@@ -26,9 +26,6 @@ GLuint Framework::createVAO(const std::vector<GLfloat> &arr, const std::vector<G
 	//set ebo to arr_indices data
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, arr_indices.size() * sizeof(GLuint), arr_indices.data(), GL_STATIC_DRAW);
-	//set the vertex attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLuint) * 3, (const void*)0);
-	glEnableVertexAttribArray(0);
 	return vao;
 }
 /**

@@ -24,6 +24,7 @@ Pacman::Pacman() {
 	speed = 150.0f;
     getPosition();
     pacmanVAO = genObject();
+
     pacmanShaderProgram = compileShader(assetVertexShaderSrc, assetFragmentShaderSrc);
 	//specify the layout of the vertex data
     GLint posAttrib = glGetAttribLocation(pacmanShaderProgram, "aPosition");

@@ -13,6 +13,10 @@ Wall::~Wall() {
 Wall::Wall() {
     wallVAO = genObject();
     wallShaderProgram = compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
+	//set the vertex attribute
+    GLint posAttrib = glGetAttribLocation(wallShaderProgram, "a_Position");
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLuint) * 3, (const void*)0);
+	glEnableVertexAttribArray(0);
 }
 
 GLuint Wall::genObject() {
