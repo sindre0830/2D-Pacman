@@ -12,12 +12,11 @@ class Pellet : public Scenario {
         GLuint pelletShaderProgram;
         /* private functionality */
         GLuint genObject();
+        void setupObject();
     public:
         /* public functionality */
         ~Pellet();
         Pellet();
-        void setupObject();
         void drawObject();
-        void clearObject();
 };
 #endif

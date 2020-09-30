@@ -3,7 +3,7 @@
 
 #include <string>
 
-static const std::string squareVertexShaderSrc = R"(
+static const std::string wallVertexShaderSrc = R"(
 #version 430 core
 
 layout(location = 0) in vec2 a_Position;
@@ -13,7 +13,7 @@ void main() {
 }
 )";
 
-static const std::string squareFragmentShaderSrc = R"(
+static const std::string wallFragmentShaderSrc = R"(
 #version 430 core
 
 out vec4 color;

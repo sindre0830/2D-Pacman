@@ -12,7 +12,7 @@ Wall::~Wall() {
 
 Wall::Wall() {
     wallVAO = genObject();
-    wallShaderProgram = compileShader(squareVertexShaderSrc, squareFragmentShaderSrc);
+    wallShaderProgram = compileShader(wallVertexShaderSrc, wallFragmentShaderSrc);
 	//set the vertex attribute
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLuint), (const void*)0);
 	glEnableVertexAttribArray(0);

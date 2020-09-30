@@ -14,13 +14,12 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-/* global objects */
+/* global variables */
 int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize, g_gameScore;
 float g_rowInc, g_colInc;
 std::vector<std::vector<int>> g_level;
 bool g_atePellet = false;
-/* global variables */
-
+/* global objects */
 /**
  * Main program.
  */
@@ -81,12 +80,6 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 		//draw wall
 		wall.drawObject();
-		//remove eaten pellets
-		if(g_atePellet) {
-			pellet.clearObject();
-			pellet.setupObject();
-			g_atePellet = false;
-		}
 		//draw pellets
 		pellet.drawObject();
 		//draw pacman
