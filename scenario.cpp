@@ -1,4 +1,5 @@
 #include "header/scenario.h"
+#include <iostream>
 
 extern int  g_levelRow, g_levelCol;
 extern float g_rowInc, g_colInc;
@@ -18,7 +19,7 @@ void Scenario::draw(const GLuint &shader, const GLuint &vao, const int n) {
 	glDrawElements(GL_TRIANGLES, (6 * n), GL_UNSIGNED_INT, (const void*)0);
 }
 
-std::vector<GLfloat> Scenario::genCoordinates(const int target, const float xSize, const float ySize) {
+std::vector<GLfloat> Scenario::genCoordinates(const int target, const float xSize, const float ySize, const bool addDisplay) {
     /* local data */
 	float
 		x = -1.0f,
@@ -31,15 +32,19 @@ std::vector<GLfloat> Scenario::genCoordinates(const int target, const float xSiz
 				//top left coordinate
 				arr.push_back(x + xSize);
 				arr.push_back((y + g_colInc) - ySize);
+				if(addDisplay) arr.push_back(1.f);
 				//bottom left coordinate
 				arr.push_back(x + xSize);
 				arr.push_back(y + ySize);
+				if(addDisplay) arr.push_back(1.f);
 				//bottom right coordinate
 				arr.push_back((x + g_rowInc) - xSize);
 				arr.push_back(y + ySize);
+				if(addDisplay) arr.push_back(1.f);
 				//top right coordinate
 				arr.push_back((x + g_rowInc) - xSize);
 				arr.push_back((y + g_colInc) - ySize);
+				if(addDisplay) arr.push_back(1.f);
 			}
 		}
 	}

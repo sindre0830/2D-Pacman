@@ -19,7 +19,8 @@ Wall::Wall() {
 }
 
 GLuint Wall::genObject() {
-	std::vector<GLfloat> arr = genCoordinates(1, .0f, .0f);
+	//target value 1, don't change size of x and y, don't add a display value
+	std::vector<GLfloat> arr = genCoordinates(1, 0.f, 0.f, false);
 	std::vector<GLuint> arrIndices = genIndices(g_wallSize);
 	return createVAO(arr, arrIndices);
 }

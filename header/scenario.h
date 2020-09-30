@@ -13,6 +13,6 @@ class Scenario : public Framework {
     protected:
         /* protected functionality */
         void draw(const GLuint &shader, const GLuint &vao, const int n);
-        std::vector<GLfloat> genCoordinates(const int target, const float xSize, const float ySize);
+        std::vector<GLfloat> genCoordinates(const int target, const float xSize, const float ySize, const bool addDisplay);
 };
 #endif

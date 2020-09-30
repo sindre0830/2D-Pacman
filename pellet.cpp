@@ -19,20 +19,24 @@ Pellet::Pellet() {
 void Pellet::setupObject() {
     pelletVAO = genObject();
 	//set the vertex attribute
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLuint), (const void*)0);
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void*)0);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void*)(2 * sizeof(GLfloat)));
 }
 
 GLuint Pellet::genObject() {
-	std::vector<GLfloat> arr = genCoordinates(0, (g_rowInc / 2.5f), (g_colInc / 2.5f));
+	//target value 0, change size of x and y, add a display value
+	std::vector<GLfloat> arr = genCoordinates(0, (g_rowInc / 2.5f), (g_colInc / 2.5f), true);
 	std::vector<GLuint> arrIndices = genIndices(g_pelletSize);
 	return createVAO(arr, arrIndices);
 }
 
 void Pellet::drawObject() {
 	if(g_atePellet) {
-		cleanVAO(pelletVAO);
-		setupObject();
+		//cleanVAO(pelletVAO);
+		//setupObject();
 		g_atePellet = false;
 	}
     draw(pelletShaderProgram, pelletVAO, g_pelletSize);
