@@ -7,6 +7,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <fstream>
 /* defining functions */
 void readFile();
 void enableDebug();
