@@ -25,7 +25,7 @@ in float vs_Display;
 out vec4 color;
 
 void main() {
-    if(a_Display) {
+    if(vs_Display == 1.f) {
         //set color white
         color = vec4(1.f, 1.f, 1.f, 1.f); 
     } else {
