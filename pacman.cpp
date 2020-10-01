@@ -1,12 +1,14 @@
 /* libraries */
 #include "header/pacman.h"
 #include "shader/asset.h"
+#include "header/pellet.h"
 #include <iostream>
 /* global variables */
 extern int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize, g_gameScore;
 extern float g_rowInc, g_colInc;
 extern std::vector<std::vector<int>> g_level;
 extern bool g_atePellet;
+extern Pellet pellet;
 /**
  * @brief Destroy the Pacman object
  */
@@ -28,13 +30,9 @@ Pacman::Pacman() {
     pacmanShaderProgram = compileShader(assetVertexShaderSrc, assetFragmentShaderSrc);
 	//specify the layout of the vertex data
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
-
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
     //load the texture image, create OpenGL texture, and bind it to the current context
     texture0 = loadTexture("sprite/pacman.png", 0);
 }
@@ -44,13 +42,7 @@ Pacman::Pacman() {
  * @return GLuint 
  */
 GLuint Pacman::genObject() {
-    std::vector<GLfloat> arr = genCoordinates(xPos, yPos, .0f, .0f); /*{
-		//position								//color                 //texture coord	//Down https://learnopengl.com/Getting-started/Textures
-		xPos,				yPos + g_colInc,	1.0f,	1.0f,	1.0f,	0.0f,	0.25f,	//0.02f,	0.03f,
-		xPos,				yPos,				1.0f,	1.0f,	1.0f,	0.0f,	0.0f,	//0.15f,	0.03f,
-		xPos + g_rowInc,	yPos,				1.0f,	1.0f,	1.0f,	0.16f,	0.0f,	//0.15f,	0.245f,
-		xPos + g_rowInc,	yPos + g_colInc,	1.0f,	1.0f,	1.0f,	0.16f,	0.25f	//0.02f,	0.245f
-    };*/
+    std::vector<GLfloat> arr = genCoordinates(xPos, yPos, .0f, .0f);
     std::vector<GLuint> arrIndices = genIndices(1);
 	//reset values to be used in Pacman::draw()
 	xPos = 0.0f;
@@ -131,8 +123,7 @@ void Pacman::movObject(GLuint &shader) {
 				if(colPos + 1 <= g_levelCol) {
 					if(g_level[++colPos][rowPos] == 0) {
 						g_gameScore++;
-						g_pelletSize--;
-						g_atePellet = true;
+						pellet.hidePellet(colPos, rowPos);
 					}
 					g_level[colPos][rowPos] = 2;
 				}
@@ -151,8 +142,7 @@ void Pacman::movObject(GLuint &shader) {
 				if(rowPos - 1 >= 0) {
 					if(g_level[colPos][--rowPos] == 0) {
 						g_gameScore++;
-						g_pelletSize--;
-						g_atePellet = true;
+						pellet.hidePellet(colPos, rowPos);
 					}
 					g_level[colPos][rowPos] = 2;
 				}
@@ -171,8 +161,7 @@ void Pacman::movObject(GLuint &shader) {
 				if(colPos - 1 >= 0) {
 					if(g_level[--colPos][rowPos] == 0) {
 						g_gameScore++;
-						g_pelletSize--;
-						g_atePellet = true;
+						pellet.hidePellet(colPos, rowPos);
 					}
 					g_level[colPos][rowPos] = 2;
 				}
@@ -191,8 +180,7 @@ void Pacman::movObject(GLuint &shader) {
 				if(rowPos + 1 < g_levelRow) {
 					if(g_level[colPos][++rowPos] == 0) {
 						g_gameScore++;
-						g_pelletSize--;
-						g_atePellet = true;
+						pellet.hidePellet(colPos, rowPos);
 					}
 					g_level[colPos][rowPos] = 2;
 				}

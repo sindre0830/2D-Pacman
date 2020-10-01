@@ -20,6 +20,7 @@ float g_rowInc, g_colInc;
 std::vector<std::vector<int>> g_level;
 bool g_atePellet = false;
 /* global objects */
+Pellet pellet;
 /**
  * Main program.
  */
@@ -66,10 +67,10 @@ int main() {
 	enableDebug();
 	//construct wall
 	Wall wall;
-	//construct pellets
-	Pellet pellet;
 	//construct pacman
 	Pacman pacman;
+	//construct pellets
+	pellet.setupObject();
 	//set background color black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//loop until user closes window

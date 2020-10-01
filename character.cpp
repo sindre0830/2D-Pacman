@@ -15,12 +15,13 @@ Character::~Character() {}
 
 std::vector<GLfloat> Character::genCoordinates(const float xPos, const float yPos, const float xTex, const float yTex) {
     std::vector<GLfloat> arr = {
-		//position								//color                 //texture coord
-		xPos,			    yPos + g_colInc,	1.0f,	1.0f,	1.0f,	xTex,	        yTex + 0.25f,
-		xPos,			    yPos,				1.0f,	1.0f,	1.0f,	xTex,	        yTex,
-		xPos + g_rowInc,	yPos,				1.0f,	1.0f,	1.0f,	xTex + 0.16f,	yTex,
-		xPos + g_rowInc,	yPos + g_colInc,	1.0f,	1.0f,	1.0f,	xTex + 0.16f,	yTex + 0.25f
+		//position								//texture coord
+		xPos,			    yPos + g_colInc,	xTex,	        yTex + 0.25f,
+		xPos,			    yPos,				xTex,	        yTex,
+		xPos + g_rowInc,	yPos,				xTex + 0.16f,	yTex,
+		xPos + g_rowInc,	yPos + g_colInc,	xTex + 0.16f,	yTex + 0.25f
     };
+    std::cout << "pacman array: " << arr.size() * sizeof(GLfloat) << std::endl;
     return arr;
 }
 /**
