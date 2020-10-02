@@ -2,6 +2,8 @@
 #define __CHARACTER_H
 /* library */
 #include "header/framework.h"
+#include <map>
+#include <string>
 /**
  * @brief Child class of 'Framework' with shared data and functionality
  * 
@@ -11,10 +13,13 @@ class Character : public Framework {
         /* public functionality */
         ~Character();
     protected:
+        /* protected data */
+        std::map<std::string, std::vector<float>> spriteGrid;
         /* protected functionality */
         std::vector<GLfloat> genCoordinates(const float xPos, const float yPos, const float xTex, const float yTex);
         void translatePos(const float x, const float y, const GLuint &shader);
         void translateTex(const float x, const float y, const GLuint &shader);
         GLuint loadTexture(const std::string& filepath, GLuint slot);
+        void imgGrid(const int width, const int height);
 };
 #endif

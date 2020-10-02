@@ -60,7 +60,9 @@ GLuint Character::loadTexture(const std::string& filepath, GLuint slot) {
 	stbi_set_flip_vertically_on_load(true);
 	//load pixel data from a stored image
     int w, h, bpp;
-    auto pixels = stbi_load(filepath.c_str(), &w, &h,&bpp, STBI_rgb_alpha);
+    auto pixels = stbi_load(filepath.c_str(), &w, &h, &bpp, STBI_rgb_alpha);
+    //split image into grid
+    imgGrid(w, h);
     //generate the texture
 	GLuint tex{};
     glGenTextures(1, &tex);					//generate a texture object
@@ -76,4 +78,8 @@ GLuint Character::loadTexture(const std::string& filepath, GLuint slot) {
     //free the memory returned by STBI
     if(pixels) stbi_image_free(pixels);
     return tex;
+}
+
+void Character::imgGrid(const int width, const int height) {
+    
 }
