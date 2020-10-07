@@ -10,6 +10,7 @@
 #include "header/wall.h"
 #include "header/pellet.h"
 #include "header/pacman.h"
+#include "header/ghost.h"
 #include "header/function.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -69,6 +70,8 @@ int main() {
 	Wall wall;
 	//construct pacman
 	Pacman pacman;
+	//construct ghost
+	Ghost ghost;
 	//construct pellets
 	pellet.setupObject();
 	//set background color black
@@ -86,6 +89,7 @@ int main() {
         deltaTime += (nowTime - lastTime) / limitFPS;
         lastTime = nowTime;
 		if (deltaTime >= 1.0){
+			ghost.movObject();
 			pacman.movObject();
             deltaTime -= 1.0;
         }
@@ -95,6 +99,8 @@ int main() {
 		wall.drawObject();
 		//draw pellets
 		pellet.drawObject();
+		//
+		ghost.drawObject(window);
 		//draw pacman
 		pacman.drawObject(window);
 		//go to next buffer

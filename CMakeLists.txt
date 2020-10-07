@@ -30,10 +30,12 @@ add_executable(${PROJECT_NAME}
 
 	character.cpp
 	header/character.h
-
 	pacman.cpp
 	header/pacman.h
+	ghost.cpp
+	header/ghost.h
 
+	shader/ghost.h
 	shader/asset.h
 	shader/pellet.h
 	shader/wall.h)
