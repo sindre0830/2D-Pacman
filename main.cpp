@@ -19,6 +19,7 @@ int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize, g_gameScore;
 float g_rowInc, g_colInc;
 std::vector<std::vector<int>> g_level;
 bool g_atePellet = false;
+double g_deltaTime;
 /* global objects */
 Pellet pellet;
 /**
@@ -73,10 +74,22 @@ int main() {
 	pellet.setupObject();
 	//set background color black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	//setup timer
+	static double limitFPS = 1.0 / 120.0;
+    double lastTime = glfwGetTime(), nowTime = 0, timer = lastTime;
+    g_deltaTime = 0;
 	//loop until user closes window
 	while(!glfwWindowShouldClose(window)) {
 		//processes all pending events - source: https://www.glfw.org/docs/3.3/group__window.html#ga37bd57223967b4211d60ca1a0bf3c832
 		glfwPollEvents();
+		//time managment
+		nowTime = glfwGetTime();
+        g_deltaTime += (nowTime - lastTime) / limitFPS;
+        lastTime = nowTime;
+		if (g_deltaTime >= 1.0){
+			pacman.movObject();
+            g_deltaTime -= 1.0;
+        }
 		//for every frame reset background color to the value in the buffer ???
 		glClear(GL_COLOR_BUFFER_BIT);
 		//draw wall

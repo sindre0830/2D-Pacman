@@ -11,18 +11,19 @@ class Pacman : public Character {
         GLuint pacmanVAO;
         GLuint pacmanShaderProgram;
         GLuint texture0;
-        int direction, clock, rowPos, colPos;
+        int direction, clock, rowPos, colPos, n;
         float speed, xPos, yPos;
         bool changeDirection;
         /* private functionality */
         GLuint genObject();
         void draw(GLuint &shader, GLuint &vao, GLFWwindow *window);
-        void movObject(GLuint &shader);
+        void movRight();
     public:
         /* public functionality */
         ~Pacman();
         Pacman();
         void drawObject(GLFWwindow *window);
+        void movObject();
         void getPosition();
 };
 #endif
