@@ -110,8 +110,6 @@ void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
  * @param shader
  */
 void Pacman::movObject() {
-	n++;
-	changeDirection = false;
 	//move up (W)
 	if(direction == 0) {
 		movUp();
@@ -185,6 +183,8 @@ void Pacman::movObject() {
 void Pacman::movUp() {
 	//check if next location will be a wall or out of bound
 	if(colPos + 1 < g_levelCol && g_level[colPos + 1][rowPos] != 1) {
+		n++;
+		changeDirection = false;
 		//translate up on the x-axis
 		translatePos(xPos, (yPos += g_colInc / (double)(speed)), pacmanShaderProgram);
 	}
@@ -193,6 +193,8 @@ void Pacman::movUp() {
 void Pacman::movLeft() {
 	//check if next location will be a wall or out of bound
 	if(rowPos - 1 >= 0 && g_level[colPos][rowPos - 1] != 1) {
+		n++;
+		changeDirection = false;
 		//translate up on the x-axis
 		translatePos((xPos -= g_rowInc / (double)(speed)), yPos, pacmanShaderProgram);
 	}
@@ -201,6 +203,8 @@ void Pacman::movLeft() {
 void Pacman::movDown() {
 	//check if next location will be a wall or out of bound
 	if(colPos - 1 >= 0 && g_level[colPos - 1][rowPos] != 1) {
+		n++;
+		changeDirection = false;
 		//translate up on the x-axis
 		translatePos(xPos, (yPos -= g_colInc / (double)(speed)), pacmanShaderProgram);
 	}
@@ -209,6 +213,8 @@ void Pacman::movDown() {
 void Pacman::movRight() {
 	//check if next location will be a wall or out of bound
 	if(rowPos + 1 < g_levelRow && g_level[colPos][rowPos + 1] != 1) {
+		n++;
+		changeDirection = false;
 		//translate up on the x-axis
 		translatePos((xPos += g_rowInc / (double)(speed)), yPos, pacmanShaderProgram);
 	}
