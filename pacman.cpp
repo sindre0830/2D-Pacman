@@ -5,9 +5,8 @@
 #include <iostream>
 /* global variables */
 extern int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize, g_gameScore;
-extern float g_rowInc, g_colInc;
+extern double g_rowInc, g_colInc;
 extern std::vector<std::vector<int>> g_level;
-extern double g_deltaTime;
 extern Pellet pellet;
 /**
  * @brief Destroy the Pacman object
@@ -22,12 +21,11 @@ Pacman::~Pacman() {
  */
 Pacman::Pacman() {
 	direction = 3;
-	clock = 0;
-	speed = 50.0f;
+	speed = 20;
 	n = 0;
+	yTex = 0.0f;
     getPosition();
     pacmanVAO = genObject();
-
     pacmanShaderProgram = compileShader(assetVertexShaderSrc, assetFragmentShaderSrc);
 	//specify the layout of the vertex data
     glEnableVertexAttribArray(0);
@@ -87,23 +85,22 @@ void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
 	//movObject();
 	//change direction on key press if clock has reset and it wont hit a wall
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && changeDirection && colPos + 1 < g_levelCol && g_level[colPos + 1][rowPos] != 1) {
-		translateTex(0.0f, 0.5f, shader);
+		yTex = 0.5f;
+		translateTex(0.0f, yTex, shader);
 		direction = 0;
 	} else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && changeDirection && rowPos - 1 >= 0 && g_level[colPos][rowPos - 1] != 1) {
-		translateTex(0.0f, 0.25f, shader);
+		yTex = 0.25f;
+		translateTex(0.0f, yTex, shader);
 		direction = 1;
 	} else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && changeDirection && colPos - 1 >= 0 && g_level[colPos - 1][rowPos] != 1) {
-		translateTex(0.0f, 0.75f, shader);
+		yTex = 0.75f;
+		translateTex(0.0f, yTex, shader);
 		direction = 2;
 	} else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && changeDirection && rowPos + 1 < g_levelRow && g_level[colPos][rowPos + 1] != 1) {
-		translateTex(0.0f, 0.0f, shader);
+		yTex = 0.0f;
+		translateTex(0.0f, yTex, shader);
 		direction = 3;
 	}
-	//update clock
-	if(clock == (int)(speed)) {
-		clock = 0;
-	} else clock++;
-
 	glUniform1i(samplerSlotLocation0, 0);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
 }
@@ -113,86 +110,56 @@ void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
  * @param shader
  */
 void Pacman::movObject() {
+	n++;
+	changeDirection = false;
 	//move up (W)
 	if(direction == 0) {
-		//check if next location will be a wall or go out of bound
-		if(colPos + 1 < g_levelCol && g_level[colPos + 1][rowPos] != 1) {
-			//update grid
-			if(g_deltaTime >= 60.0) {
-				if(colPos + 1 <= g_levelCol) {
-					if(g_level[++colPos][rowPos] == 0) {
-						g_gameScore++;
-						pellet.hidePellet(colPos, rowPos);
-					}
-					g_level[colPos][rowPos] = 2;
+		movUp();
+		//update grid if it has completed one square
+		if(n == speed) {
+			if(colPos + 1 <= g_levelCol) {
+				//check if there is a pellet
+				if(g_level[++colPos][rowPos] == 0) {
+					g_gameScore++;
+					pellet.hidePellet(colPos, rowPos);
 				}
-				clock = 0;
-				changeDirection = true;
-			} else {
-				changeDirection = false;
-				//translate up on the y-axis
-				translatePos(xPos, (yPos += g_colInc), pacmanShaderProgram);
+				g_level[colPos][rowPos] = 2;
 			}
-		} else changeDirection = true;
+		}
 	//move left (A)
 	} else if (direction == 1) {
-		//check if next location will be a wall
-		if(rowPos - 1 >= 0 && g_level[colPos][rowPos - 1] != 1) {
-			//update grid
-			if(g_deltaTime >= 60.0) {
-				if(rowPos - 1 >= 0) {
-					if(g_level[colPos][--rowPos] == 0) {
-						g_gameScore++;
-						pellet.hidePellet(colPos, rowPos);
-					}
-					g_level[colPos][rowPos] = 2;
+		movLeft();
+		//update grid if it has completed one square
+		if(n == speed) {
+			if(rowPos - 1 >= 0) {
+				//check if there is a pellet
+				if(g_level[colPos][--rowPos] == 0) {
+					g_gameScore++;
+					pellet.hidePellet(colPos, rowPos);
 				}
-				clock = 0;
-				changeDirection = true;	
-			} else {
-				changeDirection = false;
-				//translate left on the x-axis
-				translatePos((xPos -= g_rowInc), yPos, pacmanShaderProgram);
+				g_level[colPos][rowPos] = 2;
 			}
-		} else changeDirection = true;
+		}
 	//move down (S)
 	} else if (direction == 2) {
-		//check if next location will be a wall
-		if(colPos - 1 >= 0 && g_level[colPos - 1][rowPos] != 1) {
-			//update grid
-			if(g_deltaTime >= 60.0) {
-				if(colPos - 1 >= 0) {
-					if(g_level[--colPos][rowPos] == 0) {
-						g_gameScore++;
-						pellet.hidePellet(colPos, rowPos);
-					}
-					g_level[colPos][rowPos] = 2;
+		movDown();
+		//update grid if it has completed one square
+		if(n == speed) {
+			if(colPos - 1 >= 0) {
+				//check if there is a pellet
+				if(g_level[--colPos][rowPos] == 0) {
+					g_gameScore++;
+					pellet.hidePellet(colPos, rowPos);
 				}
-				clock = 0;
-				changeDirection = true;
-			} else {
-				changeDirection = false;
-				//translate up on the y-axis
-				translatePos(xPos, (yPos -= g_colInc), pacmanShaderProgram);
+				g_level[colPos][rowPos] = 2;
 			}
-		} else changeDirection = true;
+		}
 	//move right (D)
 	} else if (direction == 3) {
 		movRight();
-	}
-}
-
-void Pacman::movRight() {
-	//check if next location will be a wall or out of bound
-	if(rowPos + 1 < g_levelRow && g_level[colPos][rowPos + 1] != 1) {
-		//translate up on the x-axis
-		translatePos((xPos += g_rowInc / 40), yPos, pacmanShaderProgram);
-		n++;
 		//update grid if it has completed one square
-		if(n == 40) {
+		if(n == speed) {
 			if(rowPos + 1 < g_levelRow) {
-				//animate pacman
-				translateTex(0.0f, 0.0f, pacmanShaderProgram);
 				//check if there is a pellet
 				if(g_level[colPos][++rowPos] == 0) {
 					g_gameScore++;
@@ -200,14 +167,49 @@ void Pacman::movRight() {
 				}
 				g_level[colPos][rowPos] = 2;
 			}
-			n = 0;
-			changeDirection = true;
-		} else if (n == 30) {
-			translateTex(0.5f, 0.0f, pacmanShaderProgram);
-		} else if (n == 20) {
-			translateTex(0.333f, 0.0f, pacmanShaderProgram);
-		} else if (n == 10) {
-			translateTex(0.167f, 0.0f, pacmanShaderProgram);
-		} else changeDirection = false;
+		}
+	}
+	if (n == speed * 0.25f) {
+		translateTex(0.167f, yTex, pacmanShaderProgram);
+	} else if (n == speed * 0.5f) {
+		translateTex(0.333f, yTex, pacmanShaderProgram);
+	} else if (n == speed * 0.75f) {
+		translateTex(0.5f, yTex, pacmanShaderProgram);
+	} else if (n == speed) {
+		translateTex(0.0f, yTex, pacmanShaderProgram);
+		changeDirection = true;
+		n = 0;
+	}
+}
+
+void Pacman::movUp() {
+	//check if next location will be a wall or out of bound
+	if(colPos + 1 < g_levelCol && g_level[colPos + 1][rowPos] != 1) {
+		//translate up on the x-axis
+		translatePos(xPos, (yPos += g_colInc / (double)(speed)), pacmanShaderProgram);
+	}
+}
+
+void Pacman::movLeft() {
+	//check if next location will be a wall or out of bound
+	if(rowPos - 1 >= 0 && g_level[colPos][rowPos - 1] != 1) {
+		//translate up on the x-axis
+		translatePos((xPos -= g_rowInc / (double)(speed)), yPos, pacmanShaderProgram);
+	}
+}
+
+void Pacman::movDown() {
+	//check if next location will be a wall or out of bound
+	if(colPos - 1 >= 0 && g_level[colPos - 1][rowPos] != 1) {
+		//translate up on the x-axis
+		translatePos(xPos, (yPos -= g_colInc / (double)(speed)), pacmanShaderProgram);
+	}
+}
+
+void Pacman::movRight() {
+	//check if next location will be a wall or out of bound
+	if(rowPos + 1 < g_levelRow && g_level[colPos][rowPos + 1] != 1) {
+		//translate up on the x-axis
+		translatePos((xPos += g_rowInc / (double)(speed)), yPos, pacmanShaderProgram);
 	}
 }

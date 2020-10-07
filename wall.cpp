@@ -3,7 +3,7 @@
 #include "shader/wall.h"
 
 extern int  g_wallSize;
-extern float g_rowInc, g_colInc;
+extern double g_rowInc, g_colInc;
 
 Wall::~Wall() {
     glDeleteProgram(wallShaderProgram);

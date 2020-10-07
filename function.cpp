@@ -2,7 +2,7 @@
 #include "header/function.h"
 
 extern int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize;
-extern float g_rowInc, g_colInc;
+extern double g_rowInc, g_colInc;
 extern std::vector<std::vector<int>> g_level;
 /**
  * @brief Reads data from level file.

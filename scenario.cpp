@@ -2,7 +2,7 @@
 #include <iostream>
 
 extern int  g_levelRow, g_levelCol;
-extern float g_rowInc, g_colInc;
+extern double g_rowInc, g_colInc;
 extern std::vector<std::vector<int>> g_level;
 
 Scenario::~Scenario() {}

@@ -8,7 +8,7 @@
 #include <stb_image.h>
 
 extern int  g_levelRow, g_levelCol;
-extern float g_rowInc, g_colInc;
+extern double g_rowInc, g_colInc;
 extern std::vector<std::vector<int>> g_level;
 
 Character::~Character() {}
@@ -16,12 +16,11 @@ Character::~Character() {}
 std::vector<GLfloat> Character::genCoordinates(const float xPos, const float yPos, const float xTex, const float yTex) {
     std::vector<GLfloat> arr = {
 		//position								//texture coord
-		xPos,			    yPos + g_colInc,	xTex,	        yTex + 0.25f,
-		xPos,			    yPos,				xTex,	        yTex,
-		xPos + g_rowInc,	yPos,				xTex + 0.16f,	yTex,
-		xPos + g_rowInc,	yPos + g_colInc,	xTex + 0.16f,	yTex + 0.25f
+		xPos,			            yPos + (float)(g_colInc),	xTex,	        yTex + 0.25f,
+		xPos,			            yPos,				        xTex,	        yTex,
+		xPos + (float)(g_rowInc),	yPos,				        xTex + 0.16f,	yTex,
+		xPos + (float)(g_rowInc),	yPos + (float)(g_colInc),	xTex + 0.16f,	yTex + 0.25f
     };
-    std::cout << "pacman array: " << arr.size() * sizeof(GLfloat) << std::endl;
     return arr;
 }
 /**

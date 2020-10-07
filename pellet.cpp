@@ -5,7 +5,7 @@
 #include <iterator>
 /* global variables */
 extern int  g_levelRow, g_levelCol, g_pelletSize;
-extern float g_rowInc, g_colInc;
+extern double g_rowInc, g_colInc;
 extern std::vector<std::vector<int>> g_level;
 extern bool g_atePellet;
 
