@@ -4,6 +4,7 @@
 extern int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize;
 extern double g_rowInc, g_colInc;
 extern std::vector<std::vector<int>> g_level;
+extern std::vector<std::vector<bool>> g_ghostPos;
 /**
  * @brief Reads data from level file.
  */
@@ -18,6 +19,7 @@ bool readFile() {
 		file.ignore();
 		for (int i = 0; i < g_levelCol; i++) {
 			std::vector<int> arrRow;
+			std::vector<bool> boolRow;
 			for (int j = 0; j < g_levelRow; j++) {
 				file >> buffer;
 				if (buffer == 1) {
@@ -26,9 +28,11 @@ bool readFile() {
 					g_pelletSize++;
 				}
 				arrRow.push_back(buffer);
+				boolRow.push_back(false);
 				file.ignore();
 			}
 			g_level.push_back(arrRow);
+			g_ghostPos.push_back(boolRow);
 		}
 		file.close();
 		//reverse order of array

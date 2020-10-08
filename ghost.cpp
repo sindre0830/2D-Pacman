@@ -4,9 +4,10 @@
 #include "header/pellet.h"
 #include <iostream>
 /* global variables */
-extern int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize, g_gameScore;
+extern int  g_levelRow, g_levelCol;
 extern double g_rowInc, g_colInc;
 extern std::vector<std::vector<int>> g_level;
+extern std::vector<std::vector<bool>> g_ghostPos;
 /**
  * @brief Destroy the Pacman object
  */
@@ -80,26 +81,6 @@ void Ghost::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
     auto samplerSlotLocation1 = glGetUniformLocation(shader, "uTextureB");
 	glUseProgram(shader);
 	glBindVertexArray(vao);
-	//move asset
-	//movObject();
-	//change direction on key press if clock has reset and it wont hit a wall
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && changeDirection && colPos + 1 < g_levelCol && g_level[colPos + 1][rowPos] != 1) {
-		yTex = 0.5f;
-		translateTex(0.0f, yTex, shader);
-		direction = 0;
-	} else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && changeDirection && rowPos - 1 >= 0 && g_level[colPos][rowPos - 1] != 1) {
-		yTex = 0.25f;
-		translateTex(0.0f, yTex, shader);
-		direction = 1;
-	} else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && changeDirection && colPos - 1 >= 0 && g_level[colPos - 1][rowPos] != 1) {
-		yTex = 0.75f;
-		translateTex(0.0f, yTex, shader);
-		direction = 2;
-	} else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && changeDirection && rowPos + 1 < g_levelRow && g_level[colPos][rowPos + 1] != 1) {
-		yTex = 0.0f;
-		translateTex(0.0f, yTex, shader);
-		direction = 3;
-	}
 	glUniform1i(samplerSlotLocation1, 0);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
 }
@@ -111,66 +92,85 @@ void Ghost::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
 void Ghost::movObject() {
 	//move up (W)
 	if(direction == 0) {
+		yTex = 0.5f;
 		movUp();
 		//update grid if it has completed one square
 		if(n == speed) {
 			if(colPos + 1 <= g_levelCol) {
-				//check if there is a pellet
-				if(g_level[++colPos][rowPos] == 0) {
-					g_gameScore++;
-				}
-				g_level[colPos][rowPos] = 3;
+				g_ghostPos[colPos][rowPos] = false;
+				g_ghostPos[++colPos][rowPos] = true;
+
+				std::vector<int> possiblePaths;
+				if(g_level[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
+				if(g_level[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
+				if(g_level[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
+
+				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
 	//move left (A)
 	} else if (direction == 1) {
+		yTex = 0.25f;
 		movLeft();
 		//update grid if it has completed one square
 		if(n == speed) {
 			if(rowPos - 1 >= 0) {
-				//check if there is a pellet
-				if(g_level[colPos][--rowPos] == 0) {
-					g_gameScore++;
-				}
-				g_level[colPos][rowPos] = 3;
+				g_ghostPos[colPos][rowPos] = false;
+				g_ghostPos[colPos][--rowPos] = true;
+
+				std::vector<int> possiblePaths;
+				if(g_level[colPos + 1][rowPos] == 0) possiblePaths.push_back(0);
+				if(g_level[colPos][rowPos - 1] == 0) possiblePaths.push_back(1);
+				if(g_level[colPos - 1][rowPos] == 0) possiblePaths.push_back(2);
+
+				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
 	//move down (S)
 	} else if (direction == 2) {
+		yTex = 0.75f;
 		movDown();
 		//update grid if it has completed one square
 		if(n == speed) {
 			if(colPos - 1 >= 0) {
-				//check if there is a pellet
-				if(g_level[--colPos][rowPos] == 0) {
-					g_gameScore++;
-				}
-				g_level[colPos][rowPos] = 3;
+				g_ghostPos[colPos][rowPos] = false;
+				g_ghostPos[--colPos][rowPos] = true;
+
+				std::vector<int> possiblePaths;
+				if(g_level[colPos][rowPos - 1] == 0) possiblePaths.push_back(1);
+				if(g_level[colPos - 1][rowPos] == 0) possiblePaths.push_back(2);
+				if(g_level[colPos][rowPos + 1] == 0) possiblePaths.push_back(3);
+
+				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
 	//move right (D)
 	} else if (direction == 3) {
+		yTex = 0.0f;
 		movRight();
 		//update grid if it has completed one square
 		if(n == speed) {
 			if(rowPos + 1 < g_levelRow) {
-				//check if there is a pellet
-				if(g_level[colPos][++rowPos] == 0) {
-					g_gameScore++;
-				}
-				std::cout << "ghost moving\n";
-				g_level[colPos][rowPos] = 3;
+				g_ghostPos[colPos][rowPos] = false;
+				g_ghostPos[colPos][++rowPos] = true;
+
+				std::vector<int> possiblePaths;
+				if(g_level[colPos + 1][rowPos] == 0) possiblePaths.push_back(0);
+				if(g_level[colPos - 1][rowPos] == 0) possiblePaths.push_back(2);
+				if(g_level[colPos][rowPos + 1] == 0) possiblePaths.push_back(3);
+
+				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
 	}
 	if (n == speed * 0.25f) {
-		translateTex(0.167f, yTex, ghostShaderProgram);
+		translateTex(4.0f / 6.0f, yTex, ghostShaderProgram);
 	} else if (n == speed * 0.5f) {
-		translateTex(0.333f, yTex, ghostShaderProgram);
+		translateTex(5.0f / 6.0f, yTex, ghostShaderProgram);
 	} else if (n == speed * 0.75f) {
-		translateTex(0.5f, yTex, ghostShaderProgram);
+		translateTex(4.0f / 6.0f, yTex, ghostShaderProgram);
 	} else if (n == speed) {
-		translateTex(0.0f, yTex, ghostShaderProgram);
+		translateTex(5.0f / 6.0f, yTex, ghostShaderProgram);
 		changeDirection = true;
 		n = 0;
 	}

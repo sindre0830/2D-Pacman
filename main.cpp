@@ -19,6 +19,7 @@
 int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize, g_gameScore;
 double g_rowInc, g_colInc;
 std::vector<std::vector<int>> g_level;
+std::vector<std::vector<bool>> g_ghostPos;
 bool g_atePellet = false;
 /* global objects */
 Pellet pellet;
@@ -90,7 +91,7 @@ int main() {
         lastTime = nowTime;
 		if (deltaTime >= 1.0){
 			ghost.movObject();
-			pacman.movObject();
+			//pacman.movObject();
             deltaTime -= 1.0;
         }
 		//for every frame reset background color to the value in the buffer ???
@@ -99,10 +100,10 @@ int main() {
 		wall.drawObject();
 		//draw pellets
 		pellet.drawObject();
+		//draw pacman
+		//pacman.drawObject(window);
 		//
 		ghost.drawObject(window);
-		//draw pacman
-		pacman.drawObject(window);
 		//go to next buffer
 		glfwSwapBuffers(window);
 		//break loop if 'ESC' key is pressed
