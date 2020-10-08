@@ -41,7 +41,7 @@ Ghost::Ghost() {
  * @return GLuint 
  */
 GLuint Ghost::genObject() {
-    std::vector<GLfloat> arr = genCoordinates(xPos, yPos, .0f, .0f);
+    std::vector<GLfloat> arr = genCoordinates(xPos, yPos, 0.0f, 0.0f);
     std::vector<GLuint> arrIndices = genIndices(1);
 	//reset values to be used in Pacman::draw()
 	xPos = 0.0f;

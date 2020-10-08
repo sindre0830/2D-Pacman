@@ -7,7 +7,9 @@
 extern int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize, g_gameScore;
 extern double g_rowInc, g_colInc;
 extern std::vector<std::vector<int>> g_level;
+extern std::vector<std::vector<bool>> g_ghostPos;
 extern Pellet pellet;
+extern bool g_gameover;
 /**
  * @brief Destroy the Pacman object
  */
@@ -177,6 +179,8 @@ void Pacman::movObject() {
 	} else if (n == speed) {
 		translateTex(0.0f, yTex, pacmanShaderProgram);
 		changeDirection = true;
+		if(g_gameScore == g_pelletSize) g_gameover = true;
+		if(g_ghostPos[colPos][rowPos]) g_gameover = true;
 		n = 0;
 	}
 }

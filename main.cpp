@@ -20,7 +20,7 @@ int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize, g_gameScore;
 double g_rowInc, g_colInc;
 std::vector<std::vector<int>> g_level;
 std::vector<std::vector<bool>> g_ghostPos;
-bool g_atePellet = false;
+bool g_gameover = false;
 /* global objects */
 Pellet pellet;
 /**
@@ -89,7 +89,7 @@ int main() {
 		nowTime = glfwGetTime();
         deltaTime += (nowTime - lastTime) / limitFPS;
         lastTime = nowTime;
-		if (deltaTime >= 1.0){
+		if (!g_gameover && deltaTime >= 1.0){
 			ghost.movObject();
 			//pacman.movObject();
             deltaTime -= 1.0;
