@@ -1,9 +1,9 @@
-#ifndef __ASSET_H_
-#define __ASSET_H_
+#ifndef __CHARACTER_H_
+#define __CHARACTER_H_
 
 #include <string>
 
-static const std::string assetVertexShaderSrc = R"(
+static const std::string characterVertexShaderSrc = R"(
 #version 430 core
 
 /** Inputs */
@@ -25,7 +25,7 @@ void main() {
 }
 )";
 
-static const std::string assetFragmentShaderSrc = R"(
+static const std::string characterFragmentShaderSrc = R"(
 #version 430 core
 
 /** Inputs */

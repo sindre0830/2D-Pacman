@@ -1,6 +1,6 @@
 /* libraries */
 #include "header/pacman.h"
-#include "shader/asset.h"
+#include "shader/character.h"
 #include "header/pellet.h"
 #include <iostream>
 /* global variables */
@@ -28,7 +28,7 @@ Pacman::Pacman() {
 	yTex = 0.0f;
     getPosition();
     pacmanVAO = genObject();
-    pacmanShaderProgram = compileShader(assetVertexShaderSrc, assetFragmentShaderSrc);
+    pacmanShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
 	//specify the layout of the vertex data
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);

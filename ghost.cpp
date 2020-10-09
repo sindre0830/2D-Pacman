@@ -1,6 +1,6 @@
 /* libraries */
 #include "header/ghost.h"
-#include "shader/ghost.h"
+#include "shader/character.h"
 #include "header/pellet.h"
 #include <iostream>
 /* global variables */
@@ -31,7 +31,7 @@ Ghost::Ghost(int row, int col) {
 	} else direction = 1;
 	//generate VAO and shader program
     ghostVAO = genObject();
-    ghostShaderProgram = compileShader(ghostVertexShaderSrc, ghostFragmentShaderSrc);
+    ghostShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
 	//specify the layout of the vertex data
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);

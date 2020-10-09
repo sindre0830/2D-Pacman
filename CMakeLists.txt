@@ -33,8 +33,7 @@ add_executable(${PROJECT_NAME}
 	ghost.cpp
 	header/ghost.h
 
-	shader/ghost.h
-	shader/asset.h
+	shader/character.h
 	shader/pellet.h
 	shader/wall.h)
 
