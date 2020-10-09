@@ -10,6 +10,7 @@
 extern int  g_levelRow, g_levelCol;
 extern double g_rowInc, g_colInc;
 extern std::vector<std::vector<int>> g_level;
+extern std::vector<std::vector<bool>> g_ghostPos;
 
 Character::~Character() {}
 
@@ -88,6 +89,7 @@ bool Character::movUp(int &row, int &col, float &x, float &y, const int speed, c
     } else {
         translatePos(x, y -= (double)(g_levelCol - 1) * g_colInc, shader);
         col = 0;
+        g_ghostPos[g_levelCol - 1][row] = false;
         return false;
     }
 }
@@ -103,6 +105,7 @@ bool Character::movLeft(int &row, int &col, float &x, float &y, const int speed,
     } else {
         translatePos(x += (double)(g_levelRow - 1) * g_rowInc, y, shader);
         row = g_levelRow - 1;
+        g_ghostPos[col][0] = false;
         return false;
     }
 }
@@ -118,6 +121,7 @@ bool Character::movDown(int &row, int &col, float &x, float &y, const int speed,
     } else {
         translatePos(x, y += (double)(g_levelCol - 1) * g_colInc, shader);
         col = g_levelCol - 1;
+        g_ghostPos[0][row] = false;
         return false;
     }
 }
@@ -133,6 +137,7 @@ bool Character::movRight(int &row, int &col, float &x, float &y, const int speed
 	} else {
         translatePos(x -= (double)(g_levelRow - 1) * g_rowInc, y, shader);
         row = 0;
+        g_ghostPos[col][g_levelRow - 1] = false;
         return false;
     }
 }

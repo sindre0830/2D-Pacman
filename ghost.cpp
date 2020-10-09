@@ -86,7 +86,7 @@ void Ghost::movObject() {
 			//
 			g_ghostPos[colPos][rowPos] = false;
 			g_ghostPos[++colPos][rowPos] = true;
-			//
+			//branch if character isn't going to teleport
 			if(colPos + 1 <= g_levelCol) {
 				std::vector<int> possiblePaths;
 				if(g_level[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
@@ -104,7 +104,7 @@ void Ghost::movObject() {
 			//
 			g_ghostPos[colPos][rowPos] = false;
 			g_ghostPos[colPos][--rowPos] = true;
-			//
+			//branch if character isn't going to teleport
 			if(rowPos - 1 >= 0) {
 				std::vector<int> possiblePaths;
 				if(g_level[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
@@ -122,7 +122,7 @@ void Ghost::movObject() {
 			//
 			g_ghostPos[colPos][rowPos] = false;
 			g_ghostPos[--colPos][rowPos] = true;
-			//
+			//branch if character isn't going to teleport
 			if(colPos - 1 >= 0) {
 				std::vector<int> possiblePaths;
 				if(g_level[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
@@ -140,7 +140,7 @@ void Ghost::movObject() {
 			//
 			g_ghostPos[colPos][rowPos] = false;
 			g_ghostPos[colPos][++rowPos] = true;
-			//
+			//branch if character isn't going to teleport
 			if(rowPos + 1 < g_levelRow) {
 				std::vector<int> possiblePaths;
 				if(g_level[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
@@ -156,7 +156,7 @@ void Ghost::movObject() {
 		translateTex(5.0f / 6.0f, yTex, ghostShaderProgram);
 	} else if (counter == speed * 0.75f) {
 		translateTex(4.0f / 6.0f, yTex, ghostShaderProgram);
-	} else if (counter == speed) {
+	} else if (counter >= speed) {
 		translateTex(5.0f / 6.0f, yTex, ghostShaderProgram);
 		counter = 0;
 	}
