@@ -11,8 +11,8 @@ class Ghost : public Character {
         GLuint ghostVAO;
         GLuint ghostShaderProgram;
         GLuint texture;
-        int direction, rowPos, colPos, n, speed;
-        float xPos, yPos, yTex;
+        int direction, rowPos, colPos, counter = 0, speed = 20;
+        float xPos, yPos, yTex = 0.0f;
         /* private functionality */
         GLuint genObject();
         void draw(GLuint &shader, GLuint &vao);
@@ -22,6 +22,5 @@ class Ghost : public Character {
         Ghost(int row, int col);
         void drawObject();
         void movObject();
-        void getPosition();
 };
 #endif

@@ -20,18 +20,16 @@ Ghost::~Ghost() {
  * @brief Declare variables on construction of Pacman object.
  */
 Ghost::Ghost(int row, int col) {
-	speed = 20;
-	n = 0;
-	yTex = 0.0f;
-    //getPosition();
+	//set starting postions
 	xPos = -1.0f + (g_rowInc * row);
 	yPos = -1.0f + (g_colInc * col);
 	rowPos = row;
 	colPos = col;
+	//setting direction compared to position
 	if(g_levelRow / 2 <= row) {
 		direction = 3;
 	} else direction = 1;
-
+	//generate VAO and shader program
     ghostVAO = genObject();
     ghostShaderProgram = compileShader(ghostVertexShaderSrc, ghostFragmentShaderSrc);
 	//specify the layout of the vertex data
@@ -54,24 +52,6 @@ GLuint Ghost::genObject() {
 	xPos = 0.0f;
 	yPos = 0.0f;
     return createVAO(arr, arrIndices);
-}
-
-void Ghost::getPosition() {
-	/* local variables */
-	float
-		x = -1.0f,
-		y = -1.0f;
-	for (int i = 0; i < g_levelCol; i++, x = -1.0f, y += g_colInc) {
-		for (int j = 0; j < g_levelRow; j++, x += g_rowInc) {
-			if (g_level[i][j] == 0) {
-				xPos = x;
-				yPos = y;
-				rowPos = j;
-				colPos = i;
-				return;
-			}
-		}
-	}
 }
 
 void Ghost::drawObject() {
@@ -100,9 +80,9 @@ void Ghost::movObject() {
 	//move up (W)
 	if(direction == 0) {
 		yTex = 0.5f;
-		if(movUp(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) n++;
+		if(movUp(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
-		if(n == speed) {
+		if(counter == speed) {
 			if(colPos + 1 <= g_levelCol) {
 				g_ghostPos[colPos][rowPos] = false;
 				g_ghostPos[++colPos][rowPos] = true;
@@ -118,9 +98,9 @@ void Ghost::movObject() {
 	//move left (A)
 	} else if (direction == 1) {
 		yTex = 0.25f;
-		if(movLeft(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) n++;
+		if(movLeft(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
-		if(n == speed) {
+		if(counter == speed) {
 			if(rowPos - 1 >= 0) {
 				g_ghostPos[colPos][rowPos] = false;
 				g_ghostPos[colPos][--rowPos] = true;
@@ -136,9 +116,9 @@ void Ghost::movObject() {
 	//move down (S)
 	} else if (direction == 2) {
 		yTex = 0.75f;
-		if(movDown(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) n++;
+		if(movDown(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
-		if(n == speed) {
+		if(counter == speed) {
 			if(colPos - 1 >= 0) {
 				g_ghostPos[colPos][rowPos] = false;
 				g_ghostPos[--colPos][rowPos] = true;
@@ -154,9 +134,9 @@ void Ghost::movObject() {
 	//move right (D)
 	} else if (direction == 3) {
 		yTex = 0.0f;
-		if(movRight(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) n++;
+		if(movRight(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
-		if(n == speed) {
+		if(counter == speed) {
 			if(rowPos + 1 <= g_levelRow) {
 				g_ghostPos[colPos][rowPos] = false;
 				g_ghostPos[colPos][++rowPos] = true;
@@ -170,14 +150,14 @@ void Ghost::movObject() {
 			}
 		}
 	}
-	if (n == speed * 0.25f) {
+	if (counter == speed * 0.25f) {
 		translateTex(4.0f / 6.0f, yTex, ghostShaderProgram);
-	} else if (n == speed * 0.5f) {
+	} else if (counter == speed * 0.5f) {
 		translateTex(5.0f / 6.0f, yTex, ghostShaderProgram);
-	} else if (n == speed * 0.75f) {
+	} else if (counter == speed * 0.75f) {
 		translateTex(4.0f / 6.0f, yTex, ghostShaderProgram);
-	} else if (n == speed) {
+	} else if (counter == speed) {
 		translateTex(5.0f / 6.0f, yTex, ghostShaderProgram);
-		n = 0;
+		counter = 0;
 	}
 }

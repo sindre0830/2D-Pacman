@@ -72,15 +72,15 @@ int main() {
 	//construct pacman
 	Pacman pacman;
 	//construct ghosts
-	int startRow, startCol;
+	int ghostStartRow, ghostStartCol;
 	std::vector<Ghost*> ghostArr(4, nullptr);
-	if(!getGhostPos(ghostArr.size(), startRow, startCol)){
+	if(!getGhostPos(ghostArr.size(), ghostStartRow, ghostStartCol)){
 		std::cerr << "Get ghost position failed.\n";
 		std::cin.get();
 		return EXIT_FAILURE;
 	}
 	for(int i = 0; i < ghostArr.size(); i++) {
-		ghostArr[i] = new Ghost(startRow + i, startCol);
+		ghostArr[i] = new Ghost(ghostStartRow + i, ghostStartCol);
 	}
 	//construct pellets
 	pellet.setupObject();
@@ -109,7 +109,7 @@ int main() {
 		if (!g_gameover && deltaTime >= 1.0){
 			pacman.movObject();
 		}
-		//draw ghost
+		//draw ghosts
 		for(int i = 0; i < ghostArr.size(); i++) {
 			ghostArr[i]->drawObject();
 			if (!g_gameover && deltaTime >= 1.0){
