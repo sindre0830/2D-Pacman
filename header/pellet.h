@@ -1,20 +1,21 @@
 #ifndef __PELLET_H
 #define __PELLET_H
 /* libraries */
-#include "header/scenario.h"
+#include "header/framework.h"
 #include <map>
 /**
  * 'Pellet' class.
  */
-class Pellet : public Scenario {
+class Pellet : public Framework {
     private:
         /* private data */
         GLuint pelletVAO;
         GLuint pelletShaderProgram;
-        std::map<std::pair<int,int>, int> bufferPos;
-        int pelletByteSize = 3 * 4 * sizeof(GLfloat);
+        std::map<std::pair<int, int>, int> bufferPos;
+        const int pelletByteSize = 3 * 4 * sizeof(GLfloat);
         /* private functionality */
         GLuint genObject();
+        std::vector<GLfloat> genCoordinates(const int target);
     public:
         /* public functionality */
         ~Pellet();

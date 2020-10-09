@@ -37,13 +37,15 @@ void Pellet::setupObject() {
 
 GLuint Pellet::genObject() {
 	//target value 0, change size of x and y, add a display value
-	std::vector<GLfloat> arr = genCoordinates(0, (g_rowInc / 2.5f), (g_colInc / 2.5f), true);
+	std::vector<GLfloat> arr = genCoordinates(0);
 	std::vector<GLuint> arrIndices = genIndices(g_pelletSize);
 	return createVAO(arr, arrIndices);
 }
 
 void Pellet::drawObject() {
-    draw(pelletShaderProgram, pelletVAO, g_pelletSize);
+	glUseProgram(pelletShaderProgram);
+	glBindVertexArray(pelletVAO);
+	glDrawElements(GL_TRIANGLES, (6 * g_pelletSize), GL_UNSIGNED_INT, (const void*)0);
 }
 
 void Pellet::hidePellet(const int y, const int x) {
@@ -53,4 +55,38 @@ void Pellet::hidePellet(const int y, const int x) {
 	glBufferSubData(GL_ARRAY_BUFFER, bufferPos[std::make_pair(y, x)] + 20, sizeof(GLfloat), &display);
 	glBufferSubData(GL_ARRAY_BUFFER, bufferPos[std::make_pair(y, x)] + 32, sizeof(GLfloat), &display);
 	glBufferSubData(GL_ARRAY_BUFFER, bufferPos[std::make_pair(y, x)] + 44, sizeof(GLfloat), &display);
+}
+
+std::vector<GLfloat> Pellet::genCoordinates(const int target) {
+    /* local data */
+	float
+		x = -1.0f,
+		y = -1.0f,
+		xSize = (float)(g_rowInc / 2.5f),
+		ySize = (float)(g_colInc / 2.5f);
+	std::vector<GLfloat> arr;
+	//fills in arr with coordinates
+	for (int i = 0; i < g_levelCol; i++, x = -1.0f, y += g_colInc) {
+		for (int j = 0; j < g_levelRow; j++, x += g_rowInc) {
+			if (g_level[i][j] == target) {
+				//top left coordinate
+				arr.push_back(x + xSize);
+				arr.push_back(y + g_colInc - ySize);
+				arr.push_back(1.f);
+				//bottom left coordinate
+				arr.push_back(x + xSize);
+				arr.push_back(y + ySize);
+				arr.push_back(1.f);
+				//bottom right coordinate
+				arr.push_back(x + g_rowInc - xSize);
+				arr.push_back(y + ySize);
+				arr.push_back(1.f);
+				//top right coordinate
+				arr.push_back(x + g_rowInc - xSize);
+				arr.push_back(y + g_colInc - ySize);
+				arr.push_back(1.f);
+			}
+		}
+	}
+	return arr;
 }

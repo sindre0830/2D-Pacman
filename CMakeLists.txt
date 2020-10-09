@@ -21,8 +21,6 @@ add_executable(${PROJECT_NAME}
 	framework.cpp
 	header/framework.h
 
-	scenario.cpp
-	header/scenario.h
 	wall.cpp
 	header/wall.h
 	pellet.cpp
