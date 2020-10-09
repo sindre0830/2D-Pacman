@@ -91,22 +91,20 @@ int main() {
         lastTime = nowTime;
 		//for every frame reset background color to the value in the buffer ???
 		glClear(GL_COLOR_BUFFER_BIT);
-		if(!g_gameover) {
-			//draw wall
-			wall.drawObject();
-			//draw pellets
-			pellet.drawObject();
-			//draw pacman
-			pacman.drawObject(window);
-			if (deltaTime >= 1.0){
-				pacman.movObject();
-			}
-			//draw ghost
-			ghost.drawObject(window);
-			if (deltaTime >= 1.0){
-				ghost.movObject();
-				deltaTime -= 1.0;
-			}
+		//draw wall
+		wall.drawObject();
+		//draw pellets
+		pellet.drawObject();
+		//draw pacman
+		pacman.drawObject(window);
+		if (!g_gameover && deltaTime >= 1.0){
+			pacman.movObject();
+		}
+		//draw ghost
+		ghost.drawObject(window);
+		if (!g_gameover && deltaTime >= 1.0){
+			ghost.movObject();
+			deltaTime -= 1.0;
 		}
 		//go to next buffer
 		glfwSwapBuffers(window);

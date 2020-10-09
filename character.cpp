@@ -60,8 +60,6 @@ GLuint Character::loadTexture(const std::string& filepath, GLuint slot) {
 	//load pixel data from a stored image
     int w, h, bpp;
     auto pixels = stbi_load(filepath.c_str(), &w, &h, &bpp, STBI_rgb_alpha);
-    //split image into grid
-    imgGrid(w, h);
     //generate the texture
 	GLuint tex{};
     glGenTextures(1, &tex);					//generate a texture object
@@ -79,6 +77,38 @@ GLuint Character::loadTexture(const std::string& filepath, GLuint slot) {
     return tex;
 }
 
-void Character::imgGrid(const int width, const int height) {
-    
+bool Character::movUp(const int row, const int col, float &x, float &y, const int speed, const GLuint &shader) {
+	//check if next location will be a wall or out of bound
+	if(col + 1 < g_levelCol && g_level[col + 1][row] != 1) {
+		//translate up on the x-axis
+		translatePos(x, (y += g_colInc / (double)(speed)), shader);
+		return true;
+	} else return false;
+}
+
+bool Character::movLeft(const int row, const int col, float &x, float &y, const int speed, const GLuint &shader) {
+	//check if next location will be a wall or out of bound
+	if(row - 1 >= 0 && g_level[col][row - 1] != 1) {
+		//translate up on the x-axis
+		translatePos((x -= g_rowInc / (double)(speed)), y, shader);
+		return true;
+	} else return false;
+}
+
+bool Character::movDown(const int row, const int col, float &x, float &y, const int speed, const GLuint &shader) {
+	//check if next location will be a wall or out of bound
+	if(col - 1 >= 0 && g_level[col - 1][row] != 1) {
+		//translate up on the x-axis
+		translatePos(x, (y -= g_colInc / (double)(speed)), shader);
+		return true;
+	} else return false;
+}
+
+bool Character::movRight(const int row, const int col, float &x, float &y, const int speed, const GLuint &shader) {
+	//check if next location will be a wall or out of bound
+	if(row + 1 < g_levelRow && g_level[col][row + 1] != 1) {
+		//translate up on the x-axis
+		translatePos((x += g_rowInc / (double)(speed)), y, shader);
+		return true;
+	} else return false;
 }

@@ -15,7 +15,7 @@ extern bool g_gameover;
  */
 Pacman::~Pacman() {
     glDeleteProgram(pacmanShaderProgram);
-    glDeleteTextures(1, &texture0);
+    glDeleteTextures(1, &texture);
     cleanVAO(pacmanVAO);
 }
 /**
@@ -35,7 +35,7 @@ Pacman::Pacman() {
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
     //load the texture image, create OpenGL texture, and bind it to the current context
-    texture0 = loadTexture("sprite/pacman.png", 0);
+    texture = loadTexture("sprite/pacman.png", 0);
 }
 /**
  * @brief Generate Pac-Man from the 2D array to the window.
@@ -80,7 +80,7 @@ void Pacman::drawObject(GLFWwindow *window) {
  * @param window
  */
 void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
-    auto samplerSlotLocation0 = glGetUniformLocation(shader, "uTextureA");
+    auto samplerSlotLocation = glGetUniformLocation(shader, "uTexture");
 	glUseProgram(shader);
 	glBindVertexArray(vao);
 	//move asset
@@ -103,7 +103,7 @@ void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
 		translateTex(0.0f, yTex, shader);
 		direction = 3;
 	}
-	glUniform1i(samplerSlotLocation0, 0);
+	glUniform1i(samplerSlotLocation, 0);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
 }
 /**
@@ -112,9 +112,13 @@ void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
  * @param shader
  */
 void Pacman::movObject() {
+	if(g_ghostPos[colPos][rowPos]) g_gameover = true;
 	//move up (W)
 	if(direction == 0) {
-		movUp();
+		if(movUp(rowPos, colPos, xPos, yPos, speed, pacmanShaderProgram)) {
+			n++;
+			changeDirection = false;
+		}
 		//update grid if it has completed one square
 		if(n == speed) {
 			if(colPos + 1 <= g_levelCol) {
@@ -128,7 +132,10 @@ void Pacman::movObject() {
 		}
 	//move left (A)
 	} else if (direction == 1) {
-		movLeft();
+		if(movLeft(rowPos, colPos, xPos, yPos, speed, pacmanShaderProgram)) {
+			n++;
+			changeDirection = false;
+		}
 		//update grid if it has completed one square
 		if(n == speed) {
 			if(rowPos - 1 >= 0) {
@@ -142,7 +149,10 @@ void Pacman::movObject() {
 		}
 	//move down (S)
 	} else if (direction == 2) {
-		movDown();
+		if(movDown(rowPos, colPos, xPos, yPos, speed, pacmanShaderProgram)) {
+			n++;
+			changeDirection = false;
+		}
 		//update grid if it has completed one square
 		if(n == speed) {
 			if(colPos - 1 >= 0) {
@@ -156,7 +166,10 @@ void Pacman::movObject() {
 		}
 	//move right (D)
 	} else if (direction == 3) {
-		movRight();
+		if(movRight(rowPos, colPos, xPos, yPos, speed, pacmanShaderProgram)) {
+			n++;
+			changeDirection = false;
+		}
 		//update grid if it has completed one square
 		if(n == speed) {
 			if(rowPos + 1 < g_levelRow) {
@@ -179,47 +192,6 @@ void Pacman::movObject() {
 		translateTex(0.0f, yTex, pacmanShaderProgram);
 		changeDirection = true;
 		if(g_gameScore == g_pelletSize) g_gameover = true;
-		if(g_ghostPos[colPos][rowPos]) g_gameover = true;
 		n = 0;
-	}
-}
-
-void Pacman::movUp() {
-	//check if next location will be a wall or out of bound
-	if(colPos + 1 < g_levelCol && g_level[colPos + 1][rowPos] != 1) {
-		n++;
-		changeDirection = false;
-		//translate up on the x-axis
-		translatePos(xPos, (yPos += g_colInc / (double)(speed)), pacmanShaderProgram);
-	}
-}
-
-void Pacman::movLeft() {
-	//check if next location will be a wall or out of bound
-	if(rowPos - 1 >= 0 && g_level[colPos][rowPos - 1] != 1) {
-		n++;
-		changeDirection = false;
-		//translate up on the x-axis
-		translatePos((xPos -= g_rowInc / (double)(speed)), yPos, pacmanShaderProgram);
-	}
-}
-
-void Pacman::movDown() {
-	//check if next location will be a wall or out of bound
-	if(colPos - 1 >= 0 && g_level[colPos - 1][rowPos] != 1) {
-		n++;
-		changeDirection = false;
-		//translate up on the x-axis
-		translatePos(xPos, (yPos -= g_colInc / (double)(speed)), pacmanShaderProgram);
-	}
-}
-
-void Pacman::movRight() {
-	//check if next location will be a wall or out of bound
-	if(rowPos + 1 < g_levelRow && g_level[colPos][rowPos + 1] != 1) {
-		n++;
-		changeDirection = false;
-		//translate up on the x-axis
-		translatePos((xPos += g_rowInc / (double)(speed)), yPos, pacmanShaderProgram);
 	}
 }

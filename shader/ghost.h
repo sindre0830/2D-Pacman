@@ -35,10 +35,10 @@ in vec2 vsTexcoord;
 out vec4 color;
 
 /** Binding specifies what texture slot the texture should be at (in this case TEXTURE0) */
-uniform sampler2D uTextureB;
+uniform sampler2D uTexture;
 
 void main() {
-	vec4 textColorA = texture(uTextureB, vsTexcoord);
+	vec4 textColorA = texture(uTexture, vsTexcoord);
 	color = textColorA * vec4(1.f, 1.f, 1.f, 1.f);
 }
 )";

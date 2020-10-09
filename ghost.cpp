@@ -13,7 +13,7 @@ extern std::vector<std::vector<bool>> g_ghostPos;
  */
 Ghost::~Ghost() {
     glDeleteProgram(ghostShaderProgram);
-    glDeleteTextures(1, &texture0);
+    glDeleteTextures(1, &texture);
     cleanVAO(ghostVAO);
 }
 /**
@@ -33,7 +33,7 @@ Ghost::Ghost() {
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
     //load the texture image, create OpenGL texture, and bind it to the current context
-    texture0 = loadTexture("sprite/pacman.png", 1);
+    texture = loadTexture("sprite/pacman.png", 0);
 }
 /**
  * @brief Generate Pac-Man from the 2D array to the window.
@@ -78,10 +78,10 @@ void Ghost::drawObject(GLFWwindow *window) {
  * @param window
  */
 void Ghost::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
-    auto samplerSlotLocation1 = glGetUniformLocation(shader, "uTextureB");
+    auto samplerSlotLocation = glGetUniformLocation(shader, "uTexture");
 	glUseProgram(shader);
 	glBindVertexArray(vao);
-	glUniform1i(samplerSlotLocation1, 0);
+	glUniform1i(samplerSlotLocation, 0);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
 }
 /**
@@ -93,7 +93,7 @@ void Ghost::movObject() {
 	//move up (W)
 	if(direction == 0) {
 		yTex = 0.5f;
-		movUp();
+		if(movUp(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) n++;
 		//update grid if it has completed one square
 		if(n == speed) {
 			if(colPos + 1 <= g_levelCol) {
@@ -111,7 +111,7 @@ void Ghost::movObject() {
 	//move left (A)
 	} else if (direction == 1) {
 		yTex = 0.25f;
-		movLeft();
+		if(movLeft(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) n++;
 		//update grid if it has completed one square
 		if(n == speed) {
 			if(rowPos - 1 >= 0) {
@@ -129,7 +129,7 @@ void Ghost::movObject() {
 	//move down (S)
 	} else if (direction == 2) {
 		yTex = 0.75f;
-		movDown();
+		if(movDown(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) n++;
 		//update grid if it has completed one square
 		if(n == speed) {
 			if(colPos - 1 >= 0) {
@@ -147,7 +147,7 @@ void Ghost::movObject() {
 	//move right (D)
 	} else if (direction == 3) {
 		yTex = 0.0f;
-		movRight();
+		if(movRight(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) n++;
 		//update grid if it has completed one square
 		if(n == speed) {
 			if(rowPos + 1 < g_levelRow) {
@@ -171,47 +171,6 @@ void Ghost::movObject() {
 		translateTex(4.0f / 6.0f, yTex, ghostShaderProgram);
 	} else if (n == speed) {
 		translateTex(5.0f / 6.0f, yTex, ghostShaderProgram);
-		changeDirection = true;
 		n = 0;
-	}
-}
-
-void Ghost::movUp() {
-	//check if next location will be a wall or out of bound
-	if(colPos + 1 < g_levelCol && g_level[colPos + 1][rowPos] != 1) {
-		n++;
-		changeDirection = false;
-		//translate up on the x-axis
-		translatePos(xPos, (yPos += g_colInc / (double)(speed)), ghostShaderProgram);
-	}
-}
-
-void Ghost::movLeft() {
-	//check if next location will be a wall or out of bound
-	if(rowPos - 1 >= 0 && g_level[colPos][rowPos - 1] != 1) {
-		n++;
-		changeDirection = false;
-		//translate up on the x-axis
-		translatePos((xPos -= g_rowInc / (double)(speed)), yPos, ghostShaderProgram);
-	}
-}
-
-void Ghost::movDown() {
-	//check if next location will be a wall or out of bound
-	if(colPos - 1 >= 0 && g_level[colPos - 1][rowPos] != 1) {
-		n++;
-		changeDirection = false;
-		//translate up on the x-axis
-		translatePos(xPos, (yPos -= g_colInc / (double)(speed)), ghostShaderProgram);
-	}
-}
-
-void Ghost::movRight() {
-	//check if next location will be a wall or out of bound
-	if(rowPos + 1 < g_levelRow && g_level[colPos][rowPos + 1] != 1) {
-		n++;
-		changeDirection = false;
-		//translate up on the x-axis
-		translatePos((xPos += g_rowInc / (double)(speed)), yPos, ghostShaderProgram);
 	}
 }

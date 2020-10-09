@@ -10,17 +10,13 @@ class Ghost : public Character {
         /* private data */
         GLuint ghostVAO;
         GLuint ghostShaderProgram;
-        GLuint texture0;
+        GLuint texture;
         int direction, rowPos, colPos, n, speed;
         float xPos, yPos, yTex;
         bool changeDirection;
         /* private functionality */
         GLuint genObject();
         void draw(GLuint &shader, GLuint &vao, GLFWwindow *window);
-        void movUp();
-        void movLeft();
-        void movDown();
-        void movRight();
     public:
         /* public functionality */
         ~Ghost();
