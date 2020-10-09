@@ -83,7 +83,7 @@ void Ghost::movObject() {
 		if(movUp(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
 		if(counter == speed) {
-			//
+			//update the character position in array
 			g_ghostPos[colPos][rowPos] = false;
 			g_ghostPos[++colPos][rowPos] = true;
 			//branch if character isn't going to teleport
@@ -101,7 +101,7 @@ void Ghost::movObject() {
 		if(movLeft(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
 		if(counter == speed) {
-			//
+			//update the character position in array
 			g_ghostPos[colPos][rowPos] = false;
 			g_ghostPos[colPos][--rowPos] = true;
 			//branch if character isn't going to teleport
@@ -119,7 +119,7 @@ void Ghost::movObject() {
 		if(movDown(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
 		if(counter == speed) {
-			//
+			//update the character position in array
 			g_ghostPos[colPos][rowPos] = false;
 			g_ghostPos[--colPos][rowPos] = true;
 			//branch if character isn't going to teleport
@@ -137,7 +137,7 @@ void Ghost::movObject() {
 		if(movRight(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
 		if(counter == speed) {
-			//
+			//update the character position in array
 			g_ghostPos[colPos][rowPos] = false;
 			g_ghostPos[colPos][++rowPos] = true;
 			//branch if character isn't going to teleport
