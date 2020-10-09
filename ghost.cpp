@@ -19,12 +19,19 @@ Ghost::~Ghost() {
 /**
  * @brief Declare variables on construction of Pacman object.
  */
-Ghost::Ghost() {
-	direction = 3;
+Ghost::Ghost(int row, int col) {
 	speed = 20;
 	n = 0;
 	yTex = 0.0f;
-    getPosition();
+    //getPosition();
+	xPos = -1.0f + (g_rowInc * row);
+	yPos = -1.0f + (g_colInc * col);
+	rowPos = row;
+	colPos = col;
+	if(g_levelRow / 2 <= row) {
+		direction = 3;
+	} else direction = 1;
+
     ghostVAO = genObject();
     ghostShaderProgram = compileShader(ghostVertexShaderSrc, ghostFragmentShaderSrc);
 	//specify the layout of the vertex data
@@ -67,8 +74,8 @@ void Ghost::getPosition() {
 	}
 }
 
-void Ghost::drawObject(GLFWwindow *window) {
-    draw(ghostShaderProgram, ghostVAO, window);
+void Ghost::drawObject() {
+    draw(ghostShaderProgram, ghostVAO);
 }
 /**
  * @brief Draw asset according to the direction it is facing.
@@ -77,7 +84,7 @@ void Ghost::drawObject(GLFWwindow *window) {
  * @param vao
  * @param window
  */
-void Ghost::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
+void Ghost::draw(GLuint &shader, GLuint &vao) {
     auto samplerSlotLocation = glGetUniformLocation(shader, "uTexture");
 	glUseProgram(shader);
 	glBindVertexArray(vao);
@@ -150,7 +157,7 @@ void Ghost::movObject() {
 		if(movRight(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) n++;
 		//update grid if it has completed one square
 		if(n == speed) {
-			if(rowPos + 1 < g_levelRow) {
+			if(rowPos + 1 <= g_levelRow) {
 				g_ghostPos[colPos][rowPos] = false;
 				g_ghostPos[colPos][++rowPos] = true;
 

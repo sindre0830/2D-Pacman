@@ -71,8 +71,17 @@ int main() {
 	Wall wall;
 	//construct pacman
 	Pacman pacman;
-	//construct ghost
-	Ghost ghost;
+	//construct ghosts
+	int startRow, startCol;
+	std::vector<Ghost*> ghostArr(4, nullptr);
+	if(!getGhostPos(ghostArr.size(), startRow, startCol)){
+		std::cerr << "Get ghost position failed.\n";
+		std::cin.get();
+		return EXIT_FAILURE;
+	}
+	for(int i = 0; i < ghostArr.size(); i++) {
+		ghostArr[i] = new Ghost(startRow + i, startCol);
+	}
 	//construct pellets
 	pellet.setupObject();
 	//set background color black
@@ -101,11 +110,14 @@ int main() {
 			pacman.movObject();
 		}
 		//draw ghost
-		ghost.drawObject(window);
-		if (!g_gameover && deltaTime >= 1.0){
-			ghost.movObject();
-			deltaTime -= 1.0;
+		for(int i = 0; i < ghostArr.size(); i++) {
+			ghostArr[i]->drawObject();
+			if (!g_gameover && deltaTime >= 1.0){
+				ghostArr[i]->movObject();
+			}
 		}
+		//reset time control
+		if (!g_gameover && deltaTime >= 1.0) deltaTime -= 1.0;
 		//go to next buffer
 		glfwSwapBuffers(window);
 		//break loop if 'ESC' key is pressed
@@ -113,6 +125,10 @@ int main() {
 	}
 	std::cout << "\nFinal score was: " << g_gameScore << '\n';
 	//clear memory
+	for(int i = 0; i < ghostArr.size(); i++) {
+		delete ghostArr[i];
+	}
+	ghostArr.clear();
 	glUseProgram(0);
 	glfwTerminate();
 	return EXIT_SUCCESS;

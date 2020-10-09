@@ -12,5 +12,5 @@
 bool readFile();
 void enableDebug();
 void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
-//void readFile();
+bool getGhostPos(const int size, int &row, int &col);
 #endif

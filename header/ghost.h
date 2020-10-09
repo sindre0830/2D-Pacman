@@ -13,15 +13,14 @@ class Ghost : public Character {
         GLuint texture;
         int direction, rowPos, colPos, n, speed;
         float xPos, yPos, yTex;
-        bool changeDirection;
         /* private functionality */
         GLuint genObject();
-        void draw(GLuint &shader, GLuint &vao, GLFWwindow *window);
+        void draw(GLuint &shader, GLuint &vao);
     public:
         /* public functionality */
         ~Ghost();
-        Ghost();
-        void drawObject(GLFWwindow *window);
+        Ghost(int row, int col);
+        void drawObject();
         void movObject();
         void getPosition();
 };
