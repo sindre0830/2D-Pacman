@@ -165,7 +165,6 @@ void Pacman::movObject() {
 					g_gameScore++;
 					pellet.hidePellet(colPos, rowPos);
 				}
-				std::cout << "pacman moving\n";
 				g_level[colPos][rowPos] = 2;
 			}
 		}

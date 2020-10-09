@@ -89,21 +89,25 @@ int main() {
 		nowTime = glfwGetTime();
         deltaTime += (nowTime - lastTime) / limitFPS;
         lastTime = nowTime;
-		if (!g_gameover && deltaTime >= 1.0){
-			ghost.movObject();
-			//pacman.movObject();
-            deltaTime -= 1.0;
-        }
 		//for every frame reset background color to the value in the buffer ???
 		glClear(GL_COLOR_BUFFER_BIT);
-		//draw wall
-		wall.drawObject();
-		//draw pellets
-		pellet.drawObject();
-		//draw pacman
-		//pacman.drawObject(window);
-		//
-		ghost.drawObject(window);
+		if(!g_gameover) {
+			//draw wall
+			wall.drawObject();
+			//draw pellets
+			pellet.drawObject();
+			//draw pacman
+			pacman.drawObject(window);
+			if (deltaTime >= 1.0){
+				pacman.movObject();
+			}
+			//draw ghost
+			ghost.drawObject(window);
+			if (deltaTime >= 1.0){
+				ghost.movObject();
+				deltaTime -= 1.0;
+			}
+		}
 		//go to next buffer
 		glfwSwapBuffers(window);
 		//break loop if 'ESC' key is pressed

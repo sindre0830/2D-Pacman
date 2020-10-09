@@ -119,9 +119,9 @@ void Ghost::movObject() {
 				g_ghostPos[colPos][--rowPos] = true;
 
 				std::vector<int> possiblePaths;
-				if(g_level[colPos + 1][rowPos] == 0) possiblePaths.push_back(0);
-				if(g_level[colPos][rowPos - 1] == 0) possiblePaths.push_back(1);
-				if(g_level[colPos - 1][rowPos] == 0) possiblePaths.push_back(2);
+				if(g_level[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
+				if(g_level[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
+				if(g_level[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
 
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
@@ -137,9 +137,9 @@ void Ghost::movObject() {
 				g_ghostPos[--colPos][rowPos] = true;
 
 				std::vector<int> possiblePaths;
-				if(g_level[colPos][rowPos - 1] == 0) possiblePaths.push_back(1);
-				if(g_level[colPos - 1][rowPos] == 0) possiblePaths.push_back(2);
-				if(g_level[colPos][rowPos + 1] == 0) possiblePaths.push_back(3);
+				if(g_level[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
+				if(g_level[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
+				if(g_level[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
 
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
@@ -155,9 +155,9 @@ void Ghost::movObject() {
 				g_ghostPos[colPos][++rowPos] = true;
 
 				std::vector<int> possiblePaths;
-				if(g_level[colPos + 1][rowPos] == 0) possiblePaths.push_back(0);
-				if(g_level[colPos - 1][rowPos] == 0) possiblePaths.push_back(2);
-				if(g_level[colPos][rowPos + 1] == 0) possiblePaths.push_back(3);
+				if(g_level[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
+				if(g_level[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
+				if(g_level[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
 
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
