@@ -83,15 +83,15 @@ void Ghost::movObject() {
 		if(movUp(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
 		if(counter == speed) {
+			//
+			g_ghostPos[colPos][rowPos] = false;
+			g_ghostPos[++colPos][rowPos] = true;
+			//
 			if(colPos + 1 <= g_levelCol) {
-				g_ghostPos[colPos][rowPos] = false;
-				g_ghostPos[++colPos][rowPos] = true;
-
 				std::vector<int> possiblePaths;
 				if(g_level[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
 				if(g_level[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
 				if(g_level[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
-
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
@@ -101,15 +101,15 @@ void Ghost::movObject() {
 		if(movLeft(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
 		if(counter == speed) {
+			//
+			g_ghostPos[colPos][rowPos] = false;
+			g_ghostPos[colPos][--rowPos] = true;
+			//
 			if(rowPos - 1 >= 0) {
-				g_ghostPos[colPos][rowPos] = false;
-				g_ghostPos[colPos][--rowPos] = true;
-
 				std::vector<int> possiblePaths;
 				if(g_level[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
 				if(g_level[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
 				if(g_level[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
-
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
@@ -119,15 +119,15 @@ void Ghost::movObject() {
 		if(movDown(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
 		if(counter == speed) {
+			//
+			g_ghostPos[colPos][rowPos] = false;
+			g_ghostPos[--colPos][rowPos] = true;
+			//
 			if(colPos - 1 >= 0) {
-				g_ghostPos[colPos][rowPos] = false;
-				g_ghostPos[--colPos][rowPos] = true;
-
 				std::vector<int> possiblePaths;
 				if(g_level[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
 				if(g_level[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
 				if(g_level[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
-
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
@@ -137,15 +137,15 @@ void Ghost::movObject() {
 		if(movRight(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
 		if(counter == speed) {
-			if(rowPos + 1 <= g_levelRow) {
-				g_ghostPos[colPos][rowPos] = false;
-				g_ghostPos[colPos][++rowPos] = true;
-
+			//
+			g_ghostPos[colPos][rowPos] = false;
+			g_ghostPos[colPos][++rowPos] = true;
+			//
+			if(rowPos + 1 < g_levelRow) {
 				std::vector<int> possiblePaths;
 				if(g_level[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
 				if(g_level[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
 				if(g_level[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
-
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}

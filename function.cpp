@@ -73,13 +73,14 @@ void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 }
 
 bool getGhostPos(const int size, int &row, int &col) {
+	bool flag = true;
 	row = (g_levelRow / 2) - (size / 2);
-	for(int i = 0; i < g_levelCol; i++) {
-		for(int j = row; j < row + size; j++) {
-			if(g_level[i][j] != 0) break;
+	for(int i = 0; i < g_levelCol; i++, flag = true) {
+		for(int j = 0; j < size; j++) {
+			if(g_level[i][row + j] != 0) flag = false;
 			col = i;
-			return true;
 		}
+		if(flag) return true;
 	}
 	return false;
 }

@@ -138,14 +138,12 @@ void Pacman::movObject() {
 		}
 		//update grid if it has completed one square
 		if(n == speed) {
-			if(rowPos - 1 >= 0) {
-				//check if there is a pellet
-				if(g_level[colPos][--rowPos] == 0) {
-					g_gameScore++;
-					pellet.hidePellet(colPos, rowPos);
-				}
-				g_level[colPos][rowPos] = 2;
+			//check if there is a pellet
+			if(g_level[colPos][--rowPos] == 0) {
+				g_gameScore++;
+				pellet.hidePellet(colPos, rowPos);
 			}
+			g_level[colPos][rowPos] = 2;
 		}
 	//move down (S)
 	} else if (direction == 2) {
@@ -172,14 +170,12 @@ void Pacman::movObject() {
 		}
 		//update grid if it has completed one square
 		if(n == speed) {
-			if(rowPos + 1 < g_levelRow) {
-				//check if there is a pellet
-				if(g_level[colPos][++rowPos] == 0) {
-					g_gameScore++;
-					pellet.hidePellet(colPos, rowPos);
-				}
-				g_level[colPos][rowPos] = 2;
+			//check if there is a pellet
+			if(g_level[colPos][++rowPos] == 0) {
+				g_gameScore++;
+				pellet.hidePellet(colPos, rowPos);
 			}
+			g_level[colPos][rowPos] = 2;
 		}
 	}
 	if (n == speed * 0.25f) {

@@ -20,9 +20,9 @@ class Character : public Framework {
         void translatePos(const float x, const float y, const GLuint &shader);
         void translateTex(const float x, const float y, const GLuint &shader);
         GLuint loadTexture(const std::string& filepath, GLuint slot);
-        bool movUp(const int row, const int col, float &x, float &y, const int speed, const GLuint &shader);
-        bool movLeft(const int row, const int col, float &x, float &y, const int speed, const GLuint &shader);
-        bool movDown(const int row, const int col, float &x, float &y, const int speed, const GLuint &shader);
-        bool movRight(const int row, const int col, float &x, float &y, const int speed, const GLuint &shader);
+        bool movUp(int &row, int &col, float &x, float &y, const int speed, const GLuint &shader);
+        bool movLeft(int &row, int &col, float &x, float &y, const int speed, const GLuint &shader);
+        bool movDown(int &row, int &col, float &x, float &y, const int speed, const GLuint &shader);
+        bool movRight(int &row, int &col, float &x, float &y, const int speed, const GLuint &shader);
 };
 #endif
