@@ -14,6 +14,7 @@ add_subdirectory(external/glm-0.9.9.8)
 
 add_executable(${PROJECT_NAME}
 	main.cpp
+	header/levelData.h
 	
 	function.cpp
 	header/function.h

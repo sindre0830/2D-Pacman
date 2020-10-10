@@ -1,10 +1,8 @@
 /* libraries */
 #include "header/function.h"
+#include "header/levelData.h"
 
-extern int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize;
-extern double g_rowInc, g_colInc;
-extern std::vector<std::vector<int>> g_level;
-extern std::vector<std::vector<bool>> g_ghostPos;
+extern LevelData g_level;
 /**
  * @brief Reads data from level file.
  */
@@ -13,33 +11,33 @@ bool readFile() {
 	file.open("level/level0");
 	if (file) {
 		int buffer;
-		file >> g_levelRow;
+		file >> g_level.arrWidth;
 		file.ignore();
-		file >> g_levelCol;
+		file >> g_level.arrHeight;
 		file.ignore();
-		for (int i = 0; i < g_levelCol; i++) {
+		for (int i = 0; i < g_level.arrHeight; i++) {
 			std::vector<int> arrRow;
 			std::vector<bool> boolRow;
-			for (int j = 0; j < g_levelRow; j++) {
+			for (int j = 0; j < g_level.arrWidth; j++) {
 				file >> buffer;
 				if (buffer == 1) {
-					g_wallSize++;
+					g_level.wallSize++;
 				} else if (buffer == 0) {
-					g_pelletSize++;
+					g_level.pelletSize++;
 				}
 				arrRow.push_back(buffer);
 				boolRow.push_back(false);
 				file.ignore();
 			}
-			g_level.push_back(arrRow);
-			g_ghostPos.push_back(boolRow);
+			g_level.arr.push_back(arrRow);
+			g_level.ghostPos.push_back(boolRow);
 		}
 		file.close();
 		//reverse order of array
-		std::reverse(g_level.begin(), g_level.end());
-		//set increment value
-		g_rowInc = 1.f / ((float)(g_levelRow) / 2.f);
-		g_colInc = 1.f / ((float)(g_levelCol) / 2.f);
+		std::reverse(g_level.arr.begin(), g_level.arr.end());
+		//set element value
+		g_level.elementWidth = 1.f / ((float)(g_level.arrWidth) / 2.f);
+		g_level.elementHeight = 1.f / ((float)(g_level.arrHeight) / 2.f);
 		return true;
 	} else return false;
 }
@@ -74,10 +72,10 @@ void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 
 bool getGhostPos(const int size, int &row, int &col) {
 	bool flag = true;
-	row = (g_levelRow / 2) - (size / 2);
-	for(int i = g_levelCol - 1; i >= 0; i--, flag = true) {
+	row = (g_level.arrWidth / 2) - (size / 2);
+	for(int i = g_level.arrHeight - 1; i >= 0; i--, flag = true) {
 		for(int j = 0; j < size; j++) {
-			if(g_level[i][row + j] != 0) flag = false;
+			if(g_level.arr[i][row + j] != 0) flag = false;
 			col = i;
 		}
 		if(flag) return true;

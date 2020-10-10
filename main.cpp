@@ -7,6 +7,7 @@
  * @author Brage Heimly N�ss
  */
 /* libraries */
+#include "header/levelData.h"
 #include "header/wall.h"
 #include "header/pellet.h"
 #include "header/pacman.h"
@@ -16,12 +17,9 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 /* global variables */
-int  g_levelRow, g_levelCol, g_wallSize, g_pelletSize, g_gameScore;
-double g_rowInc, g_colInc;
-std::vector<std::vector<int>> g_level;
-std::vector<std::vector<bool>> g_ghostPos;
 bool g_gameover = false;
 /* global objects */
+LevelData g_level;
 Pellet pellet;
 /**
  * Main program.
@@ -33,7 +31,6 @@ int main() {
 		std::cin.get();
 		return EXIT_FAILURE;
 	}
-	std::cout << "wall: " << g_wallSize << " pellet: " << g_pelletSize << std::endl;
 	//branch if GLFW isn't initialized
 	if(!glfwInit()) {
 		std::cerr << "GLFW initialization failed.\n";
@@ -47,7 +44,7 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//create window
-	auto window = glfwCreateWindow(g_levelRow * 35, g_levelCol * 35, "Pac-Man", nullptr, nullptr);
+	auto window = glfwCreateWindow(g_level.arrWidth * 35, g_level.arrHeight * 35, "Pac-Man", nullptr, nullptr);
 	//setting the OpenGL context to the window
 	glfwMakeContextCurrent(window);
 	glEnable(GL_BLEND);
@@ -123,7 +120,7 @@ int main() {
 		//break loop if 'ESC' key is pressed
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) break;
 	}
-	std::cout << "\nFinal score was: " << g_gameScore << '\n';
+	std::cout << "\nFinal score was: " << g_level.score << '\n';
 	//clear memory
 	for(int i = 0; i < ghostArr.size(); i++) {
 		delete ghostArr[i];

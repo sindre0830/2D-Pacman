@@ -1,13 +1,11 @@
 /* libraries */
 #include "header/ghost.h"
 #include "shader/character.h"
+#include "header/levelData.h"
 #include "header/pellet.h"
 #include <iostream>
 /* global variables */
-extern int  g_levelRow, g_levelCol;
-extern double g_rowInc, g_colInc;
-extern std::vector<std::vector<int>> g_level;
-extern std::vector<std::vector<bool>> g_ghostPos;
+extern LevelData g_level;
 /**
  * @brief Destroy the Pacman object
  */
@@ -21,12 +19,12 @@ Ghost::~Ghost() {
  */
 Ghost::Ghost(int row, int col) {
 	//set starting postions
-	xPos = -1.0f + (g_rowInc * row);
-	yPos = -1.0f + (g_colInc * col);
+	xPos = -1.0f + (g_level.elementWidth * row);
+	yPos = -1.0f + (g_level.elementHeight * col);
 	rowPos = row;
 	colPos = col;
 	//setting direction compared to position
-	if(g_levelRow / 2 <= row) {
+	if(g_level.arrWidth / 2 <= row) {
 		direction = 3;
 	} else direction = 1;
 	//generate VAO and shader program
@@ -84,14 +82,14 @@ void Ghost::movObject() {
 		//update grid if it has completed one square
 		if(counter == speed) {
 			//update the character position in array
-			g_ghostPos[colPos][rowPos] = false;
-			g_ghostPos[++colPos][rowPos] = true;
+			g_level.ghostPos[colPos][rowPos] = false;
+			g_level.ghostPos[++colPos][rowPos] = true;
 			//branch if character isn't going to teleport
-			if(colPos + 1 <= g_levelCol) {
+			if(colPos + 1 <= g_level.arrHeight) {
 				std::vector<int> possiblePaths;
-				if(g_level[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
-				if(g_level[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
-				if(g_level[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
+				if(g_level.arr[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
+				if(g_level.arr[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
+				if(g_level.arr[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
@@ -102,14 +100,14 @@ void Ghost::movObject() {
 		//update grid if it has completed one square
 		if(counter == speed) {
 			//update the character position in array
-			g_ghostPos[colPos][rowPos] = false;
-			g_ghostPos[colPos][--rowPos] = true;
+			g_level.ghostPos[colPos][rowPos] = false;
+			g_level.ghostPos[colPos][--rowPos] = true;
 			//branch if character isn't going to teleport
 			if(rowPos - 1 >= 0) {
 				std::vector<int> possiblePaths;
-				if(g_level[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
-				if(g_level[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
-				if(g_level[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
+				if(g_level.arr[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
+				if(g_level.arr[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
+				if(g_level.arr[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
@@ -120,14 +118,14 @@ void Ghost::movObject() {
 		//update grid if it has completed one square
 		if(counter == speed) {
 			//update the character position in array
-			g_ghostPos[colPos][rowPos] = false;
-			g_ghostPos[--colPos][rowPos] = true;
+			g_level.ghostPos[colPos][rowPos] = false;
+			g_level.ghostPos[--colPos][rowPos] = true;
 			//branch if character isn't going to teleport
 			if(colPos - 1 >= 0) {
 				std::vector<int> possiblePaths;
-				if(g_level[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
-				if(g_level[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
-				if(g_level[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
+				if(g_level.arr[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
+				if(g_level.arr[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
+				if(g_level.arr[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
@@ -138,14 +136,14 @@ void Ghost::movObject() {
 		//update grid if it has completed one square
 		if(counter == speed) {
 			//update the character position in array
-			g_ghostPos[colPos][rowPos] = false;
-			g_ghostPos[colPos][++rowPos] = true;
+			g_level.ghostPos[colPos][rowPos] = false;
+			g_level.ghostPos[colPos][++rowPos] = true;
 			//branch if character isn't going to teleport
-			if(rowPos + 1 < g_levelRow) {
+			if(rowPos + 1 < g_level.arrWidth) {
 				std::vector<int> possiblePaths;
-				if(g_level[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
-				if(g_level[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
-				if(g_level[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
+				if(g_level.arr[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
+				if(g_level.arr[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
+				if(g_level.arr[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}

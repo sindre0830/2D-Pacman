@@ -1,11 +1,10 @@
 
 #include "header/wall.h"
 #include "shader/wall.h"
+#include "header/levelData.h"
 #include <iostream>
 
-extern int  g_levelRow, g_levelCol;
-extern double g_rowInc, g_colInc;
-extern std::vector<std::vector<int>> g_level;
+extern LevelData g_level;
 
 Wall::~Wall() {
     glDeleteProgram(wallShaderProgram);
@@ -50,66 +49,66 @@ std::vector<GLfloat> Wall::genWallCoordinates(const int target) {
 		x = -1.0f,
 		y = -1.0f,
 		//resize wall
-		xResize = (float)(g_rowInc / 1.2f),
-		yResize = (float)(g_colInc / 1.2f);
+		xResize = (float)(g_level.elementWidth / 1.2f),
+		yResize = (float)(g_level.elementHeight / 1.2f);
 	std::vector<GLfloat> arr;
 	//fills in array with coordinates
-	for (int i = 0; i < g_levelCol; i++, x = -1.0f, y += g_colInc) {
-		for (int j = 0; j < g_levelRow; j++, x += g_rowInc) {
-			if (g_level[i][j] == target) {
+	for (int i = 0; i < g_level.arrHeight; i++, x = -1.0f, y += g_level.elementHeight) {
+		for (int j = 0; j < g_level.arrWidth; j++, x += g_level.elementWidth) {
+			if (g_level.arr[i][j] == target) {
 				//check over target
-				if(i + 1 < g_levelCol && g_level[i + 1][j] != 1) {
+				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x, y + (float)(g_colInc),
+						x, y + (float)(g_level.elementHeight),
 						//bottom left coordinate
 						x, y + yResize,
 						//bottom right coordinate
-						x + (float)(g_rowInc), y + yResize,
+						x + (float)(g_level.elementWidth), y + yResize,
 						//top right coordinate
-						x + (float)(g_rowInc), y + (float)(g_colInc)
+						x + (float)(g_level.elementWidth), y + (float)(g_level.elementHeight)
 					});
 					wallSize++;
 				}
 				//check under target
-				if(i - 1 >= 0 && g_level[i - 1][j] != 1) {
+				if(i - 1 >= 0 && g_level.arr[i - 1][j] != 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x, y + (float)(g_colInc) - yResize,
+						x, y + (float)(g_level.elementHeight) - yResize,
 						//bottom left coordinate
 						x, y,
 						//bottom right coordinate
-						x + (float)(g_rowInc), y,
+						x + (float)(g_level.elementWidth), y,
 						//top right coordinate
-						x + (float)(g_rowInc), y + (float)(g_colInc) - yResize
+						x + (float)(g_level.elementWidth), y + (float)(g_level.elementHeight) - yResize
 					});
 					wallSize++;
 				}
 				//check left of target
-				if(j - 1 >= 0 && g_level[i][j - 1] != 1) {
+				if(j - 1 >= 0 && g_level.arr[i][j - 1] != 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x, y + (float)(g_colInc),
+						x, y + (float)(g_level.elementHeight),
 						//bottom left coordinate
 						x, y,
 						//bottom right coordinate
-						x + (float)(g_rowInc) - xResize, y,
+						x + (float)(g_level.elementWidth) - xResize, y,
 						//top right coordinate
-						x + (float)(g_rowInc) - xResize, y + (float)(g_colInc)
+						x + (float)(g_level.elementWidth) - xResize, y + (float)(g_level.elementHeight)
 					});
 					wallSize++;
 				}
 				//check right of target
-				if(j + 1 < g_levelRow && g_level[i][j + 1] != 1) {
+				if(j + 1 < g_level.arrWidth && g_level.arr[i][j + 1] != 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x + xResize, y + (float)(g_colInc),
+						x + xResize, y + (float)(g_level.elementHeight),
 						//bottom left coordinate
 						x + xResize, y,
 						//bottom right coordinate
-						x + (float)(g_rowInc), y,
+						x + (float)(g_level.elementWidth), y,
 						//top right coordinate
-						x + (float)(g_rowInc), y + (float)(g_colInc)
+						x + (float)(g_level.elementWidth), y + (float)(g_level.elementHeight)
 					});
 					wallSize++;
 				}
@@ -126,51 +125,51 @@ GLuint Wall::genCornerVAO(const int target) {
 		x = -1.0f,
 		y = -1.0f,
 		//resize wall
-		xResize = (float)(g_rowInc / 1.2f) / 5.f,
-		yResize = (float)(g_colInc / 1.2f) / 5.f;
+		xResize = (float)(g_level.elementWidth / 1.2f) / 5.f,
+		yResize = (float)(g_level.elementHeight / 1.2f) / 5.f;
 	std::vector<GLfloat> arr;
 	//fills in array with coordinates
-	for (int i = 0; i < g_levelCol; i++, x = -1.0f, y += g_colInc) {
-		for (int j = 0; j < g_levelRow; j++, x += g_rowInc) {
-			if (g_level[i][j] == target) {
+	for (int i = 0; i < g_level.arrHeight; i++, x = -1.0f, y += g_level.elementHeight) {
+		for (int j = 0; j < g_level.arrWidth; j++, x += g_level.elementWidth) {
+			if (g_level.arr[i][j] == target) {
 				//check top right
-				if(i + 1 < g_levelCol && g_level[i + 1][j] != 1 && j + 1 < g_levelRow && g_level[i + 1][j + 1] == 1) {
+				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != 1 && j + 1 < g_level.arrWidth && g_level.arr[i + 1][j + 1] == 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x + (float)(g_rowInc), y + (float)(g_colInc),
+						x + (float)(g_level.elementWidth), y + (float)(g_level.elementHeight),
 						//bottom left coordinate
-						x + (float)(g_rowInc), y + (float)(g_colInc) - yResize,
+						x + (float)(g_level.elementWidth), y + (float)(g_level.elementHeight) - yResize,
 						//top right coordinate
-						x + (float)(g_rowInc) + xResize, y + (float)(g_colInc)
+						x + (float)(g_level.elementWidth) + xResize, y + (float)(g_level.elementHeight)
 					});
 					cornerSize++;
 				}
 				//check top left
-				if(i + 1 < g_levelCol && g_level[i + 1][j] != 1 && j - 1 >= 0 && g_level[i + 1][j - 1] == 1) {
+				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != 1 && j - 1 >= 0 && g_level.arr[i + 1][j - 1] == 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x - xResize, y + (float)(g_colInc),
+						x - xResize, y + (float)(g_level.elementHeight),
 						//bottom right coordinate
-						x, y + (float)(g_colInc) - yResize,
+						x, y + (float)(g_level.elementHeight) - yResize,
 						//top right coordinate
-						x, y + (float)(g_colInc)
+						x, y + (float)(g_level.elementHeight)
 					});
 					cornerSize++;
 				}
 				//check bottom right
-				if(i - 1 >= 0 && g_level[i - 1][j] != 1 && j + 1 < g_levelRow && g_level[i - 1][j + 1] == 1) {
+				if(i - 1 >= 0 && g_level.arr[i - 1][j] != 1 && j + 1 < g_level.arrWidth && g_level.arr[i - 1][j + 1] == 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x + (float)(g_rowInc), y,
+						x + (float)(g_level.elementWidth), y,
 						//bottom left coordinate
-						x + (float)(g_rowInc), y + yResize,
+						x + (float)(g_level.elementWidth), y + yResize,
 						//top right coordinate
-						x + (float)(g_rowInc) + xResize, y
+						x + (float)(g_level.elementWidth) + xResize, y
 					});
 					cornerSize++;
 				}
 				//check bottom left
-				if(i - 1 >= 0 && g_level[i - 1][j] != 1 && j - 1 >= 0 && g_level[i - 1][j - 1] == 1) {
+				if(i - 1 >= 0 && g_level.arr[i - 1][j] != 1 && j - 1 >= 0 && g_level.arr[i - 1][j - 1] == 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
 						x - xResize, y,
@@ -184,7 +183,7 @@ GLuint Wall::genCornerVAO(const int target) {
 			}
 		}
 	}
-	
+
 	GLuint vao;
     glCreateVertexArrays(1, &vao);
     glBindVertexArray(vao);

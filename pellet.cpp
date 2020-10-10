@@ -1,12 +1,11 @@
 /* libraries */
+#include "header/levelData.h"
 #include "header/pellet.h"
 #include "shader/pellet.h"
 #include <iostream>
 #include <iterator>
 /* global variables */
-extern int  g_levelRow, g_levelCol, g_pelletSize;
-extern double g_rowInc, g_colInc;
-extern std::vector<std::vector<int>> g_level;
+extern LevelData g_level;
 /**
  * @brief Destroy the Pellet:: Pellet object
  * 
@@ -33,9 +32,9 @@ void Pellet::setupObject() {
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void*)(2 * sizeof(GLfloat)));
 	//set bufferposition in refrence to position in level
-	for(int i = 0, n = 0; i < g_levelCol; i++) {
-		for(int j = 0; j < g_levelRow; j++) {
-			if(g_level[i][j] == 0) {
+	for(int i = 0, n = 0; i < g_level.arrHeight; i++) {
+		for(int j = 0; j < g_level.arrWidth; j++) {
+			if(g_level.arr[i][j] == 0) {
 				bufferPos[std::make_pair(i, j)] = n * pelletByteSize;
 				n++;
 			}
@@ -49,7 +48,7 @@ void Pellet::setupObject() {
  */
 GLuint Pellet::genObject() {
 	std::vector<GLfloat> arr = genCoordinates(0);
-	std::vector<GLuint> arrIndices = genIndices(g_pelletSize);
+	std::vector<GLuint> arrIndices = genIndices(g_level.pelletSize);
 	return createVAO(arr, arrIndices);
 }
 /**
@@ -59,7 +58,7 @@ GLuint Pellet::genObject() {
 void Pellet::drawObject() {
 	glUseProgram(pelletShaderProgram);
 	glBindVertexArray(pelletVAO);
-	glDrawElements(GL_TRIANGLES, (6 * g_pelletSize), GL_UNSIGNED_INT, (const void*)0);
+	glDrawElements(GL_TRIANGLES, (6 * g_level.pelletSize), GL_UNSIGNED_INT, (const void*)0);
 }
 /**
  * @brief Hide pellet by modifying the buffer array.
@@ -88,31 +87,31 @@ std::vector<GLfloat> Pellet::genCoordinates(const int target) {
 		//display pellet
 		display = 1.f,
 		//resize pellet
-		xResize = (float)(g_rowInc / 2.8f),
-		yResize = (float)(g_colInc / 2.8f),
+		xResize = (float)(g_level.elementWidth / 2.8f),
+		yResize = (float)(g_level.elementHeight / 2.8f),
 		//rotate pellet
-		xRotate = (float)(g_rowInc / 2.f),
-		yRotate = (float)(g_colInc / 2.f);
+		xRotate = (float)(g_level.elementWidth / 2.f),
+		yRotate = (float)(g_level.elementHeight / 2.f);
 	std::vector<GLfloat> arr;
 	//fills in array with coordinates
-	for (int i = 0; i < g_levelCol; i++, x = -1.f, y += g_colInc) {
-		for (int j = 0; j < g_levelRow; j++, x += g_rowInc) {
-			if (g_level[i][j] == target) {
+	for (int i = 0; i < g_level.arrHeight; i++, x = -1.f, y += g_level.elementHeight) {
+		for (int j = 0; j < g_level.arrWidth; j++, x += g_level.elementWidth) {
+			if (g_level.arr[i][j] == target) {
 				//middle left coordinate
 				arr.push_back(x + xResize);
-				arr.push_back(y + g_colInc - yRotate);
+				arr.push_back(y + g_level.elementHeight - yRotate);
 				arr.push_back(display);
 				//middle down coordinate
 				arr.push_back(x + xRotate);
 				arr.push_back(y + yResize);
 				arr.push_back(display);
 				//middle right coordinate
-				arr.push_back(x + g_rowInc - xResize);
+				arr.push_back(x + g_level.elementWidth - xResize);
 				arr.push_back(y + yRotate);
 				arr.push_back(display);
 				//middle top coordinate
-				arr.push_back(x + g_rowInc - xRotate);
-				arr.push_back(y + g_colInc - yResize);
+				arr.push_back(x + g_level.elementWidth - xRotate);
+				arr.push_back(y + g_level.elementHeight - yResize);
 				arr.push_back(display);
 			}
 		}
