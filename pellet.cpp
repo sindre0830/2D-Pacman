@@ -58,30 +58,35 @@ void Pellet::hidePellet(const int y, const int x) {
 std::vector<GLfloat> Pellet::genCoordinates(const int target) {
     /* local data */
 	float
+		//position
 		x = -1.0f,
 		y = -1.0f,
-		xSize = (float)(g_rowInc / 2.5f),
-		ySize = (float)(g_colInc / 2.5f);
+		//scale the size
+		xScale = (float)(g_rowInc / 2.8f),
+		yScale = (float)(g_colInc / 2.8f),
+		//rotate
+		xRotate = (float)(g_rowInc / 2.f),
+		yRotate = (float)(g_colInc / 2.f);
 	std::vector<GLfloat> arr;
 	//fills in arr with coordinates
 	for (int i = 0; i < g_levelCol; i++, x = -1.0f, y += g_colInc) {
 		for (int j = 0; j < g_levelRow; j++, x += g_rowInc) {
 			if (g_level[i][j] == target) {
-				//top left coordinate
-				arr.push_back(x + xSize);
-				arr.push_back(y + g_colInc - ySize);
+				//middle left coordinate
+				arr.push_back(x + xScale);
+				arr.push_back(y + g_colInc - yRotate);
 				arr.push_back(1.f);
-				//bottom left coordinate
-				arr.push_back(x + xSize);
-				arr.push_back(y + ySize);
+				//middle down coordinate
+				arr.push_back(x + xRotate);
+				arr.push_back(y + yScale);
 				arr.push_back(1.f);
-				//bottom right coordinate
-				arr.push_back(x + g_rowInc - xSize);
-				arr.push_back(y + ySize);
+				//middle right coordinate
+				arr.push_back(x + g_rowInc - xScale);
+				arr.push_back(y + yRotate);
 				arr.push_back(1.f);
-				//top right coordinate
-				arr.push_back(x + g_rowInc - xSize);
-				arr.push_back(y + g_colInc - ySize);
+				//middle top coordinate
+				arr.push_back(x + g_rowInc - xRotate);
+				arr.push_back(y + g_colInc - yScale);
 				arr.push_back(1.f);
 			}
 		}
