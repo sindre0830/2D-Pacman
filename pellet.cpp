@@ -94,7 +94,7 @@ std::vector<GLfloat> Pellet::genCoordinates(const int target) {
 		xRotate = (float)(g_rowInc / 2.f),
 		yRotate = (float)(g_colInc / 2.f);
 	std::vector<GLfloat> arr;
-	//fills in arr with coordinates
+	//fills in array with coordinates
 	for (int i = 0; i < g_levelCol; i++, x = -1.f, y += g_colInc) {
 		for (int j = 0; j < g_levelRow; j++, x += g_rowInc) {
 			if (g_level[i][j] == target) {

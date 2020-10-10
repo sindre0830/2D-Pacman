@@ -1,6 +1,7 @@
 
 #include "header/wall.h"
 #include "shader/wall.h"
+#include <iostream>
 
 extern int  g_wallSize, g_levelRow, g_levelCol;
 extern double g_rowInc, g_colInc;
@@ -35,42 +36,44 @@ void Wall::drawObject() {
 std::vector<GLfloat> Wall::genCoordinates(const int target) {
     /* local data */
 	float
+		//wall position
 		x = -1.0f,
 		y = -1.0f,
-		xSize = (float)(g_rowInc / 1.2f),
-		ySize = (float)(g_colInc / 1.2f);
+		//resize wall
+		xResize = (float)(g_rowInc / 1.2f),
+		yResize = (float)(g_colInc / 1.2f);
 	std::vector<GLfloat> arr;
-	//fills in arr with coordinates
+	//fills in array with coordinates
 	for (int i = 0; i < g_levelCol; i++, x = -1.0f, y += g_colInc) {
 		for (int j = 0; j < g_levelRow; j++, x += g_rowInc) {
 			if (g_level[i][j] == target) {
-				//check over
+				//check over target
 				if(i + 1 < g_levelCol && g_level[i + 1][j] != 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
 						x, y + (float)(g_colInc),
 						//bottom left coordinate
-						x, y + ySize,
+						x, y + yResize,
 						//bottom right coordinate
-						x + (float)(g_rowInc), y + ySize,
+						x + (float)(g_rowInc), y + yResize,
 						//top right coordinate
 						x + (float)(g_rowInc), y + (float)(g_colInc)
 					});
 				}
-				//check under
+				//check under target
 				if(i - 1 >= 0 && g_level[i - 1][j] != 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x, y + (float)(g_colInc) - ySize,
+						x, y + (float)(g_colInc) - yResize,
 						//bottom left coordinate
 						x, y,
 						//bottom right coordinate
 						x + (float)(g_rowInc), y,
 						//top right coordinate
-						x + (float)(g_rowInc), y + (float)(g_colInc) - ySize
+						x + (float)(g_rowInc), y + (float)(g_colInc) - yResize
 					});
 				}
-				//check left
+				//check left of target
 				if(j - 1 >= 0 && g_level[i][j - 1] != 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
@@ -78,25 +81,24 @@ std::vector<GLfloat> Wall::genCoordinates(const int target) {
 						//bottom left coordinate
 						x, y,
 						//bottom right coordinate
-						x + (float)(g_rowInc) - xSize, y,
+						x + (float)(g_rowInc) - xResize, y,
 						//top right coordinate
-						x + (float)(g_rowInc) - xSize, y + (float)(g_colInc)
+						x + (float)(g_rowInc) - xResize, y + (float)(g_colInc)
 					});
 				}
-				//check right
+				//check right of target
 				if(j + 1 < g_levelRow && g_level[i][j + 1] != 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x + xSize, y + (float)(g_colInc),
+						x + xResize, y + (float)(g_colInc),
 						//bottom left coordinate
-						x + xSize, y,
+						x + xResize, y,
 						//bottom right coordinate
 						x + (float)(g_rowInc), y,
 						//top right coordinate
 						x + (float)(g_rowInc), y + (float)(g_colInc)
 					});
 				}
-				//check corners
 			}
 		}
 	}
