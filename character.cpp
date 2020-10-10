@@ -11,6 +11,16 @@
 extern LevelData g_level;
 
 Character::~Character() {}
+/**
+ * @brief Generate Pac-Man from the 2D array to the window.
+ * 
+ * @return GLuint 
+ */
+GLuint Character::genObject(const int row, const int col) {
+    std::vector<GLfloat> arr = genCoordinates(row, col);
+    std::vector<GLuint> arrIndices = genIndices(1);
+    return createVAO(arr, arrIndices);
+}
 
 std::vector<GLfloat> Character::genCoordinates(const int row, const int col) {
     std::vector<GLfloat> arr = {

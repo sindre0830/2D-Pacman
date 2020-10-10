@@ -20,9 +20,12 @@ Pacman::~Pacman() {
  * @brief Declare variables on construction of Pacman object.
  */
 Pacman::Pacman() {
-	direction = 3;
+	//set starting postions
     getPosition();
-    pacmanVAO = genObject();
+	//set starting direction
+	direction = 3;
+	//generate VAO and shader program
+    pacmanVAO = genObject(rowPos, colPos);
     pacmanShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
 	//specify the layout of the vertex data
     glEnableVertexAttribArray(0);
@@ -31,16 +34,6 @@ Pacman::Pacman() {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
     //load the texture image, create OpenGL texture, and bind it to the current context
     texture = loadTexture("sprite/pacman.png", 0);
-}
-/**
- * @brief Generate Pac-Man from the 2D array to the window.
- * 
- * @return GLuint 
- */
-GLuint Pacman::genObject() {
-    std::vector<GLfloat> arr = genCoordinates(rowPos, colPos);
-    std::vector<GLuint> arrIndices = genIndices(1);
-    return createVAO(arr, arrIndices);
 }
 
 void Pacman::getPosition() {
@@ -69,7 +62,7 @@ void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
     auto samplerSlotLocation = glGetUniformLocation(shader, "uTexture");
 	glUseProgram(shader);
 	glBindVertexArray(vao);
-	//change direction on key press if clock has reset and it wont hit a wall
+	//change direction on key press if pacman has completed a translation and it wont hit a wall
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && changeDirection && colPos + 1 < g_level.arrHeight && g_level.arr[colPos + 1][rowPos] != 1) {
 		yTex = 0.5f;
 		translateTex(0.0f, yTex, shader);
@@ -103,11 +96,11 @@ void Pacman::movObject() {
 	//move up (W)
 	if(direction == 0) {
 		if(movUp(rowPos, colPos, xPos, yPos, speed, pacmanShaderProgram)) {
-			n++;
+			counter++;
 			changeDirection = false;
 		}
 		//update grid if it has completed one square
-		if(n == speed) {
+		if(counter == speed) {
 			//check if there is a pellet
 			if(g_level.arr[++colPos][rowPos] == 0) {
 				g_level.score++;
@@ -118,11 +111,11 @@ void Pacman::movObject() {
 	//move left (A)
 	} else if (direction == 1) {
 		if(movLeft(rowPos, colPos, xPos, yPos, speed, pacmanShaderProgram)) {
-			n++;
+			counter++;
 			changeDirection = false;
 		}
 		//update grid if it has completed one square
-		if(n == speed) {
+		if(counter == speed) {
 			//check if there is a pellet
 			if(g_level.arr[colPos][--rowPos] == 0) {
 				g_level.score++;
@@ -133,11 +126,11 @@ void Pacman::movObject() {
 	//move down (S)
 	} else if (direction == 2) {
 		if(movDown(rowPos, colPos, xPos, yPos, speed, pacmanShaderProgram)) {
-			n++;
+			counter++;
 			changeDirection = false;
 		}
 		//update grid if it has completed one square
-		if(n == speed) {
+		if(counter == speed) {
 			//check if there is a pellet
 			if(g_level.arr[--colPos][rowPos] == 0) {
 				g_level.score++;
@@ -148,11 +141,11 @@ void Pacman::movObject() {
 	//move right (D)
 	} else if (direction == 3) {
 		if(movRight(rowPos, colPos, xPos, yPos, speed, pacmanShaderProgram)) {
-			n++;
+			counter++;
 			changeDirection = false;
 		}
 		//update grid if it has completed one square
-		if(n == speed) {
+		if(counter == speed) {
 			//check if there is a pellet
 			if(g_level.arr[colPos][++rowPos] == 0) {
 				g_level.score++;
@@ -161,19 +154,20 @@ void Pacman::movObject() {
 			g_level.arr[colPos][rowPos] = 2;
 		}
 	}
-	if (n == speed * 0.25f) {
+	//animate
+	if (counter == speed * 0.25f) {
 		translateTex(0.167f, yTex, pacmanShaderProgram);
-	} else if (n == speed * 0.5f) {
+	} else if (counter == speed * 0.5f) {
 		translateTex(0.333f, yTex, pacmanShaderProgram);
-	} else if (n == speed * 0.75f) {
+	} else if (counter == speed * 0.75f) {
 		translateTex(0.5f, yTex, pacmanShaderProgram);
-	} else if (n == speed) {
+	} else if (counter == speed) {
 		translateTex(0.0f, yTex, pacmanShaderProgram);
 		changeDirection = true;
 		if(g_level.score == g_level.pelletSize) {
 			g_gameover = true;
 			std::cout << "Congratulations, you won...\n";
 		}
-		n = 0;
+		counter = 0;
 	}
 }

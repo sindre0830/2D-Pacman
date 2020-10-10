@@ -5,7 +5,7 @@
 /* global variables */
 extern LevelData g_level;
 /**
- * @brief Destroy the Pacman object
+ * @brief Destroy the Ghost object
  */
 Ghost::~Ghost() {
     glDeleteProgram(ghostShaderProgram);
@@ -13,18 +13,18 @@ Ghost::~Ghost() {
     cleanVAO(ghostVAO);
 }
 /**
- * @brief Declare variables on construction of Pacman object.
+ * @brief Set data on construction of Ghost object.
  */
 Ghost::Ghost(int row, int col) {
 	//set starting postions
 	rowPos = row;
 	colPos = col;
-	//setting direction compared to position
+	//set starting direction compared to row position
 	if(g_level.arrWidth / 2 <= row) {
 		direction = 3;
 	} else direction = 1;
 	//generate VAO and shader program
-    ghostVAO = genObject();
+    ghostVAO = genObject(rowPos, colPos);
     ghostShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
 	//specify the layout of the vertex data
     glEnableVertexAttribArray(0);
@@ -33,16 +33,8 @@ Ghost::Ghost(int row, int col) {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
     //load the texture image, create OpenGL texture, and bind it to the current context
     texture = loadTexture("sprite/pacman.png", 0);
-}
-/**
- * @brief Generate Pac-Man from the 2D array to the window.
- * 
- * @return GLuint 
- */
-GLuint Ghost::genObject() {
-    std::vector<GLfloat> arr = genCoordinates(rowPos, colPos);
-    std::vector<GLuint> arrIndices = genIndices(1);
-    return createVAO(arr, arrIndices);
+	//translate texture to show ghost
+	translateTex(4.0f / 6.0f, yTex, ghostShaderProgram);
 }
 
 void Ghost::drawObject() {
@@ -79,10 +71,12 @@ void Ghost::movObject() {
 			g_level.ghostPos[++colPos][rowPos] = true;
 			//branch if character isn't going to teleport
 			if(colPos + 1 <= g_level.arrHeight) {
+				//store all possible directions in an array
 				std::vector<int> possiblePaths;
 				if(g_level.arr[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
 				if(g_level.arr[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
 				if(g_level.arr[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
+				//pick direction randomly
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
@@ -97,10 +91,12 @@ void Ghost::movObject() {
 			g_level.ghostPos[colPos][--rowPos] = true;
 			//branch if character isn't going to teleport
 			if(rowPos - 1 >= 0) {
+				//store all possible directions in an array
 				std::vector<int> possiblePaths;
 				if(g_level.arr[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
 				if(g_level.arr[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
 				if(g_level.arr[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
+				//pick direction randomly
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
@@ -115,10 +111,12 @@ void Ghost::movObject() {
 			g_level.ghostPos[--colPos][rowPos] = true;
 			//branch if character isn't going to teleport
 			if(colPos - 1 >= 0) {
+				//store all possible directions in an array
 				std::vector<int> possiblePaths;
 				if(g_level.arr[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
 				if(g_level.arr[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
 				if(g_level.arr[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
+				//pick direction randomly
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
@@ -133,14 +131,17 @@ void Ghost::movObject() {
 			g_level.ghostPos[colPos][++rowPos] = true;
 			//branch if character isn't going to teleport
 			if(rowPos + 1 < g_level.arrWidth) {
+				//store all possible directions in an array
 				std::vector<int> possiblePaths;
 				if(g_level.arr[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
 				if(g_level.arr[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
 				if(g_level.arr[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
+				//pick direction randomly
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
 	}
+	//animate
 	if (counter == speed * 0.25f) {
 		translateTex(4.0f / 6.0f, yTex, ghostShaderProgram);
 	} else if (counter == speed * 0.5f) {

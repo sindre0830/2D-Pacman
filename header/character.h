@@ -14,7 +14,11 @@ class Character : public Framework {
         ~Character();
     protected:
         /* protected data */
+        GLuint texture;
+        int direction, rowPos, colPos, counter = 0, speed = 20;
+        float xPos = 0.f, yPos = 0.f, yTex = 0.f;
         /* protected functionality */
+        GLuint genObject(const int row, const int col);
         std::vector<GLfloat> genCoordinates(const int row, const int col);
         void translatePos(const float x, const float y, const GLuint &shader);
         void translateTex(const float x, const float y, const GLuint &shader);
