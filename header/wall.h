@@ -10,10 +10,13 @@ class Wall : public Framework {
     private:
         /* private data */
         GLuint wallVAO;
+        GLuint cornerVAO;
         GLuint wallShaderProgram;
+        int wallSize = 0, cornerSize = 0;
         /* private functionality */
         GLuint genObject();
-        std::vector<GLfloat> genCoordinates(const int target);
+        std::vector<GLfloat> genWallCoordinates(const int target);
+        GLuint genCornerVAO(const int target);
     public:
         /* public functionality */
         ~Wall();
