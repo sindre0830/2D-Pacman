@@ -50,11 +50,10 @@ void Pellet::drawObject() {
 
 void Pellet::hidePellet(const int y, const int x) {
 	GLfloat display = 0.0f;
-	//std::cout << y << ',' << x << ' ' << bufferPos[std::make_pair(y, x)] << std::endl;
-	glBufferSubData(GL_ARRAY_BUFFER, bufferPos[std::make_pair(y, x)] +  8, sizeof(GLfloat), &display);
-	glBufferSubData(GL_ARRAY_BUFFER, bufferPos[std::make_pair(y, x)] + 20, sizeof(GLfloat), &display);
-	glBufferSubData(GL_ARRAY_BUFFER, bufferPos[std::make_pair(y, x)] + 32, sizeof(GLfloat), &display);
-	glBufferSubData(GL_ARRAY_BUFFER, bufferPos[std::make_pair(y, x)] + 44, sizeof(GLfloat), &display);
+	for(int i = 8; i < pelletByteSize - sizeof(GLfloat); i += 12) {
+		glBufferSubData(GL_ARRAY_BUFFER, bufferPos[std::make_pair(y, x)] +  i, sizeof(GLfloat), &display);
+	}
+	
 }
 
 std::vector<GLfloat> Pellet::genCoordinates(const int target) {
