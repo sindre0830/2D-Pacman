@@ -39,6 +39,23 @@ bool readFile() {
 		//set element value
 		g_level.elementWidth = 1.f / ((float)(g_level.arrWidth) / 2.f);
 		g_level.elementHeight = 1.f / ((float)(g_level.arrHeight) / 2.f);
+		
+		float
+			x = -1.f,
+			y = -1.f;
+		//fills in array with coordinates
+		for (int i = 0; i < g_level.arrHeight; i++, x = -1.f, y += g_level.elementHeight) {
+			for (int j = 0; j < g_level.arrWidth; j++, x += g_level.elementWidth) {
+				//top left
+				g_level.elementPos[std::make_pair(i, j)].push_back({x, y + (float)(g_level.elementHeight)});
+				//bottom left
+				g_level.elementPos[std::make_pair(i, j)].push_back({x, y});
+				//bottom right
+				g_level.elementPos[std::make_pair(i, j)].push_back({x + (float)(g_level.elementWidth), y});
+				//top right
+				g_level.elementPos[std::make_pair(i, j)].push_back({x + (float)(g_level.elementWidth), y + (float)(g_level.elementHeight)});
+			}
+		}
 		return true;
 	} else return false;
 }

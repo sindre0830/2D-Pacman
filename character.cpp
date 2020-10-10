@@ -12,13 +12,20 @@ extern LevelData g_level;
 
 Character::~Character() {}
 
-std::vector<GLfloat> Character::genCoordinates(const float xPos, const float yPos, const float xTex, const float yTex) {
+std::vector<GLfloat> Character::genCoordinates(const int row, const int col) {
     std::vector<GLfloat> arr = {
-		//position								                                        //texture coord
-		xPos,			                        yPos + (float)(g_level.elementHeight),	xTex,	        yTex + 0.25f,
-		xPos,			                        yPos,				                    xTex,	        yTex,
-		xPos + (float)(g_level.elementWidth),	yPos,				                    xTex + 0.16f,	yTex,
-		xPos + (float)(g_level.elementWidth),	yPos + (float)(g_level.elementHeight),	xTex + 0.16f,	yTex + 0.25f
+        //top left coordinate
+        g_level.elementPos[std::make_pair(col, row)][0][0], g_level.elementPos[std::make_pair(col, row)][0][1],	
+        0.f,                                                0.25f,
+        //bottom left coordinate
+        g_level.elementPos[std::make_pair(col, row)][1][0], g_level.elementPos[std::make_pair(col, row)][1][1], 
+        0.f,                                                0.f,
+        //bottom right coordinate
+        g_level.elementPos[std::make_pair(col, row)][2][0], g_level.elementPos[std::make_pair(col, row)][2][1], 
+        0.16f,                                              0.f,
+        //top right coordinate
+        g_level.elementPos[std::make_pair(col, row)][3][0], g_level.elementPos[std::make_pair(col, row)][3][1],	
+        0.16f,                                              0.25f
     };
     return arr;
 }

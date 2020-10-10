@@ -43,72 +43,69 @@ void Wall::drawObject() {
 }
 
 std::vector<GLfloat> Wall::genWallCoordinates(const int target) {
-    /* local data */
 	float
-		//wall position
-		x = -1.0f,
-		y = -1.0f,
 		//resize wall
 		xResize = (float)(g_level.elementWidth / 1.2f),
 		yResize = (float)(g_level.elementHeight / 1.2f);
+	//buffer array
 	std::vector<GLfloat> arr;
 	//fills in array with coordinates
-	for (int i = 0; i < g_level.arrHeight; i++, x = -1.0f, y += g_level.elementHeight) {
-		for (int j = 0; j < g_level.arrWidth; j++, x += g_level.elementWidth) {
+	for (int i = 0; i < g_level.arrHeight; i++) {
+		for (int j = 0; j < g_level.arrWidth; j++) {
 			if (g_level.arr[i][j] == target) {
-				//check over target
+				//check if there can be a wall above
 				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x, y + (float)(g_level.elementHeight),
+						g_level.elementPos[std::make_pair(i, j)][0][0], g_level.elementPos[std::make_pair(i, j)][0][1],
 						//bottom left coordinate
-						x, y + yResize,
+						g_level.elementPos[std::make_pair(i, j)][1][0], g_level.elementPos[std::make_pair(i, j)][1][1] + yResize,
 						//bottom right coordinate
-						x + (float)(g_level.elementWidth), y + yResize,
+						g_level.elementPos[std::make_pair(i, j)][2][0], g_level.elementPos[std::make_pair(i, j)][2][1] + yResize,
 						//top right coordinate
-						x + (float)(g_level.elementWidth), y + (float)(g_level.elementHeight)
+						g_level.elementPos[std::make_pair(i, j)][3][0], g_level.elementPos[std::make_pair(i, j)][3][1]
 					});
 					wallSize++;
 				}
-				//check under target
+				//check if there can be a wall under
 				if(i - 1 >= 0 && g_level.arr[i - 1][j] != 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x, y + (float)(g_level.elementHeight) - yResize,
+						g_level.elementPos[std::make_pair(i, j)][0][0], g_level.elementPos[std::make_pair(i, j)][0][1] - yResize,
 						//bottom left coordinate
-						x, y,
+						g_level.elementPos[std::make_pair(i, j)][1][0], g_level.elementPos[std::make_pair(i, j)][1][1],
 						//bottom right coordinate
-						x + (float)(g_level.elementWidth), y,
+						g_level.elementPos[std::make_pair(i, j)][2][0], g_level.elementPos[std::make_pair(i, j)][2][1],
 						//top right coordinate
-						x + (float)(g_level.elementWidth), y + (float)(g_level.elementHeight) - yResize
+						g_level.elementPos[std::make_pair(i, j)][3][0], g_level.elementPos[std::make_pair(i, j)][3][1] - yResize
 					});
 					wallSize++;
 				}
-				//check left of target
+				//check if there can be a wall to the left
 				if(j - 1 >= 0 && g_level.arr[i][j - 1] != 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x, y + (float)(g_level.elementHeight),
+						g_level.elementPos[std::make_pair(i, j)][0][0], g_level.elementPos[std::make_pair(i, j)][0][1],
 						//bottom left coordinate
-						x, y,
+						g_level.elementPos[std::make_pair(i, j)][1][0], g_level.elementPos[std::make_pair(i, j)][1][1],
 						//bottom right coordinate
-						x + (float)(g_level.elementWidth) - xResize, y,
+						g_level.elementPos[std::make_pair(i, j)][2][0] - xResize, g_level.elementPos[std::make_pair(i, j)][2][1],
 						//top right coordinate
-						x + (float)(g_level.elementWidth) - xResize, y + (float)(g_level.elementHeight)
+						g_level.elementPos[std::make_pair(i, j)][3][0] - xResize, g_level.elementPos[std::make_pair(i, j)][3][1]
 					});
 					wallSize++;
 				}
-				//check right of target
+				//check if there can be a wall to the right
 				if(j + 1 < g_level.arrWidth && g_level.arr[i][j + 1] != 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x + xResize, y + (float)(g_level.elementHeight),
+						g_level.elementPos[std::make_pair(i, j)][0][0] + xResize, g_level.elementPos[std::make_pair(i, j)][0][1],
 						//bottom left coordinate
-						x + xResize, y,
+						g_level.elementPos[std::make_pair(i, j)][1][0] + xResize, g_level.elementPos[std::make_pair(i, j)][1][1],
 						//bottom right coordinate
-						x + (float)(g_level.elementWidth), y,
+						g_level.elementPos[std::make_pair(i, j)][2][0], g_level.elementPos[std::make_pair(i, j)][2][1],
 						//top right coordinate
-						x + (float)(g_level.elementWidth), y + (float)(g_level.elementHeight)
+						g_level.elementPos[std::make_pair(i, j)][3][0], g_level.elementPos[std::make_pair(i, j)][3][1]
 					});
 					wallSize++;
 				}
@@ -119,64 +116,61 @@ std::vector<GLfloat> Wall::genWallCoordinates(const int target) {
 }
 
 GLuint Wall::genCornerVAO(const int target) {
-    /* local data */
 	float
-		//wall position
-		x = -1.0f,
-		y = -1.0f,
-		//resize wall
+		//resize corner acording to size of wall
 		xResize = (float)(g_level.elementWidth / 1.2f) / 5.f,
 		yResize = (float)(g_level.elementHeight / 1.2f) / 5.f;
+	//buffer array
 	std::vector<GLfloat> arr;
 	//fills in array with coordinates
-	for (int i = 0; i < g_level.arrHeight; i++, x = -1.0f, y += g_level.elementHeight) {
-		for (int j = 0; j < g_level.arrWidth; j++, x += g_level.elementWidth) {
+	for (int i = 0; i < g_level.arrHeight; i++) {
+		for (int j = 0; j < g_level.arrWidth; j++) {
 			if (g_level.arr[i][j] == target) {
-				//check top right
+				//check if there can be a corner top right
 				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != 1 && j + 1 < g_level.arrWidth && g_level.arr[i + 1][j + 1] == 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x + (float)(g_level.elementWidth), y + (float)(g_level.elementHeight),
+						g_level.elementPos[std::make_pair(i, j)][3][0], g_level.elementPos[std::make_pair(i, j)][3][1],
 						//bottom left coordinate
-						x + (float)(g_level.elementWidth), y + (float)(g_level.elementHeight) - yResize,
+						g_level.elementPos[std::make_pair(i, j)][3][0], g_level.elementPos[std::make_pair(i, j)][3][1] - yResize,
 						//top right coordinate
-						x + (float)(g_level.elementWidth) + xResize, y + (float)(g_level.elementHeight)
+						g_level.elementPos[std::make_pair(i, j)][3][0] + xResize, g_level.elementPos[std::make_pair(i, j)][3][1]
 					});
 					cornerSize++;
 				}
-				//check top left
+				//check if there can be a corner top left
 				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != 1 && j - 1 >= 0 && g_level.arr[i + 1][j - 1] == 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x - xResize, y + (float)(g_level.elementHeight),
+						g_level.elementPos[std::make_pair(i, j)][0][0] - xResize, g_level.elementPos[std::make_pair(i, j)][0][1],
 						//bottom right coordinate
-						x, y + (float)(g_level.elementHeight) - yResize,
+						g_level.elementPos[std::make_pair(i, j)][0][0], g_level.elementPos[std::make_pair(i, j)][0][1] - yResize,
 						//top right coordinate
-						x, y + (float)(g_level.elementHeight)
+						g_level.elementPos[std::make_pair(i, j)][0][0], g_level.elementPos[std::make_pair(i, j)][0][1]
 					});
 					cornerSize++;
 				}
-				//check bottom right
+				//check if there can be a corner bottom right
 				if(i - 1 >= 0 && g_level.arr[i - 1][j] != 1 && j + 1 < g_level.arrWidth && g_level.arr[i - 1][j + 1] == 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x + (float)(g_level.elementWidth), y,
+						g_level.elementPos[std::make_pair(i, j)][2][0], g_level.elementPos[std::make_pair(i, j)][2][1],
 						//bottom left coordinate
-						x + (float)(g_level.elementWidth), y + yResize,
+						g_level.elementPos[std::make_pair(i, j)][2][0], g_level.elementPos[std::make_pair(i, j)][2][1] + yResize,
 						//top right coordinate
-						x + (float)(g_level.elementWidth) + xResize, y
+						g_level.elementPos[std::make_pair(i, j)][2][0] + xResize, g_level.elementPos[std::make_pair(i, j)][2][1]
 					});
 					cornerSize++;
 				}
-				//check bottom left
+				//check if there can be a corner bottom left
 				if(i - 1 >= 0 && g_level.arr[i - 1][j] != 1 && j - 1 >= 0 && g_level.arr[i - 1][j - 1] == 1) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						x - xResize, y,
+						g_level.elementPos[std::make_pair(i, j)][1][0] - xResize, g_level.elementPos[std::make_pair(i, j)][1][1],
 						//bottom right coordinate
-						x, y + yResize,
+						g_level.elementPos[std::make_pair(i, j)][1][0], g_level.elementPos[std::make_pair(i, j)][1][1] + yResize,
 						//top right coordinate
-						x, y
+						g_level.elementPos[std::make_pair(i, j)][1][0], g_level.elementPos[std::make_pair(i, j)][1][1]
 					});
 					cornerSize++;
 				}

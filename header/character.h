@@ -15,7 +15,7 @@ class Character : public Framework {
     protected:
         /* protected data */
         /* protected functionality */
-        std::vector<GLfloat> genCoordinates(const float xPos, const float yPos, const float xTex, const float yTex);
+        std::vector<GLfloat> genCoordinates(const int row, const int col);
         void translatePos(const float x, const float y, const GLuint &shader);
         void translateTex(const float x, const float y, const GLuint &shader);
         GLuint loadTexture(const std::string& filepath, GLuint slot);

@@ -17,8 +17,6 @@ Ghost::~Ghost() {
  */
 Ghost::Ghost(int row, int col) {
 	//set starting postions
-	xPos = -1.0f + (g_level.elementWidth * row);
-	yPos = -1.0f + (g_level.elementHeight * col);
 	rowPos = row;
 	colPos = col;
 	//setting direction compared to position
@@ -42,11 +40,8 @@ Ghost::Ghost(int row, int col) {
  * @return GLuint 
  */
 GLuint Ghost::genObject() {
-    std::vector<GLfloat> arr = genCoordinates(xPos, yPos, 0.0f, 0.0f);
+    std::vector<GLfloat> arr = genCoordinates(rowPos, colPos);
     std::vector<GLuint> arrIndices = genIndices(1);
-	//reset values to be used in Pacman::draw()
-	xPos = 0.0f;
-	yPos = 0.0f;
     return createVAO(arr, arrIndices);
 }
 

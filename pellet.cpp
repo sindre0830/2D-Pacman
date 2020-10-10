@@ -79,11 +79,7 @@ void Pellet::hidePellet(const int y, const int x) {
  * @return std::vector<GLfloat> 
  */
 std::vector<GLfloat> Pellet::genCoordinates(const int target) {
-    /* local data */
 	float
-		//pellet position
-		x = -1.f,
-		y = -1.f,
 		//display pellet
 		display = 1.f,
 		//resize pellet
@@ -92,27 +88,22 @@ std::vector<GLfloat> Pellet::genCoordinates(const int target) {
 		//rotate pellet
 		xRotate = (float)(g_level.elementWidth / 2.f),
 		yRotate = (float)(g_level.elementHeight / 2.f);
+	//buffer array
 	std::vector<GLfloat> arr;
 	//fills in array with coordinates
-	for (int i = 0; i < g_level.arrHeight; i++, x = -1.f, y += g_level.elementHeight) {
-		for (int j = 0; j < g_level.arrWidth; j++, x += g_level.elementWidth) {
+	for (int i = 0; i < g_level.arrHeight; i++) {
+		for (int j = 0; j < g_level.arrWidth; j++) {
 			if (g_level.arr[i][j] == target) {
-				//middle left coordinate
-				arr.push_back(x + xResize);
-				arr.push_back(y + g_level.elementHeight - yRotate);
-				arr.push_back(display);
-				//middle down coordinate
-				arr.push_back(x + xRotate);
-				arr.push_back(y + yResize);
-				arr.push_back(display);
-				//middle right coordinate
-				arr.push_back(x + g_level.elementWidth - xResize);
-				arr.push_back(y + yRotate);
-				arr.push_back(display);
-				//middle top coordinate
-				arr.push_back(x + g_level.elementWidth - xRotate);
-				arr.push_back(y + g_level.elementHeight - yResize);
-				arr.push_back(display);
+				arr.insert(arr.end(), {
+					//middle left coordinate
+					g_level.elementPos[std::make_pair(i, j)][0][0] + xResize, g_level.elementPos[std::make_pair(i, j)][0][1] - yRotate, display,
+					//middle down coordinate
+					g_level.elementPos[std::make_pair(i, j)][1][0] + xRotate, g_level.elementPos[std::make_pair(i, j)][1][1] + yResize, display,
+					//middle right coordinate
+					g_level.elementPos[std::make_pair(i, j)][2][0] - xResize, g_level.elementPos[std::make_pair(i, j)][2][1] + yRotate, display,
+					//middle top coordinate
+					g_level.elementPos[std::make_pair(i, j)][3][0] - xRotate, g_level.elementPos[std::make_pair(i, j)][3][1] - yResize, display
+				});
 			}
 		}
 	}

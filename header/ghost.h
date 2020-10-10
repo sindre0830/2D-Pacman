@@ -12,7 +12,7 @@ class Ghost : public Character {
         GLuint ghostShaderProgram;
         GLuint texture;
         int direction, rowPos, colPos, counter = 0, speed = 20;
-        float xPos, yPos, yTex = 0.0f;
+        float xPos = 0.f, yPos = 0.f, yTex = 0.f;
         /* private functionality */
         GLuint genObject();
         void draw(GLuint &shader, GLuint &vao);
