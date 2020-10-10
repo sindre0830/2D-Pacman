@@ -1,7 +1,7 @@
 /* libraries */
-#include "header/levelData.h"
 #include "header/pacman.h"
 #include "shader/character.h"
+#include "header/levelData.h"
 #include "header/pellet.h"
 #include <iostream>
 /* global variables */
@@ -110,7 +110,10 @@ void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
  * @param shader
  */
 void Pacman::movObject() {
-	if(g_level.ghostPos[colPos][rowPos]) g_gameover = true;
+	if(g_level.ghostPos[colPos][rowPos]) {
+		g_gameover = true;
+			std::cout << "Better luck next time...\n";
+	}
 	//move up (W)
 	if(direction == 0) {
 		if(movUp(rowPos, colPos, xPos, yPos, speed, pacmanShaderProgram)) {
@@ -185,7 +188,10 @@ void Pacman::movObject() {
 	} else if (n == speed) {
 		translateTex(0.0f, yTex, pacmanShaderProgram);
 		changeDirection = true;
-		if(g_level.score == g_level.pelletSize) g_gameover = true;
+		if(g_level.score == g_level.pelletSize) {
+			g_gameover = true;
+			std::cout << "Congratulations, you won...\n";
+		}
 		n = 0;
 	}
 }

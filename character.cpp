@@ -14,10 +14,10 @@ Character::~Character() {}
 
 std::vector<GLfloat> Character::genCoordinates(const float xPos, const float yPos, const float xTex, const float yTex) {
     std::vector<GLfloat> arr = {
-		//position								//texture coord
-		xPos,			            yPos + (float)(g_level.elementHeight),	xTex,	        yTex + 0.25f,
-		xPos,			            yPos,				        xTex,	        yTex,
-		xPos + (float)(g_level.elementWidth),	yPos,				        xTex + 0.16f,	yTex,
+		//position								                                        //texture coord
+		xPos,			                        yPos + (float)(g_level.elementHeight),	xTex,	        yTex + 0.25f,
+		xPos,			                        yPos,				                    xTex,	        yTex,
+		xPos + (float)(g_level.elementWidth),	yPos,				                    xTex + 0.16f,	yTex,
 		xPos + (float)(g_level.elementWidth),	yPos + (float)(g_level.elementHeight),	xTex + 0.16f,	yTex + 0.25f
     };
     return arr;

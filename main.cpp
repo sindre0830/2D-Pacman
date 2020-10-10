@@ -120,7 +120,7 @@ int main() {
 		//break loop if 'ESC' key is pressed
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) break;
 	}
-	std::cout << "\nFinal score was: " << g_level.score << '\n';
+	std::cout << "\nFinal score was: " << g_level.score << '/' << g_level.pelletSize << '\n';
 	//clear memory
 	for(int i = 0; i < ghostArr.size(); i++) {
 		delete ghostArr[i];

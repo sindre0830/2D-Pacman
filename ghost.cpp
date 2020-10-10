@@ -2,8 +2,6 @@
 #include "header/ghost.h"
 #include "shader/character.h"
 #include "header/levelData.h"
-#include "header/pellet.h"
-#include <iostream>
 /* global variables */
 extern LevelData g_level;
 /**
