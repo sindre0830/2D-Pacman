@@ -1,6 +1,7 @@
 /* libraries */
 #include "header/function.h"
 #include "header/levelData.h"
+#include <GLFW/glfw3.h>
 
 extern LevelData g_level;
 /**
@@ -81,4 +82,10 @@ bool getGhostPos(const int size, int &row, int &col) {
 		if(flag) return true;
 	}
 	return false;
+}
+
+void get_resolution(int &width, int &height) {
+    const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    width = mode->width;
+    height = mode->height;
 }

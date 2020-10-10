@@ -44,6 +44,9 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//create window
+	/*int width, height;
+	get_resolution(width, height);
+	auto window = glfwCreateWindow(width, height, "Pac-Man", glfwGetPrimaryMonitor(), nullptr);*/
 	auto window = glfwCreateWindow(g_level.arrWidth * 35, g_level.arrHeight * 35, "Pac-Man", nullptr, nullptr);
 	//setting the OpenGL context to the window
 	glfwMakeContextCurrent(window);
