@@ -114,9 +114,9 @@ int main() {
 		//draw pacman
 		pacman.draw();
 		if (!g_gameover && deltaTime >= 1.0){
-			pacman.inputDirection(window);
 			//translate pacman
 			pacman.mov(pellet);
+			pacman.inputDirection(window);
 		}
 		//draw ghosts
 		for(int i = 0; i < ghostArr.size(); i++) {
