@@ -151,8 +151,12 @@ void Ghost::findPath() {
 	direction = possiblePaths[rand() % possiblePaths.size()];
 }
 
+void Ghost::pathfinding() {
+	
+}
+
 void Ghost::checkCoalition() {
-	if(g_level.arr[colPos][rowPos] == 2) {
+	if(colPos == g_level.pacmanCol && rowPos == g_level.pacmanRow) {
 		g_gameover = true;
 		std::cout << "Better luck next time...\n";
 	}

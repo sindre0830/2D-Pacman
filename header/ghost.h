@@ -13,6 +13,7 @@ class Ghost : public Character {
         /* private functionality */
         void draw(GLuint &shader, GLuint &vao);
         void findPath();
+        void pathfinding();
         void animate();
     public:
         /* public functionality */

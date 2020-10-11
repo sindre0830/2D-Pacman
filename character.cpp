@@ -102,9 +102,8 @@ bool Character::movUp(int &row, int &col, float &x, float &y, const int speed, c
             return true;
         } else return false;
     } else {
-        translatePos(x, y -= (double)(g_level.arrHeight - 1) * g_level.elementHeight, shader);
         col = 0;
-        g_level.arr[g_level.arrHeight - 1][row] = 3;
+        translatePos(x, y -= (double)(g_level.arrHeight - 1) * g_level.elementHeight, shader);
         return false;
     }
 }
@@ -118,9 +117,8 @@ bool Character::movLeft(int &row, int &col, float &x, float &y, const int speed,
             return true;
         } else return false;
     } else {
-        translatePos(x += (double)(g_level.arrWidth - 1) * g_level.elementWidth, y, shader);
         row = g_level.arrWidth - 1;
-        g_level.arr[col][0] = 3;
+        translatePos(x += (double)(g_level.arrWidth - 1) * g_level.elementWidth, y, shader);
         return false;
     }
 }
@@ -134,9 +132,8 @@ bool Character::movDown(int &row, int &col, float &x, float &y, const int speed,
             return true;
         } else return false;
     } else {
-        translatePos(x, y += (double)(g_level.arrHeight - 1) * g_level.elementHeight, shader);
         col = g_level.arrHeight - 1;
-        g_level.arr[0][row] = 3;
+        translatePos(x, y += (double)(g_level.arrHeight - 1) * g_level.elementHeight, shader);
         return false;
     }
 }
@@ -150,9 +147,8 @@ bool Character::movRight(int &row, int &col, float &x, float &y, const int speed
             return true;
         } else return false;
 	} else {
-        translatePos(x -= (double)(g_level.arrWidth - 1) * g_level.elementWidth, y, shader);
         row = 0;
-        g_level.arr[col][g_level.arrWidth - 1] = 3;
+        translatePos(x -= (double)(g_level.arrWidth - 1) * g_level.elementWidth, y, shader);
         return false;
     }
 }
