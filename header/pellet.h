@@ -13,7 +13,7 @@ class Pellet : public Entity {
         const int pelletByteSize = 3 * 4 * sizeof(GLfloat);
         /* private functionality */
         GLuint genObject();
-        std::vector<GLfloat> genCoordinates(const int target);
+        std::vector<GLfloat> genCoordinates();
     public:
         /* public functionality */
         ~Pellet();

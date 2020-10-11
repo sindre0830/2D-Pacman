@@ -21,10 +21,12 @@ Pellet::Pellet() {
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void*)0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void*)(2 * sizeof(GLfloat)));
+	//set target to pellets
+	target = 0;
 	//set bufferposition in refrence to position in level
 	for(int i = 0, n = 0; i < g_level.arrHeight; i++) {
 		for(int j = 0; j < g_level.arrWidth; j++) {
-			if(g_level.arr[i][j] == 0) {
+			if(g_level.arr[i][j] == target) {
 				bufferPos[std::make_pair(i, j)] = n * pelletByteSize;
 				n++;
 			}
@@ -37,7 +39,7 @@ Pellet::Pellet() {
  * @return GLuint 
  */
 GLuint Pellet::genObject() {
-	std::vector<GLfloat> arr = genCoordinates(0);
+	std::vector<GLfloat> arr = genCoordinates();
 	std::vector<GLuint> arrIndices = genIndices(g_level.pelletSize);
 	return createVAO(arr, arrIndices);
 }
@@ -68,7 +70,7 @@ void Pellet::hidePellet(const int y, const int x) {
  * @param target 
  * @return std::vector<GLfloat> 
  */
-std::vector<GLfloat> Pellet::genCoordinates(const int target) {
+std::vector<GLfloat> Pellet::genCoordinates() {
 	float
 		//display pellet
 		display = 1.f,

@@ -18,15 +18,17 @@ Wall::Wall() {
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLuint), (const void*)0);
 	glEnableVertexAttribArray(0);
 	//generate corner VAO
-	cornerVAO = genCornerVAO(1);
+	cornerVAO = genCornerVAO();
 	//set the vertex attribute
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLuint), (const void*)0);
 	glEnableVertexAttribArray(0);
+	//set target to walls
+	target = 1;
 }
 
 GLuint Wall::genObject() {
 	//target value 1, don't change size of x and y, don't add a display value
-	std::vector<GLfloat> arr = genWallCoordinates(1);
+	std::vector<GLfloat> arr = genWallCoordinates();
 	std::vector<GLuint> arrIndices = genIndices(wallSize);
 	return createVAO(arr, arrIndices);
 }
@@ -41,7 +43,7 @@ void Wall::drawObject() {
 	glDrawArrays(GL_TRIANGLES, 0, (3 * cornerSize));
 }
 
-std::vector<GLfloat> Wall::genWallCoordinates(const int target) {
+std::vector<GLfloat> Wall::genWallCoordinates() {
 	float
 		//resize wall
 		xResize = (float)(g_level.elementWidth / 1.2f),
@@ -53,7 +55,7 @@ std::vector<GLfloat> Wall::genWallCoordinates(const int target) {
 		for (int j = 0; j < g_level.arrWidth; j++) {
 			if (g_level.arr[i][j] == target) {
 				//check if there can be a wall above
-				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != 1) {
+				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != target) {
 					arr.insert(arr.end(), {
 						//top left coordinate
 						g_level.elementPos[std::make_pair(i, j)][0][0], g_level.elementPos[std::make_pair(i, j)][0][1],
@@ -67,7 +69,7 @@ std::vector<GLfloat> Wall::genWallCoordinates(const int target) {
 					wallSize++;
 				}
 				//check if there can be a wall under
-				if(i - 1 >= 0 && g_level.arr[i - 1][j] != 1) {
+				if(i - 1 >= 0 && g_level.arr[i - 1][j] != target) {
 					arr.insert(arr.end(), {
 						//top left coordinate
 						g_level.elementPos[std::make_pair(i, j)][0][0], g_level.elementPos[std::make_pair(i, j)][0][1] - yResize,
@@ -81,7 +83,7 @@ std::vector<GLfloat> Wall::genWallCoordinates(const int target) {
 					wallSize++;
 				}
 				//check if there can be a wall to the left
-				if(j - 1 >= 0 && g_level.arr[i][j - 1] != 1) {
+				if(j - 1 >= 0 && g_level.arr[i][j - 1] != target) {
 					arr.insert(arr.end(), {
 						//top left coordinate
 						g_level.elementPos[std::make_pair(i, j)][0][0], g_level.elementPos[std::make_pair(i, j)][0][1],
@@ -95,7 +97,7 @@ std::vector<GLfloat> Wall::genWallCoordinates(const int target) {
 					wallSize++;
 				}
 				//check if there can be a wall to the right
-				if(j + 1 < g_level.arrWidth && g_level.arr[i][j + 1] != 1) {
+				if(j + 1 < g_level.arrWidth && g_level.arr[i][j + 1] != target) {
 					arr.insert(arr.end(), {
 						//top left coordinate
 						g_level.elementPos[std::make_pair(i, j)][0][0] + xResize, g_level.elementPos[std::make_pair(i, j)][0][1],
@@ -114,7 +116,7 @@ std::vector<GLfloat> Wall::genWallCoordinates(const int target) {
 	return arr;
 }
 
-GLuint Wall::genCornerVAO(const int target) {
+GLuint Wall::genCornerVAO() {
 	float
 		//resize corner acording to size of wall
 		xResize = (float)(g_level.elementWidth / 1.2f) / 5.f,
@@ -126,7 +128,7 @@ GLuint Wall::genCornerVAO(const int target) {
 		for (int j = 0; j < g_level.arrWidth; j++) {
 			if (g_level.arr[i][j] == target) {
 				//check if there can be a corner top right
-				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != 1 && j + 1 < g_level.arrWidth && g_level.arr[i + 1][j + 1] == 1) {
+				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != target && j + 1 < g_level.arrWidth && g_level.arr[i + 1][j + 1] == target) {
 					arr.insert(arr.end(), {
 						//top left coordinate
 						g_level.elementPos[std::make_pair(i, j)][3][0], g_level.elementPos[std::make_pair(i, j)][3][1],
@@ -138,7 +140,7 @@ GLuint Wall::genCornerVAO(const int target) {
 					cornerSize++;
 				}
 				//check if there can be a corner top left
-				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != 1 && j - 1 >= 0 && g_level.arr[i + 1][j - 1] == 1) {
+				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != target && j - 1 >= 0 && g_level.arr[i + 1][j - 1] == target) {
 					arr.insert(arr.end(), {
 						//top left coordinate
 						g_level.elementPos[std::make_pair(i, j)][0][0] - xResize, g_level.elementPos[std::make_pair(i, j)][0][1],
@@ -150,7 +152,7 @@ GLuint Wall::genCornerVAO(const int target) {
 					cornerSize++;
 				}
 				//check if there can be a corner bottom right
-				if(i - 1 >= 0 && g_level.arr[i - 1][j] != 1 && j + 1 < g_level.arrWidth && g_level.arr[i - 1][j + 1] == 1) {
+				if(i - 1 >= 0 && g_level.arr[i - 1][j] != target && j + 1 < g_level.arrWidth && g_level.arr[i - 1][j + 1] == target) {
 					arr.insert(arr.end(), {
 						//top left coordinate
 						g_level.elementPos[std::make_pair(i, j)][2][0], g_level.elementPos[std::make_pair(i, j)][2][1],
@@ -162,7 +164,7 @@ GLuint Wall::genCornerVAO(const int target) {
 					cornerSize++;
 				}
 				//check if there can be a corner bottom left
-				if(i - 1 >= 0 && g_level.arr[i - 1][j] != 1 && j - 1 >= 0 && g_level.arr[i - 1][j - 1] == 1) {
+				if(i - 1 >= 0 && g_level.arr[i - 1][j] != target && j - 1 >= 0 && g_level.arr[i - 1][j - 1] == target) {
 					arr.insert(arr.end(), {
 						//top left coordinate
 						g_level.elementPos[std::make_pair(i, j)][1][0] - xResize, g_level.elementPos[std::make_pair(i, j)][1][1],

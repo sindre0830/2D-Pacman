@@ -13,8 +13,8 @@ class Wall : public Entity {
         int wallSize = 0, cornerSize = 0;
         /* private functionality */
         GLuint genObject();
-        std::vector<GLfloat> genWallCoordinates(const int target);
-        GLuint genCornerVAO(const int target);
+        std::vector<GLfloat> genWallCoordinates();
+        GLuint genCornerVAO();
     public:
         /* public functionality */
         ~Wall();
