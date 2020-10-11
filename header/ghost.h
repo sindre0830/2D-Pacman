@@ -12,7 +12,8 @@ class Ghost : public Character {
         GLuint ghostShaderProgram;
         /* private functionality */
         void draw(GLuint &shader, GLuint &vao);
-        std::vector<int> findPath();
+        void findPath();
+        void animate();
     public:
         /* public functionality */
         ~Ghost();

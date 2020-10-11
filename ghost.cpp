@@ -23,8 +23,14 @@ Ghost::Ghost(int row, int col) {
 	colPos = col;
 	//set starting direction compared to row position
 	if(g_level.arrWidth / 2 <= row) {
-		direction = 3;
-	} else direction = 1;
+		if(g_level.arr[col][row + 1] != 1) {
+			direction = 3;
+		} else direction = 1;
+	} else {
+		if(g_level.arr[col][row - 1] != 1) {
+			direction = 1;
+		} else direction = 3;
+	}
 	//generate VAO and shader program
     ghostVAO = genObject(rowPos, colPos);
     ghostShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
@@ -62,76 +68,65 @@ void Ghost::draw(GLuint &shader, GLuint &vao) {
  * @param shader
  */
 void Ghost::movObject() {
-	//move up (W)
-	if(direction == 0) {
-		checkCoalition();
-		yTex = 0.5f;
-		if(movUp(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
-		//update grid if it has completed one square
-		if(counter == speed) {
-			//update the character position in array
-			colPos++;
-			//branch if character isn't going to teleport
-			if(colPos + 1 < g_level.arrHeight) {
-				//store all possible directions in an array
-				std::vector<int> possiblePaths = findPath();
-				//pick direction randomly
-				direction = possiblePaths[rand() % possiblePaths.size()];
+	checkCoalition();
+	animate();
+	switch (direction) {
+		case 0:
+			//face up
+			yTex = 0.5f;
+			//branch if charcter was able to move and increase counter
+			if(movUp(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
+			//update grid if it has completed one square
+			if(counter == speed) {
+				//update the character position in array
+				colPos++;
+				//branch if character isn't going to teleport
+				if(colPos + 1 < g_level.arrHeight) findPath();
 			}
-		}
-	//move left (A)
-	} else if (direction == 1) {
-		checkCoalition();
-		yTex = 0.25f;
-		if(movLeft(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
-		//update grid if it has completed one square
-		if(counter == speed) {
-			//update the character position in array
-			rowPos--;
-			//branch if character isn't going to teleport
-			if(rowPos - 1 >= 0) {
-				//store all possible directions in an array
-				std::vector<int> possiblePaths = findPath();
-				//pick direction randomly
-				direction = possiblePaths[rand() % possiblePaths.size()];
+			break;
+		case 1:
+			//face left
+			yTex = 0.25f;
+			//branch if charcter was able to move and increase counter
+			if(movLeft(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
+			//update grid if it has completed one square
+			if(counter == speed) {
+				//update the character position in array
+				rowPos--;
+				//branch if character isn't going to teleport
+				if(rowPos - 1 >= 0) findPath();
 			}
-		}
-	//move down (S)
-	} else if (direction == 2) {
-		checkCoalition();
-		yTex = 0.75f;
-		if(movDown(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
-		//update grid if it has completed one square
-		if(counter == speed) {
-			//update the character position in array
-			colPos--;
-			//branch if character isn't going to teleport
-			if(colPos - 1 >= 0) {
-				//store all possible directions in an array
-				std::vector<int> possiblePaths = findPath();
-				//pick direction randomly
-				direction = possiblePaths[rand() % possiblePaths.size()];
+			break;
+		case 2:
+			//face down
+			yTex = 0.75f;
+			//branch if charcter was able to move and increase counter
+			if(movDown(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
+			//update grid if it has completed one square
+			if(counter == speed) {
+				//update the character position in array
+				colPos--;
+				//branch if character isn't going to teleport
+				if(colPos - 1 >= 0) findPath();
 			}
-		}
-	//move right (D)
-	} else if (direction == 3) {
-		checkCoalition();
-		yTex = 0.0f;
-		if(movRight(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
-		//update grid if it has completed one square
-		if(counter == speed) {
-			//update the character position in array
-			rowPos++;
-			//branch if character isn't going to teleport
-			if(rowPos + 1 < g_level.arrWidth) {
-				//store all possible directions in an array
-				std::vector<int> possiblePaths = findPath();
-				//pick direction randomly
-				direction = possiblePaths[rand() % possiblePaths.size()];
+			break;
+		case 3:
+			//face right
+			yTex = 0.0f;
+			//branch if charcter was able to move and increase counter
+			if(movRight(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
+			//update grid if it has completed one square
+			if(counter == speed) {
+				//update the character position in array
+				rowPos++;
+				//branch if character isn't going to teleport and find a path
+				if(rowPos + 1 < g_level.arrWidth) findPath();
 			}
-		}
+			break;
 	}
-	//animate
+}
+
+void Ghost::animate() {
 	if (counter == speed * 0.25f) {
 		translateTex(4.0f / 6.0f, yTex, ghostShaderProgram);
 	} else if (counter == speed * 0.5f) {
@@ -144,14 +139,16 @@ void Ghost::movObject() {
 	}
 }
 
-std::vector<int> Ghost::findPath() {
-	//store all possible directions in an array, ghost can't do a u-turn
-	std::vector<int> arr;
-	if(direction != 2 && g_level.arr[colPos + 1][rowPos] != 1) arr.push_back(0);
-	if(direction != 3 && g_level.arr[colPos][rowPos - 1] != 1) arr.push_back(1);
-	if(direction != 0 && g_level.arr[colPos - 1][rowPos] != 1) arr.push_back(2);
-	if(direction != 1 && g_level.arr[colPos][rowPos + 1] != 1) arr.push_back(3);
-	return arr;
+void Ghost::findPath() {
+	//store all possible directions in an array
+	std::vector<int> possiblePaths;
+	//branch if path isn't opposite of current direction and there isn't a wall
+	if(direction != 2 && g_level.arr[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
+	if(direction != 3 && g_level.arr[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
+	if(direction != 0 && g_level.arr[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
+	if(direction != 1 && g_level.arr[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
+	//pick direction randomly
+	direction = possiblePaths[rand() % possiblePaths.size()];
 }
 
 void Ghost::checkCoalition() {

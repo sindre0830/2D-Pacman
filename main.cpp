@@ -76,6 +76,7 @@ int main() {
 	std::vector<Ghost*> ghostArr(4, nullptr);
 	if(!getGhostPos(ghostArr.size(), ghostStartRow, ghostStartCol)){
 		std::cerr << "Get ghost position failed.\n";
+		glfwTerminate();
 		std::cin.get();
 		return EXIT_FAILURE;
 	}
