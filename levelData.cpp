@@ -21,20 +21,3 @@ LevelData::LevelData() {
     }
     filePath.append(filePathArr[index]);
 }
-
-/*int lesInt(const char* t, const int min, const int max)  {
-    char buffer[MAXCHAR] = "";
-    int  tall = 0;
-    bool feil = false;
-
-    do {
-        feil = false;
-        std::cout << t << " (" << min << " - " << max << "):  ";
-        std::cin.getline(buffer, MAXCHAR);
-        tall = atoi(buffer);
-        if (tall == 0 && buffer[0] != '0')
-        {  feil = true;   std::cout << "\nERROR: Not an integer\n\n";  }
-    } while (feil  ||  tall < min  ||  tall > max);
-
-    return tall;
-}*/
