@@ -20,7 +20,15 @@ Pacman::Pacman() {
 	//set starting postions
     getPosition();
 	//set starting direction
-	direction = RIGHT;
+	if (g_level.pacmanCol == 0) {
+		direction = UP;
+	} else if (g_level.pacmanRow == g_level.arrWidth - 1) {
+		direction = LEFT;
+	} else if (g_level.pacmanCol == g_level.arrHeight - 1) {
+		direction = DOWN;
+	} else if(g_level.pacmanRow == 0) {
+		direction = RIGHT;
+	}
 	//generate VAO and shader program
     entityVAO = genObject(g_level.pacmanRow, g_level.pacmanCol);
     entityShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);

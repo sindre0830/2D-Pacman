@@ -92,13 +92,27 @@ void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 
 bool getGhostPos(const int size, int &row, int &col) {
 	bool flag = true;
+	//set first ghost position on row
 	row = (g_level.arrWidth / 2) - (size / 2);
-	for(int i = g_level.arrHeight - 1; i >= 0; i--, flag = true) {
-		for(int j = 0; j < size; j++) {
-			if(g_level.arr[i][row + j] != PELLET) flag = false;
-			col = i;
+	//branch if pacman won't start at the top
+	if(g_level.pacmanCol != 0) {
+		//search top to bottom for ghost positions
+		for(int i = g_level.arrHeight - 1; i >= 0; i--, flag = true) {
+			for(int j = 0; j < size; j++) {
+				if(g_level.arr[i][row + j] != PELLET) flag = false;
+				col = i;
+			}
+			if(flag) return true;
 		}
-		if(flag) return true;
+	} else {
+		//search bottom to top for ghost positions
+		for(int i = 0; i < g_level.arrWidth; i++, flag = true) {
+			for(int j = 0; j < size; j++) {
+				if(g_level.arr[i][row + j] != PELLET) flag = false;
+				col = i;
+			}
+			if(flag) return true;
+		}
 	}
 	return false;
 }
