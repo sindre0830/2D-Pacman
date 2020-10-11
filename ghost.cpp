@@ -16,7 +16,7 @@ Ghost::~Ghost() {}
 /**
  * @brief Set data on construction of Ghost object.
  */
-Ghost::Ghost(int row, int col) {
+Ghost::Ghost(const int row, const int col) {
 	//set starting postions
 	rowPos = row;
 	colPos = col;
@@ -50,7 +50,7 @@ Ghost::Ghost(int row, int col) {
  * @param shader
  */
 void Ghost::mov() {
-	checkCoalition();
+	checkCoalition(rowPos, colPos);
 	animate();
 	switch (direction) {
 		case UP:
@@ -60,9 +60,10 @@ void Ghost::mov() {
 			if(movUp(rowPos, colPos)) {
 				//update the character position in array
 				colPos++;
+				checkCoalition(rowPos, colPos);
 				//branch if character isn't going to teleport
 				if(colPos + 1 < g_level.arrHeight) findPath();
-			}
+			} else if(counter >= speed / 4) checkCoalition(rowPos, colPos + 1);
 			break;
 		case LEFT:
 			//face left
@@ -71,9 +72,10 @@ void Ghost::mov() {
 			if(movLeft(rowPos, colPos)) {
 				//update the character position in array
 				rowPos--;
+				checkCoalition(rowPos, colPos);
 				//branch if character isn't going to teleport
 				if(rowPos - 1 >= 0) findPath();
-			}
+			} else if(counter >= speed / 4) checkCoalition(rowPos - 1, colPos);
 			break;
 		case DOWN:
 			//face down
@@ -82,9 +84,10 @@ void Ghost::mov() {
 			if(movDown(rowPos, colPos)) {
 				//update the character position in array
 				colPos--;
+				checkCoalition(rowPos, colPos);
 				//branch if character isn't going to teleport
 				if(colPos - 1 >= 0) findPath();
-			}
+			} else if(counter >= speed / 4) checkCoalition(rowPos, colPos - 1);
 			break;
 		case RIGHT:
 			//face right
@@ -93,9 +96,10 @@ void Ghost::mov() {
 			if(movRight(rowPos, colPos)) {
 				//update the character position in array
 				rowPos++;
+				checkCoalition(rowPos, colPos);
 				//branch if character isn't going to teleport and find a path
 				if(rowPos + 1 < g_level.arrWidth) findPath();
-			}
+			} else if(counter >= speed / 4) checkCoalition(rowPos + 1, colPos);
 			break;
 	}
 }
@@ -129,8 +133,8 @@ void Ghost::pathfinding() {
 	
 }
 
-void Ghost::checkCoalition() {
-	if(colPos == g_level.pacmanCol && rowPos == g_level.pacmanRow) {
+void Ghost::checkCoalition(const int row, const int col) {
+	if(row == g_level.pacmanRow && col == g_level.pacmanCol) {
 		g_gameover = true;
 		std::cout << "Better luck next time...\n";
 	}

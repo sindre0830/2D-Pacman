@@ -16,8 +16,8 @@ class Ghost : public Character {
     public:
         /* public functionality */
         ~Ghost();
-        Ghost(int row, int col);
+        Ghost(const int row, const int col);
         void mov();
-        void checkCoalition();
+        void checkCoalition(const int row, const int col);
 };
 #endif
