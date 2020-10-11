@@ -57,19 +57,19 @@ void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
 	glUseProgram(shader);
 	glBindVertexArray(vao);
 	//change direction on key press if pacman has completed a translation and it wont hit a wall
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && changeDirection && g_level.pacmanCol + 1 < g_level.arrHeight && g_level.arr[g_level.pacmanCol + 1][g_level.pacmanRow] != 1) {
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && changeDirection && g_level.pacmanCol + 1 < g_level.arrHeight && g_level.arr[g_level.pacmanCol + 1][g_level.pacmanRow] != 1) {
 		yTex = 0.5f;
 		translateTex(0.0f, yTex, shader);
 		direction = 0;
-	} else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && changeDirection && g_level.pacmanRow - 1 >= 0 && g_level.arr[g_level.pacmanCol][g_level.pacmanRow - 1] != 1) {
+	} else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && changeDirection && g_level.pacmanRow - 1 >= 0 && g_level.arr[g_level.pacmanCol][g_level.pacmanRow - 1] != 1) {
 		yTex = 0.25f;
 		translateTex(0.0f, yTex, shader);
 		direction = 1;
-	} else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && changeDirection && g_level.pacmanCol - 1 >= 0 && g_level.arr[g_level.pacmanCol - 1][g_level.pacmanRow] != 1) {
+	} else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && changeDirection && g_level.pacmanCol - 1 >= 0 && g_level.arr[g_level.pacmanCol - 1][g_level.pacmanRow] != 1) {
 		yTex = 0.75f;
 		translateTex(0.0f, yTex, shader);
 		direction = 2;
-	} else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && changeDirection && g_level.pacmanRow + 1 < g_level.arrWidth && g_level.arr[g_level.pacmanCol][g_level.pacmanRow + 1] != 1) {
+	} else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && changeDirection && g_level.pacmanRow + 1 < g_level.arrWidth && g_level.arr[g_level.pacmanCol][g_level.pacmanRow + 1] != 1) {
 		yTex = 0.0f;
 		translateTex(0.0f, yTex, shader);
 		direction = 3;
