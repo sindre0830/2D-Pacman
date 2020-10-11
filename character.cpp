@@ -90,7 +90,8 @@ bool Character::movUp(int &row, int &col) {
         if(g_level.arr[col + 1][row] != WALL) {
             //translate up on the x-axis
             translatePos(xPos, (yPos += g_level.elementHeight / (double)(speed)));
-            return true;
+            counter++;
+            if(counter == speed) return true;
         }
     } else {
         col = 0;
@@ -105,7 +106,8 @@ bool Character::movLeft(int &row, int &col) {
         if(g_level.arr[col][row - 1] != WALL) {
             //translate up on the x-axis
             translatePos((xPos -= g_level.elementWidth / (double)(speed)), yPos);
-            return true;
+            counter++;
+            if(counter == speed) return true;
         }
     } else {
         row = g_level.arrWidth - 1;
@@ -120,7 +122,8 @@ bool Character::movDown(int &row, int &col) {
         if(g_level.arr[col - 1][row] != WALL) {
             //translate up on the x-axis
             translatePos(xPos, (yPos -= g_level.elementHeight / (double)(speed)));
-            return true;
+            counter++;
+            if(counter == speed) return true;
         }
     } else {
         col = g_level.arrHeight - 1;
@@ -135,7 +138,8 @@ bool Character::movRight(int &row, int &col) {
         if(g_level.arr[col][row + 1] != WALL) {
             //translate up on the x-axis
             translatePos((xPos += g_level.elementWidth / (double)(speed)), yPos);
-            return true;
+            counter++;
+            if(counter == speed) return true;
         }
 	} else {
         row = 0;

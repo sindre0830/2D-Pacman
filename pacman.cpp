@@ -53,46 +53,26 @@ void Pacman::mov(Pellet &pellet) {
 	switch (direction) {
 		case UP:
 			if(movUp(g_level.pacmanRow, g_level.pacmanCol)) {
-				counter++;
-				changeDirection = false;
-			}
-			//update grid if it has completed one square
-			if(counter == speed) {
 				//check if there is a pellet
-				if(g_level.arr[++g_level.pacmanCol][g_level.pacmanRow] == PELLET) eatPellet(pellet);
+				if(g_level.arr[++g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
 			}
 			break;
 		case LEFT:
 			if(movLeft(g_level.pacmanRow, g_level.pacmanCol)) {
-				counter++;
-				changeDirection = false;
-			}
-			//update grid if it has completed one square
-			if(counter == speed) {
 				//check if there is a pellet
-				if(g_level.arr[g_level.pacmanCol][--g_level.pacmanRow] == PELLET) eatPellet(pellet);
+				if(g_level.arr[g_level.pacmanCol][--g_level.pacmanRow] == PELLET) eat(pellet);
 			}			
 			break;
 		case DOWN:
 			if(movDown(g_level.pacmanRow, g_level.pacmanCol)) {
-				counter++;
-				changeDirection = false;
-			}
-			//update grid if it has completed one square
-			if(counter == speed) {
 				//check if there is a pellet
-				if(g_level.arr[--g_level.pacmanCol][g_level.pacmanRow] == PELLET) eatPellet(pellet);
+				if(g_level.arr[--g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
 			}			
 			break;
 		case RIGHT:
 			if(movRight(g_level.pacmanRow, g_level.pacmanCol)) {
-				counter++;
-				changeDirection = false;
-			}
-			//update grid if it has completed one square
-			if(counter == speed) {
 				//check if there is a pellet
-				if(g_level.arr[g_level.pacmanCol][++g_level.pacmanRow] == PELLET) eatPellet(pellet);
+				if(g_level.arr[g_level.pacmanCol][++g_level.pacmanRow] == PELLET) eat(pellet);
 			}			
 			break;
 	}
@@ -100,6 +80,7 @@ void Pacman::mov(Pellet &pellet) {
 }
 
 void Pacman::animate() {
+	changeDirection = false;
 	if (counter == speed * 0.25f) {
 		translateTex(0.167f, yTex);
 	} else if (counter == speed * 0.5f) {
@@ -113,7 +94,7 @@ void Pacman::animate() {
 	}
 }
 
-void Pacman::eatPellet(Pellet &pellet) {
+void Pacman::eat(Pellet &pellet) {
 	//replace pellet in array
 	g_level.arr[g_level.pacmanCol][g_level.pacmanRow] = EMPTY;
 	//increment score

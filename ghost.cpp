@@ -57,9 +57,7 @@ void Ghost::mov() {
 			//face up
 			yTex = 0.5f;
 			//branch if charcter was able to move and increase counter
-			if(movUp(rowPos, colPos)) counter++;
-			//update grid if it has completed one square
-			if(counter == speed) {
+			if(movUp(rowPos, colPos)) {
 				//update the character position in array
 				colPos++;
 				//branch if character isn't going to teleport
@@ -70,9 +68,7 @@ void Ghost::mov() {
 			//face left
 			yTex = 0.25f;
 			//branch if charcter was able to move and increase counter
-			if(movLeft(rowPos, colPos)) counter++;
-			//update grid if it has completed one square
-			if(counter == speed) {
+			if(movLeft(rowPos, colPos)) {
 				//update the character position in array
 				rowPos--;
 				//branch if character isn't going to teleport
@@ -83,9 +79,7 @@ void Ghost::mov() {
 			//face down
 			yTex = 0.75f;
 			//branch if charcter was able to move and increase counter
-			if(movDown(rowPos, colPos)) counter++;
-			//update grid if it has completed one square
-			if(counter == speed) {
+			if(movDown(rowPos, colPos)) {
 				//update the character position in array
 				colPos--;
 				//branch if character isn't going to teleport
@@ -96,9 +90,7 @@ void Ghost::mov() {
 			//face right
 			yTex = 0.0f;
 			//branch if charcter was able to move and increase counter
-			if(movRight(rowPos, colPos)) counter++;
-			//update grid if it has completed one square
-			if(counter == speed) {
+			if(movRight(rowPos, colPos)) {
 				//update the character position in array
 				rowPos++;
 				//branch if character isn't going to teleport and find a path
