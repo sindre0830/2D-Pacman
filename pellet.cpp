@@ -50,7 +50,7 @@ GLuint Pellet::genObject() {
  * @brief Draw object by installing the shader program and binding the VAO to the current rendering state.
  * 
  */
-void Pellet::drawObject() {
+void Pellet::draw() {
 	glUseProgram(entityShaderProgram);
 	glBindVertexArray(entityVAO);
 	glDrawElements(GL_TRIANGLES, (6 * g_level.pelletSize), GL_UNSIGNED_INT, (const void*)0);

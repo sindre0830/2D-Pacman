@@ -36,7 +36,7 @@ GLuint Wall::genObject() {
 	return createVAO(arr, arrIndices);
 }
 
-void Wall::drawObject() {
+void Wall::draw() {
 	glUseProgram(entityShaderProgram);
 	//draw walls
 	glBindVertexArray(entityVAO);

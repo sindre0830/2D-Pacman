@@ -41,51 +41,15 @@ void Pacman::getPosition() {
 		}
 	}
 }
-
-void Pacman::drawObject(GLFWwindow *window) {
-    draw(entityShaderProgram, entityVAO, window);
-}
-/**
- * @brief Draw asset according to the direction it is facing.
- * 
- * @param shader
- * @param vao
- * @param window
- */
-void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
-    auto samplerSlotLocation = glGetUniformLocation(shader, "uTexture");
-	glUseProgram(shader);
-	glBindVertexArray(vao);
-	//change direction on key press if pacman has completed a translation and it wont hit a wall
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && changeDirection && g_level.pacmanCol + 1 < g_level.arrHeight && g_level.arr[g_level.pacmanCol + 1][g_level.pacmanRow] != 1) {
-		yTex = 0.5f;
-		translateTex(0.0f, yTex, shader);
-		direction = 0;
-	} else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && changeDirection && g_level.pacmanRow - 1 >= 0 && g_level.arr[g_level.pacmanCol][g_level.pacmanRow - 1] != 1) {
-		yTex = 0.25f;
-		translateTex(0.0f, yTex, shader);
-		direction = 1;
-	} else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && changeDirection && g_level.pacmanCol - 1 >= 0 && g_level.arr[g_level.pacmanCol - 1][g_level.pacmanRow] != 1) {
-		yTex = 0.75f;
-		translateTex(0.0f, yTex, shader);
-		direction = 2;
-	} else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && changeDirection && g_level.pacmanRow + 1 < g_level.arrWidth && g_level.arr[g_level.pacmanCol][g_level.pacmanRow + 1] != 1) {
-		yTex = 0.0f;
-		translateTex(0.0f, yTex, shader);
-		direction = 3;
-	}
-	glUniform1i(samplerSlotLocation, 0);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
-}
 /**
  * @brief Move the asset to a direction until collision.
  * 
  * @param shader
  */
-void Pacman::movObject(Pellet &pellet) {
+void Pacman::mov(Pellet &pellet) {
 	switch (direction) {
 		case 0:
-			if(movUp(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
+			if(movUp(g_level.pacmanRow, g_level.pacmanCol)) {
 				counter++;
 				changeDirection = false;
 			}
@@ -96,7 +60,7 @@ void Pacman::movObject(Pellet &pellet) {
 			}
 			break;
 		case 1:
-			if(movLeft(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
+			if(movLeft(g_level.pacmanRow, g_level.pacmanCol)) {
 				counter++;
 				changeDirection = false;
 			}
@@ -107,7 +71,7 @@ void Pacman::movObject(Pellet &pellet) {
 			}			
 			break;
 		case 2:
-			if(movDown(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
+			if(movDown(g_level.pacmanRow, g_level.pacmanCol)) {
 				counter++;
 				changeDirection = false;
 			}
@@ -118,7 +82,7 @@ void Pacman::movObject(Pellet &pellet) {
 			}			
 			break;
 		case 3:
-			if(movRight(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
+			if(movRight(g_level.pacmanRow, g_level.pacmanCol)) {
 				counter++;
 				changeDirection = false;
 			}
@@ -134,24 +98,45 @@ void Pacman::movObject(Pellet &pellet) {
 
 void Pacman::animate() {
 	if (counter == speed * 0.25f) {
-		translateTex(0.167f, yTex, entityShaderProgram);
+		translateTex(0.167f, yTex);
 	} else if (counter == speed * 0.5f) {
-		translateTex(0.333f, yTex, entityShaderProgram);
+		translateTex(0.333f, yTex);
 	} else if (counter == speed * 0.75f) {
-		translateTex(0.5f, yTex, entityShaderProgram);
+		translateTex(0.5f, yTex);
 	} else if (counter == speed) {
-		translateTex(0.0f, yTex, entityShaderProgram);
+		translateTex(0.0f, yTex);
 		changeDirection = true;
 		counter = 0;
 	}
 }
 
 void Pacman::eatPellet(Pellet &pellet) {
+	g_level.arr[g_level.pacmanCol][g_level.pacmanRow] = 2;
 	g_level.score++;
 	pellet.hidePellet(g_level.pacmanCol, g_level.pacmanRow);
-	g_level.arr[g_level.pacmanCol][g_level.pacmanRow] = 2;
 	if(g_level.score == g_level.pelletSize) {
 		g_gameover = true;
 		std::cout << "Congratulations, you won...\n";
+	}
+}
+
+void Pacman::inputDirection(GLFWwindow *window) {
+	//change direction on key press if pacman has completed a translation and it wont hit a wall
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && changeDirection && g_level.pacmanCol + 1 < g_level.arrHeight && g_level.arr[g_level.pacmanCol + 1][g_level.pacmanRow] != 1) {
+		yTex = 0.5f;
+		translateTex(0.0f, yTex);
+		direction = 0;
+	} else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && changeDirection && g_level.pacmanRow - 1 >= 0 && g_level.arr[g_level.pacmanCol][g_level.pacmanRow - 1] != 1) {
+		yTex = 0.25f;
+		translateTex(0.0f, yTex);
+		direction = 1;
+	} else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && changeDirection && g_level.pacmanCol - 1 >= 0 && g_level.arr[g_level.pacmanCol - 1][g_level.pacmanRow] != 1) {
+		yTex = 0.75f;
+		translateTex(0.0f, yTex);
+		direction = 2;
+	} else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && changeDirection && g_level.pacmanRow + 1 < g_level.arrWidth && g_level.arr[g_level.pacmanCol][g_level.pacmanRow + 1] != 1) {
+		yTex = 0.0f;
+		translateTex(0.0f, yTex);
+		direction = 3;
 	}
 }

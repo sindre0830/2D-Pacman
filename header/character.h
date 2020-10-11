@@ -12,6 +12,7 @@ class Character : public Entity {
     public:
         /* public functionality */
         ~Character();
+        void draw();
     protected:
         /* protected data */
         GLuint texture;
@@ -20,12 +21,12 @@ class Character : public Entity {
         /* protected functionality */
         GLuint genObject(const int row, const int col);
         std::vector<GLfloat> genCoordinates(const int row, const int col);
-        void translatePos(const float x, const float y, const GLuint &shader);
-        void translateTex(const float x, const float y, const GLuint &shader);
-        GLuint loadTexture(const std::string& filepath, GLuint slot);
-        bool movUp(int &row, int &col, float &x, float &y, const int speed, const GLuint &shader);
-        bool movLeft(int &row, int &col, float &x, float &y, const int speed, const GLuint &shader);
-        bool movDown(int &row, int &col, float &x, float &y, const int speed, const GLuint &shader);
-        bool movRight(int &row, int &col, float &x, float &y, const int speed, const GLuint &shader);
+        void translatePos(const float xPos, const float yPos);
+        void translateTex(const float xPos, const float yPos);
+        bool movUp(int &row, int &col);
+        bool movLeft(int &row, int &col);
+        bool movDown(int &row, int &col);
+        bool movRight(int &row, int &col);
+        GLuint loadTexture(const std::string &filepath, GLuint slot);
 };
 #endif

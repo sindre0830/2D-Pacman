@@ -19,6 +19,6 @@ class Wall : public Entity {
         /* public functionality */
         ~Wall();
         Wall();
-        void drawObject();
+        void draw();
 };
 #endif

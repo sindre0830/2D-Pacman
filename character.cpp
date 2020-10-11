@@ -16,6 +16,20 @@ Character::~Character() {
     glDeleteTextures(1, &texture);
 }
 /**
+ * @brief Draw asset according to the direction it is facing.
+ * 
+ * @param shader
+ * @param vao
+ * @param window
+ */
+void Character::draw() {
+    auto samplerSlotLocation = glGetUniformLocation(entityShaderProgram, "uTexture");
+	glUseProgram(entityShaderProgram);
+	glBindVertexArray(entityVAO);
+	glUniform1i(samplerSlotLocation, 0);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
+}
+/**
  * @brief Generate Pac-Man from the 2D array to the window.
  * 
  * @return GLuint 
@@ -27,19 +41,20 @@ GLuint Character::genObject(const int row, const int col) {
 }
 
 std::vector<GLfloat> Character::genCoordinates(const int row, const int col) {
+    GLfloat texPos = 0.f;
     std::vector<GLfloat> arr = {
-        //top left coordinate
+        //top left grid and texture coordinate
         g_level.elementPos[std::make_pair(col, row)][topLeft][x], g_level.elementPos[std::make_pair(col, row)][topLeft][y],	
-        0.f,                                                0.25f,
-        //bottom left coordinate
+        texPos, texPos + 0.25f,
+        //bottom left grid and texture coordinate
         g_level.elementPos[std::make_pair(col, row)][bottomLeft][x], g_level.elementPos[std::make_pair(col, row)][bottomLeft][y], 
-        0.f,                                                0.f,
-        //bottom right coordinate
+        texPos, texPos,
+        //bottom right rid and texture coordinate
         g_level.elementPos[std::make_pair(col, row)][bottomRight][x], g_level.elementPos[std::make_pair(col, row)][bottomRight][y], 
-        0.16f,                                              0.f,
-        //top right coordinate
+        texPos + 0.16f, texPos,
+        //top right grid and texture coordinate
         g_level.elementPos[std::make_pair(col, row)][topRight][x], g_level.elementPos[std::make_pair(col, row)][topRight][y],	
-        0.16f,                                              0.25f
+        texPos + 0.16f, texPos + 0.25f
     };
     return arr;
 }
@@ -50,21 +65,81 @@ std::vector<GLfloat> Character::genCoordinates(const int row, const int col) {
  * @param y 
  * @param shader 
  */
-void Character::translatePos(const float xPos, const float yPos, const GLuint &shader) {
+void Character::translatePos(const float xPos, const float yPos) {
     //Translation moves our object
     glm::mat4 translation = glm::translate(glm::mat4(1), glm::vec3(xPos, yPos, 0.f));
     //Create transformation matrix
-    GLuint transformationmat = glGetUniformLocation(shader, "u_TransformationMat");
+    GLuint transformationmat = glGetUniformLocation(entityShaderProgram, "u_TransformationMat");
     //Send data from matrices to uniform
     glUniformMatrix4fv(transformationmat, 1, false, glm::value_ptr(translation));
 }
 
-void Character::translateTex(const float xPos, const float yPos, const GLuint &shader) {
+void Character::translateTex(const float xPos, const float yPos) {
 	//Translation moves our object
 	glm::mat3 translation = glm::translate(glm::mat3(1), glm::vec2(xPos, yPos));
-	GLuint transformationmat = glGetUniformLocation(shader, "u_TransformationTex");
+	GLuint transformationmat = glGetUniformLocation(entityShaderProgram, "u_TransformationTex");
 	//Send data from matrices to uniform
 	glUniformMatrix3fv(transformationmat, 1, false, glm::value_ptr(translation));
+}
+
+bool Character::movUp(int &row, int &col) {
+	//check if next location will be a wall or out of bound
+	if(col + 1 < g_level.arrHeight) {
+        if(g_level.arr[col + 1][row] != 1) {
+            //translate up on the x-axis
+            translatePos(xPos, (yPos += g_level.elementHeight / (double)(speed)));
+            return true;
+        }
+    } else {
+        col = 0;
+        translatePos(xPos, yPos -= (double)(g_level.arrHeight - 1) * g_level.elementHeight);
+    }
+    return false;
+}
+
+bool Character::movLeft(int &row, int &col) {
+	//check if next location will be a wall or out of bound
+	if(row - 1 >= 0) {
+        if(g_level.arr[col][row - 1] != 1) {
+            //translate up on the x-axis
+            translatePos((xPos -= g_level.elementWidth / (double)(speed)), yPos);
+            return true;
+        }
+    } else {
+        row = g_level.arrWidth - 1;
+        translatePos(xPos += (double)(g_level.arrWidth - 1) * g_level.elementWidth, yPos);
+    }
+    return false;
+}
+
+bool Character::movDown(int &row, int &col) {
+	//check if next location will be a wall or out of bound
+	if(col - 1 >= 0) {
+        if(g_level.arr[col - 1][row] != 1) {
+            //translate up on the x-axis
+            translatePos(xPos, (yPos -= g_level.elementHeight / (double)(speed)));
+            return true;
+        }
+    } else {
+        col = g_level.arrHeight - 1;
+        translatePos(xPos, yPos += (double)(g_level.arrHeight - 1) * g_level.elementHeight);
+    }
+    return false;
+}
+
+bool Character::movRight(int &row, int &col) {
+	//check if next location will be a wall or out of bound
+	if(row + 1 < g_level.arrWidth) {
+        if(g_level.arr[col][row + 1] != 1) {
+            //translate up on the x-axis
+            translatePos((xPos += g_level.elementWidth / (double)(speed)), yPos);
+            return true;
+        }
+	} else {
+        row = 0;
+        translatePos(xPos -= (double)(g_level.arrWidth - 1) * g_level.elementWidth, yPos);
+    }
+    return false;
 }
 /**
  * @brief Loads texture from filepath through CMake.
@@ -94,64 +169,4 @@ GLuint Character::loadTexture(const std::string& filepath, GLuint slot) {
     //free the memory returned by STBI
     if(pixels) stbi_image_free(pixels);
     return tex;
-}
-
-bool Character::movUp(int &row, int &col, float &xPos, float &yPos, const int speed, const GLuint &shader) {
-	//check if next location will be a wall or out of bound
-	if(col + 1 < g_level.arrHeight) {
-        if(g_level.arr[col + 1][row] != 1) {
-            //translate up on the x-axis
-            translatePos(xPos, (yPos += g_level.elementHeight / (double)(speed)), shader);
-            return true;
-        } else return false;
-    } else {
-        col = 0;
-        translatePos(xPos, yPos -= (double)(g_level.arrHeight - 1) * g_level.elementHeight, shader);
-        return false;
-    }
-}
-
-bool Character::movLeft(int &row, int &col, float &xPos, float &yPos, const int speed, const GLuint &shader) {
-	//check if next location will be a wall or out of bound
-	if(row - 1 >= 0) {
-        if(g_level.arr[col][row - 1] != 1) {
-            //translate up on the x-axis
-            translatePos((xPos -= g_level.elementWidth / (double)(speed)), yPos, shader);
-            return true;
-        } else return false;
-    } else {
-        row = g_level.arrWidth - 1;
-        translatePos(xPos += (double)(g_level.arrWidth - 1) * g_level.elementWidth, yPos, shader);
-        return false;
-    }
-}
-
-bool Character::movDown(int &row, int &col, float &xPos, float &yPos, const int speed, const GLuint &shader) {
-	//check if next location will be a wall or out of bound
-	if(col - 1 >= 0) {
-        if(g_level.arr[col - 1][row] != 1) {
-            //translate up on the x-axis
-            translatePos(xPos, (yPos -= g_level.elementHeight / (double)(speed)), shader);
-            return true;
-        } else return false;
-    } else {
-        col = g_level.arrHeight - 1;
-        translatePos(xPos, yPos += (double)(g_level.arrHeight - 1) * g_level.elementHeight, shader);
-        return false;
-    }
-}
-
-bool Character::movRight(int &row, int &col, float &xPos, float &yPos, const int speed, const GLuint &shader) {
-	//check if next location will be a wall or out of bound
-	if(row + 1 < g_level.arrWidth) {
-        if(g_level.arr[col][row + 1] != 1) {
-            //translate up on the x-axis
-            translatePos((xPos += g_level.elementWidth / (double)(speed)), yPos, shader);
-            return true;
-        } else return false;
-	} else {
-        row = 0;
-        translatePos(xPos -= (double)(g_level.arrWidth - 1) * g_level.elementWidth, yPos, shader);
-        return false;
-    }
 }

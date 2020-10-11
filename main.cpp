@@ -105,19 +105,22 @@ int main() {
 		//for every frame reset background color to the value in the buffer ???
 		glClear(GL_COLOR_BUFFER_BIT);
 		//draw wall
-		wall.drawObject();
+		wall.draw();
 		//draw pellets
-		pellet.drawObject();
+		pellet.draw();
 		//draw pacman
-		pacman.drawObject(window);
+		pacman.draw();
 		if (!g_gameover && deltaTime >= 1.0){
-			pacman.movObject(pellet);
+			pacman.inputDirection(window);
+			//translate pacman
+			pacman.mov(pellet);
 		}
 		//draw ghosts
 		for(int i = 0; i < ghostArr.size(); i++) {
-			ghostArr[i]->drawObject();
+			ghostArr[i]->draw();
 			if (!g_gameover && deltaTime >= 1.0){
-				ghostArr[i]->movObject();
+				//translate ghosts
+				ghostArr[i]->mov();
 			}
 		}
 		//reset time control

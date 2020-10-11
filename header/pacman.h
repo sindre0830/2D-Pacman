@@ -11,15 +11,14 @@ class Pacman : public Character {
         /* private data */
         bool changeDirection;
         /* private functionality */
-        void draw(GLuint &shader, GLuint &vao, GLFWwindow *window);
         void animate();
         void eatPellet(Pellet &pellet);
     public:
         /* public functionality */
         ~Pacman();
         Pacman();
-        void drawObject(GLFWwindow *window);
-        void movObject(Pellet &pellet);
+        void mov(Pellet &pellet);
         void getPosition();
+        void inputDirection(GLFWwindow *window);
 };
 #endif
