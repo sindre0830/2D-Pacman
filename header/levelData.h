@@ -3,6 +3,7 @@
 /* library */
 #include <vector>
 #include <map>
+#include <string>
 
 struct LevelData {
     /* data */
@@ -10,8 +11,9 @@ struct LevelData {
     double elementWidth, elementHeight;
     std::map<std::pair<int, int>, std::vector<std::vector<float>>> gridElement;
     std::vector<std::vector<int>> arr;
+    std::string filePath = "level/";
     /* functionality */
-    //levelData();
+    LevelData();
 };
 
 #endif

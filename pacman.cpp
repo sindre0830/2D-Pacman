@@ -21,12 +21,16 @@ Pacman::Pacman() {
     getPosition();
 	//set starting direction
 	if (g_level.pacmanCol == 0) {
+		yTex = 0.5f;
 		direction = UP;
 	} else if (g_level.pacmanRow == g_level.arrWidth - 1) {
+		yTex = 0.25f;
 		direction = LEFT;
 	} else if (g_level.pacmanCol == g_level.arrHeight - 1) {
+		yTex = 0.75f;
 		direction = DOWN;
 	} else if(g_level.pacmanRow == 0) {
+		yTex = 0.0f;
 		direction = RIGHT;
 	}
 	//generate VAO and shader program

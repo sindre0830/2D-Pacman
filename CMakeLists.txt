@@ -15,6 +15,7 @@ add_subdirectory(external/glm-0.9.9.8)
 add_executable(${PROJECT_NAME}
 	main.cpp
 	header/levelData.h
+	levelData.cpp
 	header/function.h
 	function.cpp
 	header/entity.h
@@ -59,3 +60,9 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy
 	${CMAKE_SOURCE_DIR}/level/level0
 	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/level/level0)
+
+add_custom_command(
+	TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy
+	${CMAKE_SOURCE_DIR}/level/level1
+	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/level/level1)
