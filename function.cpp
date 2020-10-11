@@ -95,7 +95,7 @@ bool getGhostPos(const int size, int &row, int &col) {
 	//set first ghost position on row
 	row = (g_level.arrWidth / 2) - (size / 2);
 	//branch if pacman won't start at the top
-	if(g_level.pacmanCol == 0) {
+	if(g_level.pacmanCol != g_level.arrHeight - 1) {
 		//search top to bottom for ghost positions
 		for(int i = g_level.arrHeight - 1; i >= 0; i--, flag = true) {
 			for(int j = 0; j < size; j++) {
