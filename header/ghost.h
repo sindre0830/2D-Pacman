@@ -10,8 +10,8 @@ class Ghost : public Character {
         /* private data */
         int rowPos, colPos;
         /* private functionality */
-        void findPath();
         void pathfinding();
+        void findRandomPath();
         void animate();
     public:
         /* public functionality */

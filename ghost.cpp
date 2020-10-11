@@ -62,7 +62,7 @@ void Ghost::mov() {
 				colPos++;
 				checkCoalition(rowPos, colPos);
 				//branch if character isn't going to teleport
-				if(colPos + 1 < g_level.arrHeight) findPath();
+				if(colPos + 1 < g_level.arrHeight) pathfinding();
 			} else if(counter >= speed / 4) checkCoalition(rowPos, colPos + 1);
 			break;
 		case LEFT:
@@ -74,7 +74,7 @@ void Ghost::mov() {
 				rowPos--;
 				checkCoalition(rowPos, colPos);
 				//branch if character isn't going to teleport
-				if(rowPos - 1 >= 0) findPath();
+				if(rowPos - 1 >= 0) pathfinding();
 			} else if(counter >= speed / 4) checkCoalition(rowPos - 1, colPos);
 			break;
 		case DOWN:
@@ -86,7 +86,7 @@ void Ghost::mov() {
 				colPos--;
 				checkCoalition(rowPos, colPos);
 				//branch if character isn't going to teleport
-				if(colPos - 1 >= 0) findPath();
+				if(colPos - 1 >= 0) pathfinding();
 			} else if(counter >= speed / 4) checkCoalition(rowPos, colPos - 1);
 			break;
 		case RIGHT:
@@ -98,7 +98,7 @@ void Ghost::mov() {
 				rowPos++;
 				checkCoalition(rowPos, colPos);
 				//branch if character isn't going to teleport and find a path
-				if(rowPos + 1 < g_level.arrWidth) findPath();
+				if(rowPos + 1 < g_level.arrWidth) pathfinding();
 			} else if(counter >= speed / 4) checkCoalition(rowPos + 1, colPos);
 			break;
 	}
@@ -117,7 +117,7 @@ void Ghost::animate() {
 	}
 }
 
-void Ghost::findPath() {
+void Ghost::findRandomPath() {
 	//store all possible directions in an array
 	std::vector<int> possiblePaths;
 	//branch if path isn't opposite of current direction and there isn't a wall
@@ -130,7 +130,16 @@ void Ghost::findPath() {
 }
 
 void Ghost::pathfinding() {
-	
+	//branch if path isn't opposite of current direction and there isn't a wall
+	if(direction != DOWN && g_level.arr[colPos + 1][rowPos] != WALL && colPos < g_level.pacmanCol) {
+		direction = UP;
+	} else if(direction != UP && g_level.arr[colPos - 1][rowPos] != WALL && colPos > g_level.pacmanCol) {
+		direction = DOWN;
+	} else if(direction != RIGHT && g_level.arr[colPos][rowPos - 1] != WALL && rowPos > g_level.pacmanRow) {
+		direction = LEFT;
+	} else if(direction != LEFT && g_level.arr[colPos][rowPos + 1] != WALL && rowPos < g_level.pacmanRow) {
+		direction = RIGHT;
+	} else findRandomPath();
 }
 
 void Ghost::checkCoalition(const int row, const int col) {
