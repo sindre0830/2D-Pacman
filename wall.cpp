@@ -11,6 +11,9 @@ Wall::~Wall() {
 }
 
 Wall::Wall() {
+	//set target to walls
+	target = 1;
+	//create shader program
     entityShaderProgram = compileShader(wallVertexShaderSrc, wallFragmentShaderSrc);
 	//generate wall VAO
     entityVAO = genObject();
@@ -22,8 +25,6 @@ Wall::Wall() {
 	//set the vertex attribute
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLuint), (const void*)0);
 	glEnableVertexAttribArray(0);
-	//set target to walls
-	target = 1;
 }
 
 GLuint Wall::genObject() {

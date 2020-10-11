@@ -14,6 +14,9 @@ Pellet::~Pellet() {}
  * 
  */
 Pellet::Pellet() {
+	//set target to pellets
+	target = 0;
+	//create shader program and VAO
 	entityShaderProgram = compileShader(pelletVertexShaderSrc, pelletFragmentShaderSrc);
     entityVAO = genObject();
 	//set the vertex attribute
@@ -21,8 +24,6 @@ Pellet::Pellet() {
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void*)0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void*)(2 * sizeof(GLfloat)));
-	//set target to pellets
-	target = 0;
 	//set bufferposition in refrence to position in level
 	for(int i = 0, n = 0; i < g_level.arrHeight; i++) {
 		for(int j = 0; j < g_level.arrWidth; j++) {
