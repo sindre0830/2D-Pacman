@@ -1,8 +1,10 @@
-/* libraries */
+/* library */
 #include "header/function.h"
 #include "header/levelData.h"
 #include <GLFW/glfw3.h>
-
+/* dictionary */
+extern enum Target {PELLET, WALL, PACMAN, EMPTY};
+/* global data */
 extern LevelData g_level;
 /**
  * @brief Reads data from level file.
@@ -20,12 +22,12 @@ bool readFile() {
 			std::vector<int> arrRow;
 			for (int j = 0; j < g_level.arrWidth; j++) {
 				file >> buffer;
-				if (buffer == 1) {
+				if (buffer == WALL) {
 					g_level.wallSize++;
-				} else if (buffer == 0) {
+				} else if (buffer == PELLET) {
 					//branch if position is a teleportation entrence
 					if(i == 0 || i == g_level.arrHeight - 1 || j == 0 || j == g_level.arrWidth - 1) {
-						buffer = 3;
+						buffer = EMPTY;
 					} else g_level.pelletSize++;
 				}
 				arrRow.push_back(buffer);
@@ -93,7 +95,7 @@ bool getGhostPos(const int size, int &row, int &col) {
 	row = (g_level.arrWidth / 2) - (size / 2);
 	for(int i = g_level.arrHeight - 1; i >= 0; i--, flag = true) {
 		for(int j = 0; j < size; j++) {
-			if(g_level.arr[i][row + j] != 0) flag = false;
+			if(g_level.arr[i][row + j] != PELLET) flag = false;
 			col = i;
 		}
 		if(flag) return true;

@@ -1,6 +1,6 @@
 #ifndef __PELLET_H_
 #define __PELLET_H_
-
+/* library */
 #include <string>
 
 static const std::string pelletVertexShaderSrc = R"(

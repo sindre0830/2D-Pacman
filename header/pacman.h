@@ -1,6 +1,6 @@
 #ifndef __PACMAN_H
 #define __PACMAN_H
-/* libraries */
+/* library */
 #include "header/character.h"
 #include "header/pellet.h"
 /**

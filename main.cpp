@@ -6,7 +6,7 @@
  * @author Casper Melhus
  * @author Brage Heimly N�ss
  */
-/* libraries */
+/* library */
 #include "header/levelData.h"
 #include "header/wall.h"
 #include "header/pellet.h"
@@ -16,11 +16,14 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+/* dictionary */
+enum Direction {UP, LEFT, DOWN, RIGHT};
+enum Corner {TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT};
+enum Position {X, Y};
+enum Target {PELLET, WALL, PACMAN, EMPTY};
 /* global data */
 bool g_gameover = false;
 LevelData g_level;
-enum direction {topLeft, bottomLeft, bottomRight, topRight};
-enum position {x, y};
 /**
  * Main program.
  */
@@ -47,7 +50,7 @@ int main() {
 	/*int width, height;
 	get_resolution(width, height);
 	auto window = glfwCreateWindow(width, height, "Pac-Man", glfwGetPrimaryMonitor(), nullptr);*/
-	auto window = glfwCreateWindow(g_level.arrWidth * 35, g_level.arrHeight * 35, "Pac-Man", nullptr, nullptr);
+	GLFWwindow *window = glfwCreateWindow(g_level.arrWidth * 35, g_level.arrHeight * 35, "Pac-Man", nullptr, nullptr);
 	//setting the OpenGL context to the window
 	glfwMakeContextCurrent(window);
 	//enable transparency on texture

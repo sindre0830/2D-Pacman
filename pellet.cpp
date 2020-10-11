@@ -2,10 +2,12 @@
 #include "header/levelData.h"
 #include "header/pellet.h"
 #include "shader/pellet.h"
+/* dictionary */
+extern enum Corner {TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT};
+extern enum Position {X, Y};
+extern enum Target {PELLET, WALL, PACMAN, EMPTY};
 /* global data */
 extern LevelData g_level;
-extern enum direction {topLeft, bottomLeft, bottomRight, topRight};
-extern enum position {x, y};
 /**
  * @brief Destroy the Pellet:: Pellet object
  * 
@@ -16,8 +18,6 @@ Pellet::~Pellet() {}
  * 
  */
 Pellet::Pellet() {
-	//set target to pellets
-	target = 0;
 	//create shader program and VAO
 	entityShaderProgram = compileShader(pelletVertexShaderSrc, pelletFragmentShaderSrc);
     entityVAO = genObject();
@@ -26,10 +26,10 @@ Pellet::Pellet() {
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void*)0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void*)(2 * sizeof(GLfloat)));
-	//set bufferposition in refrence to position in level
+	//set buffer position in refrence to position in level
 	for(int i = 0, n = 0; i < g_level.arrHeight; i++) {
 		for(int j = 0; j < g_level.arrWidth; j++) {
-			if(g_level.arr[i][j] == target) {
+			if(g_level.arr[i][j] == PELLET) {
 				bufferPos[std::make_pair(i, j)] = n * pelletByteSize;
 				n++;
 			}
@@ -88,16 +88,16 @@ std::vector<GLfloat> Pellet::genCoordinates() {
 	//fills in array with coordinates
 	for (int i = 0; i < g_level.arrHeight; i++) {
 		for (int j = 0; j < g_level.arrWidth; j++) {
-			if (g_level.arr[i][j] == target) {
+			if (g_level.arr[i][j] == PELLET) {
 				arr.insert(arr.end(), {
 					//middle left coordinate
-					g_level.elementPos[std::make_pair(i, j)][topLeft][x] + xResize, g_level.elementPos[std::make_pair(i, j)][topLeft][y] - yRotate, display,
+					g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][X] + xResize, g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][Y] - yRotate, display,
 					//middle down coordinate
-					g_level.elementPos[std::make_pair(i, j)][bottomLeft][x] + xRotate, g_level.elementPos[std::make_pair(i, j)][bottomLeft][y] + yResize, display,
+					g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][X] + xRotate, g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][Y] + yResize, display,
 					//middle right coordinate
-					g_level.elementPos[std::make_pair(i, j)][bottomRight][x] - xResize, g_level.elementPos[std::make_pair(i, j)][bottomRight][y] + yRotate, display,
+					g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][X] - xResize, g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yRotate, display,
 					//middle top coordinate
-					g_level.elementPos[std::make_pair(i, j)][topRight][x] - xRotate, g_level.elementPos[std::make_pair(i, j)][topRight][y] - yResize, display
+					g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][X] - xRotate, g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize, display
 				});
 			}
 		}

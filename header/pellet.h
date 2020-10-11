@@ -1,6 +1,6 @@
 #ifndef __PELLET_H
 #define __PELLET_H
-/* libraries */
+/* library */
 #include "header/entity.h"
 #include <map>
 /**

@@ -1,4 +1,4 @@
-
+/* library */
 #include "header/entity.h"
 
 Entity::~Entity() {

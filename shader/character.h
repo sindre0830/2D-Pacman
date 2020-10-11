@@ -1,6 +1,6 @@
 #ifndef __CHARACTER_H_
 #define __CHARACTER_H_
-
+/* library */
 #include <string>
 
 static const std::string characterVertexShaderSrc = R"(

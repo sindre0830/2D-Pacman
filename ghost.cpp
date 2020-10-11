@@ -1,9 +1,12 @@
-/* libraries */
+/* library */
 #include "header/ghost.h"
 #include "shader/character.h"
 #include "header/levelData.h"
 #include <iostream>
-/* global variables */
+/* dictionary */
+extern enum Direction {UP, LEFT, DOWN, RIGHT};
+extern enum Target {PELLET, WALL, PACMAN, EMPTY};
+/* global data */
 extern LevelData g_level;
 extern bool g_gameover;
 /**
@@ -19,13 +22,13 @@ Ghost::Ghost(int row, int col) {
 	colPos = col;
 	//set starting direction compared to row position
 	if(g_level.arrWidth / 2 <= row) {
-		if(g_level.arr[col][row + 1] != 1) {
-			direction = 3;
-		} else direction = 1;
+		if(g_level.arr[col][row + 1] != WALL) {
+			direction = RIGHT;
+		} else direction = LEFT;
 	} else {
-		if(g_level.arr[col][row - 1] != 1) {
-			direction = 1;
-		} else direction = 3;
+		if(g_level.arr[col][row - 1] != WALL) {
+			direction = LEFT;
+		} else direction = RIGHT;
 	}
 	//generate VAO and shader program
     entityVAO = genObject(rowPos, colPos);
@@ -50,7 +53,7 @@ void Ghost::mov() {
 	checkCoalition();
 	animate();
 	switch (direction) {
-		case 0:
+		case UP:
 			//face up
 			yTex = 0.5f;
 			//branch if charcter was able to move and increase counter
@@ -63,7 +66,7 @@ void Ghost::mov() {
 				if(colPos + 1 < g_level.arrHeight) findPath();
 			}
 			break;
-		case 1:
+		case LEFT:
 			//face left
 			yTex = 0.25f;
 			//branch if charcter was able to move and increase counter
@@ -76,7 +79,7 @@ void Ghost::mov() {
 				if(rowPos - 1 >= 0) findPath();
 			}
 			break;
-		case 2:
+		case DOWN:
 			//face down
 			yTex = 0.75f;
 			//branch if charcter was able to move and increase counter
@@ -89,7 +92,7 @@ void Ghost::mov() {
 				if(colPos - 1 >= 0) findPath();
 			}
 			break;
-		case 3:
+		case RIGHT:
 			//face right
 			yTex = 0.0f;
 			//branch if charcter was able to move and increase counter
@@ -122,10 +125,10 @@ void Ghost::findPath() {
 	//store all possible directions in an array
 	std::vector<int> possiblePaths;
 	//branch if path isn't opposite of current direction and there isn't a wall
-	if(direction != 2 && g_level.arr[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
-	if(direction != 3 && g_level.arr[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
-	if(direction != 0 && g_level.arr[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
-	if(direction != 1 && g_level.arr[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
+	if(direction != DOWN && g_level.arr[colPos + 1][rowPos] != WALL) possiblePaths.push_back(UP);
+	if(direction != RIGHT && g_level.arr[colPos][rowPos - 1] != WALL) possiblePaths.push_back(LEFT);
+	if(direction != UP && g_level.arr[colPos - 1][rowPos] != WALL) possiblePaths.push_back(DOWN);
+	if(direction != LEFT && g_level.arr[colPos][rowPos + 1] != WALL) possiblePaths.push_back(RIGHT);
 	//pick direction randomly
 	direction = possiblePaths[rand() % possiblePaths.size()];
 }

@@ -1,9 +1,12 @@
-/* libraries */
+/* library */
 #include "header/pacman.h"
 #include "shader/character.h"
 #include "header/levelData.h"
 #include <iostream>
-/* global variables */
+/* dictionary */
+extern enum Direction {UP, LEFT, DOWN, RIGHT};
+extern enum Target {PELLET, WALL, PACMAN, EMPTY};
+/* global data */
 extern LevelData g_level;
 extern bool g_gameover;
 /**
@@ -17,7 +20,7 @@ Pacman::Pacman() {
 	//set starting postions
     getPosition();
 	//set starting direction
-	direction = 3;
+	direction = RIGHT;
 	//generate VAO and shader program
     entityVAO = genObject(g_level.pacmanRow, g_level.pacmanCol);
     entityShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
@@ -33,7 +36,7 @@ Pacman::Pacman() {
 void Pacman::getPosition() {
 	for (int i = 0; i < g_level.arrHeight; i++) {
 		for (int j = 0; j < g_level.arrWidth; j++) {
-			if (g_level.arr[i][j] == 2) {
+			if (g_level.arr[i][j] == PACMAN) {
 				g_level.pacmanCol = i;
 				g_level.pacmanRow = j;
 				return;
@@ -48,7 +51,7 @@ void Pacman::getPosition() {
  */
 void Pacman::mov(Pellet &pellet) {
 	switch (direction) {
-		case 0:
+		case UP:
 			if(movUp(g_level.pacmanRow, g_level.pacmanCol)) {
 				counter++;
 				changeDirection = false;
@@ -56,10 +59,10 @@ void Pacman::mov(Pellet &pellet) {
 			//update grid if it has completed one square
 			if(counter == speed) {
 				//check if there is a pellet
-				if(g_level.arr[++g_level.pacmanCol][g_level.pacmanRow] == 0) eatPellet(pellet);
+				if(g_level.arr[++g_level.pacmanCol][g_level.pacmanRow] == PELLET) eatPellet(pellet);
 			}
 			break;
-		case 1:
+		case LEFT:
 			if(movLeft(g_level.pacmanRow, g_level.pacmanCol)) {
 				counter++;
 				changeDirection = false;
@@ -67,10 +70,10 @@ void Pacman::mov(Pellet &pellet) {
 			//update grid if it has completed one square
 			if(counter == speed) {
 				//check if there is a pellet
-				if(g_level.arr[g_level.pacmanCol][--g_level.pacmanRow] == 0) eatPellet(pellet);
+				if(g_level.arr[g_level.pacmanCol][--g_level.pacmanRow] == PELLET) eatPellet(pellet);
 			}			
 			break;
-		case 2:
+		case DOWN:
 			if(movDown(g_level.pacmanRow, g_level.pacmanCol)) {
 				counter++;
 				changeDirection = false;
@@ -78,10 +81,10 @@ void Pacman::mov(Pellet &pellet) {
 			//update grid if it has completed one square
 			if(counter == speed) {
 				//check if there is a pellet
-				if(g_level.arr[--g_level.pacmanCol][g_level.pacmanRow] == 0) eatPellet(pellet);
+				if(g_level.arr[--g_level.pacmanCol][g_level.pacmanRow] == PELLET) eatPellet(pellet);
 			}			
 			break;
-		case 3:
+		case RIGHT:
 			if(movRight(g_level.pacmanRow, g_level.pacmanCol)) {
 				counter++;
 				changeDirection = false;
@@ -89,7 +92,7 @@ void Pacman::mov(Pellet &pellet) {
 			//update grid if it has completed one square
 			if(counter == speed) {
 				//check if there is a pellet
-				if(g_level.arr[g_level.pacmanCol][++g_level.pacmanRow] == 0) eatPellet(pellet);
+				if(g_level.arr[g_level.pacmanCol][++g_level.pacmanRow] == PELLET) eatPellet(pellet);
 			}			
 			break;
 	}
@@ -111,8 +114,11 @@ void Pacman::animate() {
 }
 
 void Pacman::eatPellet(Pellet &pellet) {
-	g_level.arr[g_level.pacmanCol][g_level.pacmanRow] = 2;
+	//replace pellet in array
+	g_level.arr[g_level.pacmanCol][g_level.pacmanRow] = EMPTY;
+	//increment score
 	g_level.score++;
+	//hide pellet
 	pellet.hidePellet(g_level.pacmanCol, g_level.pacmanRow);
 	if(g_level.score == g_level.pelletSize) {
 		g_gameover = true;
@@ -122,21 +128,21 @@ void Pacman::eatPellet(Pellet &pellet) {
 
 void Pacman::inputDirection(GLFWwindow *window) {
 	//change direction on key press if pacman has completed a translation and it wont hit a wall
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && changeDirection && g_level.pacmanCol + 1 < g_level.arrHeight && g_level.arr[g_level.pacmanCol + 1][g_level.pacmanRow] != 1) {
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && changeDirection && g_level.pacmanCol + 1 < g_level.arrHeight && g_level.arr[g_level.pacmanCol + 1][g_level.pacmanRow] != WALL) {
 		yTex = 0.5f;
 		translateTex(0.0f, yTex);
-		direction = 0;
-	} else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && changeDirection && g_level.pacmanRow - 1 >= 0 && g_level.arr[g_level.pacmanCol][g_level.pacmanRow - 1] != 1) {
+		direction = UP;
+	} else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && changeDirection && g_level.pacmanRow - 1 >= 0 && g_level.arr[g_level.pacmanCol][g_level.pacmanRow - 1] != WALL) {
 		yTex = 0.25f;
 		translateTex(0.0f, yTex);
-		direction = 1;
-	} else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && changeDirection && g_level.pacmanCol - 1 >= 0 && g_level.arr[g_level.pacmanCol - 1][g_level.pacmanRow] != 1) {
+		direction = LEFT;
+	} else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && changeDirection && g_level.pacmanCol - 1 >= 0 && g_level.arr[g_level.pacmanCol - 1][g_level.pacmanRow] != WALL) {
 		yTex = 0.75f;
 		translateTex(0.0f, yTex);
-		direction = 2;
-	} else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && changeDirection && g_level.pacmanRow + 1 < g_level.arrWidth && g_level.arr[g_level.pacmanCol][g_level.pacmanRow + 1] != 1) {
+		direction = DOWN;
+	} else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && changeDirection && g_level.pacmanRow + 1 < g_level.arrWidth && g_level.arr[g_level.pacmanCol][g_level.pacmanRow + 1] != WALL) {
 		yTex = 0.0f;
 		translateTex(0.0f, yTex);
-		direction = 3;
+		direction = RIGHT;
 	}
 }

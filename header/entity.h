@@ -3,7 +3,6 @@
 /* library */
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
 #include <vector>
 #include <string>
 #include <set>
@@ -19,7 +18,6 @@ class Entity {
         /* protected data */
         GLuint entityVAO;
         GLuint entityShaderProgram;
-        int target;
         /* protected functionality */
         GLuint createVAO(const std::vector<GLfloat> &arr, const std::vector<GLuint> &arr_indices);
         GLuint compileShader(const std::string &vertexShaderSrc, const std::string &fragmentShaderSrc);

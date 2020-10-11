@@ -1,6 +1,6 @@
 #ifndef __GHOST_H
 #define __GHOST_H
-/* libraries */
+/* library */
 #include "header/character.h"
 /**
  * 'Pacman' class.

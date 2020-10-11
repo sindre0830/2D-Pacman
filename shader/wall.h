@@ -1,6 +1,6 @@
 #ifndef __WALL_H_
 #define __WALL_H_
-
+/* library */
 #include <string>
 
 static const std::string wallVertexShaderSrc = R"(

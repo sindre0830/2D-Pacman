@@ -7,10 +7,12 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <stb_image.h>
-
+/* dictionary */
+extern enum Corner {TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT};
+extern enum Position {X, Y};
+extern enum Target {PELLET, WALL, PACMAN};
+/* global data */
 extern LevelData g_level;
-extern enum direction {topLeft, bottomLeft, bottomRight, topRight};
-extern enum position {x, y};
 
 Character::~Character() {
     glDeleteTextures(1, &texture);
@@ -44,16 +46,16 @@ std::vector<GLfloat> Character::genCoordinates(const int row, const int col) {
     GLfloat texPos = 0.f;
     std::vector<GLfloat> arr = {
         //top left grid and texture coordinate
-        g_level.elementPos[std::make_pair(col, row)][topLeft][x], g_level.elementPos[std::make_pair(col, row)][topLeft][y],	
+        g_level.elementPos[std::make_pair(col, row)][TOP_LEFT][X], g_level.elementPos[std::make_pair(col, row)][TOP_LEFT][Y],	
         texPos, texPos + 0.25f,
         //bottom left grid and texture coordinate
-        g_level.elementPos[std::make_pair(col, row)][bottomLeft][x], g_level.elementPos[std::make_pair(col, row)][bottomLeft][y], 
+        g_level.elementPos[std::make_pair(col, row)][BOTTOM_LEFT][X], g_level.elementPos[std::make_pair(col, row)][BOTTOM_LEFT][Y], 
         texPos, texPos,
         //bottom right rid and texture coordinate
-        g_level.elementPos[std::make_pair(col, row)][bottomRight][x], g_level.elementPos[std::make_pair(col, row)][bottomRight][y], 
+        g_level.elementPos[std::make_pair(col, row)][BOTTOM_RIGHT][X], g_level.elementPos[std::make_pair(col, row)][BOTTOM_RIGHT][Y], 
         texPos + 0.16f, texPos,
         //top right grid and texture coordinate
-        g_level.elementPos[std::make_pair(col, row)][topRight][x], g_level.elementPos[std::make_pair(col, row)][topRight][y],	
+        g_level.elementPos[std::make_pair(col, row)][TOP_RIGHT][X], g_level.elementPos[std::make_pair(col, row)][TOP_RIGHT][Y],	
         texPos + 0.16f, texPos + 0.25f
     };
     return arr;
@@ -85,7 +87,7 @@ void Character::translateTex(const float xPos, const float yPos) {
 bool Character::movUp(int &row, int &col) {
 	//check if next location will be a wall or out of bound
 	if(col + 1 < g_level.arrHeight) {
-        if(g_level.arr[col + 1][row] != 1) {
+        if(g_level.arr[col + 1][row] != WALL) {
             //translate up on the x-axis
             translatePos(xPos, (yPos += g_level.elementHeight / (double)(speed)));
             return true;
@@ -100,7 +102,7 @@ bool Character::movUp(int &row, int &col) {
 bool Character::movLeft(int &row, int &col) {
 	//check if next location will be a wall or out of bound
 	if(row - 1 >= 0) {
-        if(g_level.arr[col][row - 1] != 1) {
+        if(g_level.arr[col][row - 1] != WALL) {
             //translate up on the x-axis
             translatePos((xPos -= g_level.elementWidth / (double)(speed)), yPos);
             return true;
@@ -115,7 +117,7 @@ bool Character::movLeft(int &row, int &col) {
 bool Character::movDown(int &row, int &col) {
 	//check if next location will be a wall or out of bound
 	if(col - 1 >= 0) {
-        if(g_level.arr[col - 1][row] != 1) {
+        if(g_level.arr[col - 1][row] != WALL) {
             //translate up on the x-axis
             translatePos(xPos, (yPos -= g_level.elementHeight / (double)(speed)));
             return true;
@@ -130,7 +132,7 @@ bool Character::movDown(int &row, int &col) {
 bool Character::movRight(int &row, int &col) {
 	//check if next location will be a wall or out of bound
 	if(row + 1 < g_level.arrWidth) {
-        if(g_level.arr[col][row + 1] != 1) {
+        if(g_level.arr[col][row + 1] != WALL) {
             //translate up on the x-axis
             translatePos((xPos += g_level.elementWidth / (double)(speed)), yPos);
             return true;
