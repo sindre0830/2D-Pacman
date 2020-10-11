@@ -1,5 +1,5 @@
-#ifndef __FRAMEWORK_H
-#define __FRAMEWORK_H
+#ifndef __ENTITY_H
+#define __ENTITY_H
 /* library */
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -11,11 +11,14 @@
  * @brief Root class with shared data and functionality
  * 
  */
-class Framework {
+class Entity {
     public:
         /* public functionality */
-        ~Framework();
+        ~Entity();
     protected:
+        /* protected data */
+        GLuint entityVAO;
+        GLuint entityShaderProgram;
         /* protected functionality */
         GLuint createVAO(const std::vector<GLfloat> &arr, const std::vector<GLuint> &arr_indices);
         GLuint compileShader(const std::string &vertexShaderSrc, const std::string &fragmentShaderSrc);

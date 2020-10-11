@@ -9,11 +9,7 @@ extern bool g_gameover;
 /**
  * @brief Destroy the Ghost object
  */
-Ghost::~Ghost() {
-    glDeleteProgram(ghostShaderProgram);
-    glDeleteTextures(1, &texture);
-    cleanVAO(ghostVAO);
-}
+Ghost::~Ghost() {}
 /**
  * @brief Set data on construction of Ghost object.
  */
@@ -32,8 +28,8 @@ Ghost::Ghost(int row, int col) {
 		} else direction = 3;
 	}
 	//generate VAO and shader program
-    ghostVAO = genObject(rowPos, colPos);
-    ghostShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
+    entityVAO = genObject(rowPos, colPos);
+    entityShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
 	//specify the layout of the vertex data
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
@@ -42,11 +38,11 @@ Ghost::Ghost(int row, int col) {
     //load the texture image, create OpenGL texture, and bind it to the current context
     texture = loadTexture("sprite/pacman.png", 0);
 	//translate texture to show ghost
-	translateTex(4.0f / 6.0f, yTex, ghostShaderProgram);
+	translateTex(4.0f / 6.0f, yTex, entityShaderProgram);
 }
 
 void Ghost::drawObject() {
-    draw(ghostShaderProgram, ghostVAO);
+    draw(entityShaderProgram, entityVAO);
 }
 /**
  * @brief Draw asset according to the direction it is facing.
@@ -75,7 +71,7 @@ void Ghost::movObject() {
 			//face up
 			yTex = 0.5f;
 			//branch if charcter was able to move and increase counter
-			if(movUp(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
+			if(movUp(rowPos, colPos, xPos, yPos, speed, entityShaderProgram)) counter++;
 			//update grid if it has completed one square
 			if(counter == speed) {
 				//update the character position in array
@@ -88,7 +84,7 @@ void Ghost::movObject() {
 			//face left
 			yTex = 0.25f;
 			//branch if charcter was able to move and increase counter
-			if(movLeft(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
+			if(movLeft(rowPos, colPos, xPos, yPos, speed, entityShaderProgram)) counter++;
 			//update grid if it has completed one square
 			if(counter == speed) {
 				//update the character position in array
@@ -101,7 +97,7 @@ void Ghost::movObject() {
 			//face down
 			yTex = 0.75f;
 			//branch if charcter was able to move and increase counter
-			if(movDown(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
+			if(movDown(rowPos, colPos, xPos, yPos, speed, entityShaderProgram)) counter++;
 			//update grid if it has completed one square
 			if(counter == speed) {
 				//update the character position in array
@@ -114,7 +110,7 @@ void Ghost::movObject() {
 			//face right
 			yTex = 0.0f;
 			//branch if charcter was able to move and increase counter
-			if(movRight(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
+			if(movRight(rowPos, colPos, xPos, yPos, speed, entityShaderProgram)) counter++;
 			//update grid if it has completed one square
 			if(counter == speed) {
 				//update the character position in array
@@ -128,13 +124,13 @@ void Ghost::movObject() {
 
 void Ghost::animate() {
 	if (counter == speed * 0.25f) {
-		translateTex(4.0f / 6.0f, yTex, ghostShaderProgram);
+		translateTex(4.0f / 6.0f, yTex, entityShaderProgram);
 	} else if (counter == speed * 0.5f) {
-		translateTex(5.0f / 6.0f, yTex, ghostShaderProgram);
+		translateTex(5.0f / 6.0f, yTex, entityShaderProgram);
 	} else if (counter == speed * 0.75f) {
-		translateTex(4.0f / 6.0f, yTex, ghostShaderProgram);
+		translateTex(4.0f / 6.0f, yTex, entityShaderProgram);
 	} else if (counter >= speed) {
-		translateTex(5.0f / 6.0f, yTex, ghostShaderProgram);
+		translateTex(5.0f / 6.0f, yTex, entityShaderProgram);
 		counter = 0;
 	}
 }

@@ -2,20 +2,14 @@
 #include "header/pacman.h"
 #include "shader/character.h"
 #include "header/levelData.h"
-#include "header/pellet.h"
 #include <iostream>
 /* global variables */
 extern LevelData g_level;
-extern Pellet pellet;
 extern bool g_gameover;
 /**
  * @brief Destroy the Pacman object
  */
-Pacman::~Pacman() {
-    glDeleteProgram(pacmanShaderProgram);
-    glDeleteTextures(1, &texture);
-    cleanVAO(pacmanVAO);
-}
+Pacman::~Pacman() {}
 /**
  * @brief Declare variables on construction of Pacman object.
  */
@@ -25,8 +19,8 @@ Pacman::Pacman() {
 	//set starting direction
 	direction = 3;
 	//generate VAO and shader program
-    pacmanVAO = genObject(g_level.pacmanRow, g_level.pacmanCol);
-    pacmanShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
+    entityVAO = genObject(g_level.pacmanRow, g_level.pacmanCol);
+    entityShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
 	//specify the layout of the vertex data
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
@@ -49,7 +43,7 @@ void Pacman::getPosition() {
 }
 
 void Pacman::drawObject(GLFWwindow *window) {
-    draw(pacmanShaderProgram, pacmanVAO, window);
+    draw(entityShaderProgram, entityVAO, window);
 }
 /**
  * @brief Draw asset according to the direction it is facing.
@@ -88,10 +82,10 @@ void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
  * 
  * @param shader
  */
-void Pacman::movObject() {
+void Pacman::movObject(Pellet &pellet) {
 	//move up (W)
 	if(direction == 0) {
-		if(movUp(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, pacmanShaderProgram)) {
+		if(movUp(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
 			counter++;
 			changeDirection = false;
 		}
@@ -106,7 +100,7 @@ void Pacman::movObject() {
 		}
 	//move left (A)
 	} else if (direction == 1) {
-		if(movLeft(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, pacmanShaderProgram)) {
+		if(movLeft(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
 			counter++;
 			changeDirection = false;
 		}
@@ -121,7 +115,7 @@ void Pacman::movObject() {
 		}
 	//move down (S)
 	} else if (direction == 2) {
-		if(movDown(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, pacmanShaderProgram)) {
+		if(movDown(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
 			counter++;
 			changeDirection = false;
 		}
@@ -136,7 +130,7 @@ void Pacman::movObject() {
 		}
 	//move right (D)
 	} else if (direction == 3) {
-		if(movRight(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, pacmanShaderProgram)) {
+		if(movRight(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
 			counter++;
 			changeDirection = false;
 		}
@@ -152,13 +146,13 @@ void Pacman::movObject() {
 	}
 	//animate
 	if (counter == speed * 0.25f) {
-		translateTex(0.167f, yTex, pacmanShaderProgram);
+		translateTex(0.167f, yTex, entityShaderProgram);
 	} else if (counter == speed * 0.5f) {
-		translateTex(0.333f, yTex, pacmanShaderProgram);
+		translateTex(0.333f, yTex, entityShaderProgram);
 	} else if (counter == speed * 0.75f) {
-		translateTex(0.5f, yTex, pacmanShaderProgram);
+		translateTex(0.5f, yTex, entityShaderProgram);
 	} else if (counter == speed) {
-		translateTex(0.0f, yTex, pacmanShaderProgram);
+		translateTex(0.0f, yTex, entityShaderProgram);
 		changeDirection = true;
 		if(g_level.score == g_level.pelletSize) {
 			g_gameover = true;

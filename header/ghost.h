@@ -8,8 +8,7 @@
 class Ghost : public Character {
     private:
         /* private data */
-        GLuint ghostVAO;
-        GLuint ghostShaderProgram;
+        int rowPos, colPos;
         /* private functionality */
         void draw(GLuint &shader, GLuint &vao);
         void findPath();

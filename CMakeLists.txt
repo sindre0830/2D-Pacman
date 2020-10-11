@@ -15,28 +15,23 @@ add_subdirectory(external/glm-0.9.9.8)
 add_executable(${PROJECT_NAME}
 	main.cpp
 	header/levelData.h
-	
-	function.cpp
 	header/function.h
-
-	framework.cpp
-	header/framework.h
-
-	wall.cpp
-	header/wall.h
-	pellet.cpp
-	header/pellet.h
-
-	character.cpp
-	header/character.h
-	pacman.cpp
-	header/pacman.h
-	ghost.cpp
-	header/ghost.h
-
-	shader/character.h
-	shader/pellet.h
-	shader/wall.h)
+	function.cpp
+	header/entity.h
+	entity.cpp
+		header/wall.h
+		shader/wall.h
+		wall.cpp
+		header/pellet.h
+		shader/pellet.h
+		pellet.cpp
+		header/character.h
+		character.cpp
+			shader/character.h
+			header/pacman.h
+			pacman.cpp
+			header/ghost.h
+			ghost.cpp)
 
 target_include_directories(${PROJECT_NAME}
 	PRIVATE

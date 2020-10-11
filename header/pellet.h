@@ -1,16 +1,14 @@
 #ifndef __PELLET_H
 #define __PELLET_H
 /* libraries */
-#include "header/framework.h"
+#include "header/entity.h"
 #include <map>
 /**
  * 'Pellet' class.
  */
-class Pellet : public Framework {
+class Pellet : public Entity {
     private:
         /* private data */
-        GLuint pelletVAO;
-        GLuint pelletShaderProgram;
         std::map<std::pair<int, int>, int> bufferPos;
         const int pelletByteSize = 3 * 4 * sizeof(GLfloat);
         /* private functionality */
@@ -20,7 +18,6 @@ class Pellet : public Framework {
         /* public functionality */
         ~Pellet();
         Pellet();
-        void setupObject();
         void drawObject();
         void hidePellet(const int x, const int y);
 };

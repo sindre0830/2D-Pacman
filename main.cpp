@@ -20,7 +20,6 @@
 bool g_gameover = false;
 /* global objects */
 LevelData g_level;
-Pellet pellet;
 /**
  * Main program.
  */
@@ -84,7 +83,7 @@ int main() {
 		ghostArr[i] = new Ghost(ghostStartRow + i, ghostStartCol);
 	}
 	//construct pellets
-	pellet.setupObject();
+	Pellet pellet;
 	//set background color black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//setup timer
@@ -108,7 +107,7 @@ int main() {
 		//draw pacman
 		pacman.drawObject(window);
 		if (!g_gameover && deltaTime >= 1.0){
-			pacman.movObject();
+			pacman.movObject(pellet);
 		}
 		//draw ghosts
 		for(int i = 0; i < ghostArr.size(); i++) {

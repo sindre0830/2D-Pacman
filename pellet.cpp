@@ -10,22 +10,14 @@ extern LevelData g_level;
  * @brief Destroy the Pellet:: Pellet object
  * 
  */
-Pellet::~Pellet() {
-    glDeleteProgram(pelletShaderProgram);
-    cleanVAO(pelletVAO);
-}
+Pellet::~Pellet() {}
 /**
  * @brief Construct a new Pellet:: Pellet object
  * 
  */
-Pellet::Pellet() {}
-/**
- * @brief Setup object by generating shader program, VAO and getting buffer array position.
- * 
- */
-void Pellet::setupObject() {
-    pelletShaderProgram = compileShader(pelletVertexShaderSrc, pelletFragmentShaderSrc);
-    pelletVAO = genObject();
+Pellet::Pellet() {
+	entityShaderProgram = compileShader(pelletVertexShaderSrc, pelletFragmentShaderSrc);
+    entityVAO = genObject();
 	//set the vertex attribute
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void*)0);
@@ -56,8 +48,8 @@ GLuint Pellet::genObject() {
  * 
  */
 void Pellet::drawObject() {
-	glUseProgram(pelletShaderProgram);
-	glBindVertexArray(pelletVAO);
+	glUseProgram(entityShaderProgram);
+	glBindVertexArray(entityVAO);
 	glDrawElements(GL_TRIANGLES, (6 * g_level.pelletSize), GL_UNSIGNED_INT, (const void*)0);
 }
 /**

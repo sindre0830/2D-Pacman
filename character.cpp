@@ -10,7 +10,9 @@
 
 extern LevelData g_level;
 
-Character::~Character() {}
+Character::~Character() {
+    glDeleteTextures(1, &texture);
+}
 /**
  * @brief Generate Pac-Man from the 2D array to the window.
  * 

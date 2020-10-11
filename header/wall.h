@@ -1,17 +1,15 @@
 #ifndef __WALL_H
 #define __WALL_H
 /* library */
-#include "header/framework.h"
+#include "header/entity.h"
 /**
- * @brief Child class of 'Framework' with shared data and functionality
+ * @brief Child class of 'Entity' with shared data and functionality
  * 
  */
-class Wall : public Framework {
+class Wall : public Entity {
     private:
         /* private data */
-        GLuint wallVAO;
         GLuint cornerVAO;
-        GLuint wallShaderProgram;
         int wallSize = 0, cornerSize = 0;
         /* private functionality */
         GLuint genObject();

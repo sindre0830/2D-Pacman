@@ -2,14 +2,13 @@
 #define __PACMAN_H
 /* libraries */
 #include "header/character.h"
+#include "header/pellet.h"
 /**
  * 'Pacman' class.
  */
 class Pacman : public Character {
     private:
         /* private data */
-        GLuint pacmanVAO;
-        GLuint pacmanShaderProgram;
         bool changeDirection;
         /* private functionality */
         void draw(GLuint &shader, GLuint &vao, GLFWwindow *window);
@@ -18,7 +17,7 @@ class Pacman : public Character {
         ~Pacman();
         Pacman();
         void drawObject(GLFWwindow *window);
-        void movObject();
+        void movObject(Pellet &pellet);
         void getPosition();
 };
 #endif

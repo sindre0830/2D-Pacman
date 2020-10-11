@@ -7,14 +7,13 @@
 extern LevelData g_level;
 
 Wall::~Wall() {
-    glDeleteProgram(wallShaderProgram);
-    cleanVAO(wallVAO);
+    cleanVAO(cornerVAO);
 }
 
 Wall::Wall() {
-    wallShaderProgram = compileShader(wallVertexShaderSrc, wallFragmentShaderSrc);
+    entityShaderProgram = compileShader(wallVertexShaderSrc, wallFragmentShaderSrc);
 	//generate wall VAO
-    wallVAO = genObject();
+    entityVAO = genObject();
 	//set the vertex attribute
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLuint), (const void*)0);
 	glEnableVertexAttribArray(0);
@@ -33,9 +32,9 @@ GLuint Wall::genObject() {
 }
 
 void Wall::drawObject() {
-	glUseProgram(wallShaderProgram);
+	glUseProgram(entityShaderProgram);
 	//draw walls
-	glBindVertexArray(wallVAO);
+	glBindVertexArray(entityVAO);
 	glDrawElements(GL_TRIANGLES, (6 * wallSize), GL_UNSIGNED_INT, (const void*)0);
 	//draw corners
 	glBindVertexArray(cornerVAO);

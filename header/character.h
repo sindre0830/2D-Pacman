@@ -1,21 +1,21 @@
 #ifndef __CHARACTER_H
 #define __CHARACTER_H
 /* library */
-#include "header/framework.h"
+#include "header/Entity.h"
 #include <map>
 #include <string>
 /**
- * @brief Child class of 'Framework' with shared data and functionality
+ * @brief Child class of 'Entity' with shared data and functionality
  * 
  */
-class Character : public Framework {
+class Character : public Entity {
     public:
         /* public functionality */
         ~Character();
     protected:
         /* protected data */
         GLuint texture;
-        int direction, rowPos, colPos, counter = 0, speed = 20;
+        int direction, counter = 0, speed = 20;
         float xPos = 0.f, yPos = 0.f, yTex = 0.f;
         /* protected functionality */
         GLuint genObject(const int row, const int col);
