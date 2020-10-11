@@ -83,68 +83,56 @@ void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
  * @param shader
  */
 void Pacman::movObject(Pellet &pellet) {
-	//move up (W)
-	if(direction == 0) {
-		if(movUp(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
-			counter++;
-			changeDirection = false;
-		}
-		//update grid if it has completed one square
-		if(counter == speed) {
-			//check if there is a pellet
-			if(g_level.arr[++g_level.pacmanCol][g_level.pacmanRow] == 0) {
-				g_level.score++;
-				pellet.hidePellet(g_level.pacmanCol, g_level.pacmanRow);
+	switch (direction) {
+		case 0:
+			if(movUp(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
+				counter++;
+				changeDirection = false;
 			}
-			g_level.arr[g_level.pacmanCol][g_level.pacmanRow] = 2;
-		}
-	//move left (A)
-	} else if (direction == 1) {
-		if(movLeft(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
-			counter++;
-			changeDirection = false;
-		}
-		//update grid if it has completed one square
-		if(counter == speed) {
-			//check if there is a pellet
-			if(g_level.arr[g_level.pacmanCol][--g_level.pacmanRow] == 0) {
-				g_level.score++;
-				pellet.hidePellet(g_level.pacmanCol, g_level.pacmanRow);
+			//update grid if it has completed one square
+			if(counter == speed) {
+				//check if there is a pellet
+				if(g_level.arr[++g_level.pacmanCol][g_level.pacmanRow] == 0) eatPellet(pellet);
 			}
-			g_level.arr[g_level.pacmanCol][g_level.pacmanRow] = 2;
-		}
-	//move down (S)
-	} else if (direction == 2) {
-		if(movDown(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
-			counter++;
-			changeDirection = false;
-		}
-		//update grid if it has completed one square
-		if(counter == speed) {
-			//check if there is a pellet
-			if(g_level.arr[--g_level.pacmanCol][g_level.pacmanRow] == 0) {
-				g_level.score++;
-				pellet.hidePellet(g_level.pacmanCol, g_level.pacmanRow);
+			break;
+		case 1:
+			if(movLeft(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
+				counter++;
+				changeDirection = false;
 			}
-			g_level.arr[g_level.pacmanCol][g_level.pacmanRow] = 2;
-		}
-	//move right (D)
-	} else if (direction == 3) {
-		if(movRight(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
-			counter++;
-			changeDirection = false;
-		}
-		//update grid if it has completed one square
-		if(counter == speed) {
-			//check if there is a pellet
-			if(g_level.arr[g_level.pacmanCol][++g_level.pacmanRow] == 0) {
-				g_level.score++;
-				pellet.hidePellet(g_level.pacmanCol, g_level.pacmanRow);
+			//update grid if it has completed one square
+			if(counter == speed) {
+				//check if there is a pellet
+				if(g_level.arr[g_level.pacmanCol][--g_level.pacmanRow] == 0) eatPellet(pellet);
+			}			
+			break;
+		case 2:
+			if(movDown(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
+				counter++;
+				changeDirection = false;
 			}
-			g_level.arr[g_level.pacmanCol][g_level.pacmanRow] = 2;
-		}
+			//update grid if it has completed one square
+			if(counter == speed) {
+				//check if there is a pellet
+				if(g_level.arr[--g_level.pacmanCol][g_level.pacmanRow] == 0) eatPellet(pellet);
+			}			
+			break;
+		case 3:
+			if(movRight(g_level.pacmanRow, g_level.pacmanCol, xPos, yPos, speed, entityShaderProgram)) {
+				counter++;
+				changeDirection = false;
+			}
+			//update grid if it has completed one square
+			if(counter == speed) {
+				//check if there is a pellet
+				if(g_level.arr[g_level.pacmanCol][++g_level.pacmanRow] == 0) eatPellet(pellet);
+			}			
+			break;
 	}
-	//animate
+	animate();
+}
+
+void Pacman::animate() {
 	if (counter == speed * 0.25f) {
 		translateTex(0.167f, yTex, entityShaderProgram);
 	} else if (counter == speed * 0.5f) {
@@ -154,10 +142,16 @@ void Pacman::movObject(Pellet &pellet) {
 	} else if (counter == speed) {
 		translateTex(0.0f, yTex, entityShaderProgram);
 		changeDirection = true;
-		if(g_level.score == g_level.pelletSize) {
-			g_gameover = true;
-			std::cout << "Congratulations, you won...\n";
-		}
 		counter = 0;
+	}
+}
+
+void Pacman::eatPellet(Pellet &pellet) {
+	g_level.score++;
+	pellet.hidePellet(g_level.pacmanCol, g_level.pacmanRow);
+	g_level.arr[g_level.pacmanCol][g_level.pacmanRow] = 2;
+	if(g_level.score == g_level.pelletSize) {
+		g_gameover = true;
+		std::cout << "Congratulations, you won...\n";
 	}
 }

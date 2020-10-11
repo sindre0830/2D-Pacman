@@ -1,10 +1,8 @@
-/* libraries */
+/* library */
 #include "header/levelData.h"
 #include "header/pellet.h"
 #include "shader/pellet.h"
-#include <iostream>
-#include <iterator>
-/* global variables */
+/* global data */
 extern LevelData g_level;
 /**
  * @brief Destroy the Pellet:: Pellet object

@@ -12,6 +12,8 @@ class Pacman : public Character {
         bool changeDirection;
         /* private functionality */
         void draw(GLuint &shader, GLuint &vao, GLFWwindow *window);
+        void animate();
+        void eatPellet(Pellet &pellet);
     public:
         /* public functionality */
         ~Pacman();
