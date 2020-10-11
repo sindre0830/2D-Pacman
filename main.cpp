@@ -16,10 +16,11 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-/* global variables */
+/* global data */
 bool g_gameover = false;
-/* global objects */
 LevelData g_level;
+enum direction {topLeft, bottomLeft, bottomRight, topRight};
+enum position {x, y};
 /**
  * Main program.
  */

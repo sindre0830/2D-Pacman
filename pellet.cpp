@@ -4,6 +4,8 @@
 #include "shader/pellet.h"
 /* global data */
 extern LevelData g_level;
+extern enum direction {topLeft, bottomLeft, bottomRight, topRight};
+extern enum position {x, y};
 /**
  * @brief Destroy the Pellet:: Pellet object
  * 
@@ -59,10 +61,10 @@ void Pellet::drawObject() {
  * @param y 
  * @param x 
  */
-void Pellet::hidePellet(const int y, const int x) {
+void Pellet::hidePellet(const int yPos, const int xPos) {
 	GLfloat display = 0.f;
 	for(int i = 8; i < pelletByteSize; i += 12) {
-		glBufferSubData(GL_ARRAY_BUFFER, bufferPos[std::make_pair(y, x)] +  i, sizeof(GLfloat), &display);
+		glBufferSubData(GL_ARRAY_BUFFER, bufferPos[std::make_pair(yPos, xPos)] +  i, sizeof(GLfloat), &display);
 	}
 }
 /**
@@ -89,13 +91,13 @@ std::vector<GLfloat> Pellet::genCoordinates() {
 			if (g_level.arr[i][j] == target) {
 				arr.insert(arr.end(), {
 					//middle left coordinate
-					g_level.elementPos[std::make_pair(i, j)][0][0] + xResize, g_level.elementPos[std::make_pair(i, j)][0][1] - yRotate, display,
+					g_level.elementPos[std::make_pair(i, j)][topLeft][x] + xResize, g_level.elementPos[std::make_pair(i, j)][topLeft][y] - yRotate, display,
 					//middle down coordinate
-					g_level.elementPos[std::make_pair(i, j)][1][0] + xRotate, g_level.elementPos[std::make_pair(i, j)][1][1] + yResize, display,
+					g_level.elementPos[std::make_pair(i, j)][bottomLeft][x] + xRotate, g_level.elementPos[std::make_pair(i, j)][bottomLeft][y] + yResize, display,
 					//middle right coordinate
-					g_level.elementPos[std::make_pair(i, j)][2][0] - xResize, g_level.elementPos[std::make_pair(i, j)][2][1] + yRotate, display,
+					g_level.elementPos[std::make_pair(i, j)][bottomRight][x] - xResize, g_level.elementPos[std::make_pair(i, j)][bottomRight][y] + yRotate, display,
 					//middle top coordinate
-					g_level.elementPos[std::make_pair(i, j)][3][0] - xRotate, g_level.elementPos[std::make_pair(i, j)][3][1] - yResize, display
+					g_level.elementPos[std::make_pair(i, j)][topRight][x] - xRotate, g_level.elementPos[std::make_pair(i, j)][topRight][y] - yResize, display
 				});
 			}
 		}
