@@ -61,13 +61,13 @@ std::vector<GLfloat> Wall::genWallCoordinates() {
 				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != WALL) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][X], g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][Y],
+						g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y],
 						//bottom left coordinate
-						g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][Y] + yResize,
+						g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y] + yResize,
 						//bottom right coordinate
-						g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yResize,
+						g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yResize,
 						//top right coordinate
-						g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][X], g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][Y]
+						g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y]
 					});
 					wallSize++;
 				}
@@ -75,13 +75,13 @@ std::vector<GLfloat> Wall::genWallCoordinates() {
 				if(i - 1 >= 0 && g_level.arr[i - 1][j] != WALL) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][X], g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][Y] - yResize,
+						g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y] - yResize,
 						//bottom left coordinate
-						g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][Y],
+						g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y],
 						//bottom right coordinate
-						g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
+						g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
 						//top right coordinate
-						g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][X], g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize
+						g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize
 					});
 					wallSize++;
 				}
@@ -89,13 +89,13 @@ std::vector<GLfloat> Wall::genWallCoordinates() {
 				if(j - 1 >= 0 && g_level.arr[i][j - 1] != WALL) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][X], g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][Y],
+						g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y],
 						//bottom left coordinate
-						g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][Y],
+						g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y],
 						//bottom right coordinate
-						g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][X] - xResize, g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
+						g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X] - xResize, g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
 						//top right coordinate
-						g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][X] - xResize, g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][Y]
+						g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X] - xResize, g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y]
 					});
 					wallSize++;
 				}
@@ -103,13 +103,13 @@ std::vector<GLfloat> Wall::genWallCoordinates() {
 				if(j + 1 < g_level.arrWidth && g_level.arr[i][j + 1] != WALL) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][X] + xResize, g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][Y],
+						g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X] + xResize, g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y],
 						//bottom left coordinate
-						g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][X] + xResize, g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][Y],
+						g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X] + xResize, g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y],
 						//bottom right coordinate
-						g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
+						g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
 						//top right coordinate
-						g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][X], g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][Y]
+						g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y]
 					});
 					wallSize++;
 				}
@@ -134,11 +134,11 @@ GLuint Wall::genCornerVAO() {
 				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != WALL && j + 1 < g_level.arrWidth && g_level.arr[i + 1][j + 1] == WALL) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][X], g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][Y],
+						g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y],
 						//bottom left coordinate
-						g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][X], g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize,
+						g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize,
 						//top right coordinate
-						g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][X] + xResize, g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][Y]
+						g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X] + xResize, g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y]
 					});
 					cornerSize++;
 				}
@@ -146,11 +146,11 @@ GLuint Wall::genCornerVAO() {
 				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != WALL && j - 1 >= 0 && g_level.arr[i + 1][j - 1] == WALL) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][X] - xResize, g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][Y],
+						g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X] - xResize, g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y],
 						//bottom right coordinate
-						g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][X], g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][Y] - yResize,
+						g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y] - yResize,
 						//top right coordinate
-						g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][X], g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][Y]
+						g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y]
 					});
 					cornerSize++;
 				}
@@ -158,11 +158,11 @@ GLuint Wall::genCornerVAO() {
 				if(i - 1 >= 0 && g_level.arr[i - 1][j] != WALL && j + 1 < g_level.arrWidth && g_level.arr[i - 1][j + 1] == WALL) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
+						g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
 						//bottom left coordinate
-						g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yResize,
+						g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yResize,
 						//top right coordinate
-						g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][X] + xResize, g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][Y]
+						g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X] + xResize, g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y]
 					});
 					cornerSize++;
 				}
@@ -170,11 +170,11 @@ GLuint Wall::genCornerVAO() {
 				if(i - 1 >= 0 && g_level.arr[i - 1][j] != WALL && j - 1 >= 0 && g_level.arr[i - 1][j - 1] == WALL) {
 					arr.insert(arr.end(), {
 						//top left coordinate
-						g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][X] - xResize, g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][Y],
+						g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X] - xResize, g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y],
 						//bottom right coordinate
-						g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][Y] + yResize,
+						g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y] + yResize,
 						//top right coordinate
-						g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][Y]
+						g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y]
 					});
 					cornerSize++;
 				}

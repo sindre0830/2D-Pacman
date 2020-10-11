@@ -49,13 +49,13 @@ bool readFile() {
 		for (int i = 0; i < g_level.arrHeight; i++, x = -1.f, y += g_level.elementHeight) {
 			for (int j = 0; j < g_level.arrWidth; j++, x += g_level.elementWidth) {
 				//top left
-				g_level.elementPos[std::make_pair(i, j)].push_back({x, y + (float)(g_level.elementHeight)});
+				g_level.gridElement[std::make_pair(i, j)].push_back({x, y + (float)(g_level.elementHeight)});
 				//bottom left
-				g_level.elementPos[std::make_pair(i, j)].push_back({x, y});
+				g_level.gridElement[std::make_pair(i, j)].push_back({x, y});
 				//bottom right
-				g_level.elementPos[std::make_pair(i, j)].push_back({x + (float)(g_level.elementWidth), y});
+				g_level.gridElement[std::make_pair(i, j)].push_back({x + (float)(g_level.elementWidth), y});
 				//top right
-				g_level.elementPos[std::make_pair(i, j)].push_back({x + (float)(g_level.elementWidth), y + (float)(g_level.elementHeight)});
+				g_level.gridElement[std::make_pair(i, j)].push_back({x + (float)(g_level.elementWidth), y + (float)(g_level.elementHeight)});
 			}
 		}
 		return true;

@@ -91,13 +91,13 @@ std::vector<GLfloat> Pellet::genCoordinates() {
 			if (g_level.arr[i][j] == PELLET) {
 				arr.insert(arr.end(), {
 					//middle left coordinate
-					g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][X] + xResize, g_level.elementPos[std::make_pair(i, j)][TOP_LEFT][Y] - yRotate, display,
+					g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X] + xResize, g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y] - yRotate, display,
 					//middle down coordinate
-					g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][X] + xRotate, g_level.elementPos[std::make_pair(i, j)][BOTTOM_LEFT][Y] + yResize, display,
+					g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X] + xRotate, g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y] + yResize, display,
 					//middle right coordinate
-					g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][X] - xResize, g_level.elementPos[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yRotate, display,
+					g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X] - xResize, g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yRotate, display,
 					//middle top coordinate
-					g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][X] - xRotate, g_level.elementPos[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize, display
+					g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X] - xRotate, g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize, display
 				});
 			}
 		}

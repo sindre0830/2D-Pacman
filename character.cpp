@@ -46,16 +46,16 @@ std::vector<GLfloat> Character::genCoordinates(const int row, const int col) {
     GLfloat texPos = 0.f;
     std::vector<GLfloat> arr = {
         //top left grid and texture coordinate
-        g_level.elementPos[std::make_pair(col, row)][TOP_LEFT][X], g_level.elementPos[std::make_pair(col, row)][TOP_LEFT][Y],	
+        g_level.gridElement[std::make_pair(col, row)][TOP_LEFT][X], g_level.gridElement[std::make_pair(col, row)][TOP_LEFT][Y],	
         texPos, texPos + 0.25f,
         //bottom left grid and texture coordinate
-        g_level.elementPos[std::make_pair(col, row)][BOTTOM_LEFT][X], g_level.elementPos[std::make_pair(col, row)][BOTTOM_LEFT][Y], 
+        g_level.gridElement[std::make_pair(col, row)][BOTTOM_LEFT][X], g_level.gridElement[std::make_pair(col, row)][BOTTOM_LEFT][Y], 
         texPos, texPos,
         //bottom right rid and texture coordinate
-        g_level.elementPos[std::make_pair(col, row)][BOTTOM_RIGHT][X], g_level.elementPos[std::make_pair(col, row)][BOTTOM_RIGHT][Y], 
+        g_level.gridElement[std::make_pair(col, row)][BOTTOM_RIGHT][X], g_level.gridElement[std::make_pair(col, row)][BOTTOM_RIGHT][Y], 
         texPos + 0.16f, texPos,
         //top right grid and texture coordinate
-        g_level.elementPos[std::make_pair(col, row)][TOP_RIGHT][X], g_level.elementPos[std::make_pair(col, row)][TOP_RIGHT][Y],	
+        g_level.gridElement[std::make_pair(col, row)][TOP_RIGHT][X], g_level.gridElement[std::make_pair(col, row)][TOP_RIGHT][Y],	
         texPos + 0.16f, texPos + 0.25f
     };
     return arr;

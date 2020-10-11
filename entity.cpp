@@ -101,9 +101,9 @@ void Entity::cleanVAO(GLuint &vao) {
 	glDeleteVertexArrays(1, &vao);
 }
 
-std::vector<GLuint> Entity::genIndices(const int n) {
+std::vector<GLuint> Entity::genIndices(const int size) {
     std::vector<GLuint> arrIndices;
-    for (int i = 0, j = 0; i < n; i++, j += 4) {
+    for (int i = 0, j = 0; i < size; i++, j += 4) {
 		//row 1
 		arrIndices.push_back(j);
 		arrIndices.push_back(j + 1);
