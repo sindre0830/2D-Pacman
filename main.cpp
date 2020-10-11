@@ -25,13 +25,13 @@ enum position {x, y};
  * Main program.
  */
 int main() {
-	//branch if file isn't found
+	//branch if file isn't initialized and kill the application
 	if (!readFile()) {
 		std::cerr << "File initialization failed.\n";
 		std::cin.get();
 		return EXIT_FAILURE;
 	}
-	//branch if GLFW isn't initialized
+	//branch if GLFW isn't initialized and kill the application
 	if(!glfwInit()) {
 		std::cerr << "GLFW initialization failed.\n";
 		std::cin.get();
@@ -39,7 +39,7 @@ int main() {
 	}
 	//set window hints
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -50,18 +50,20 @@ int main() {
 	auto window = glfwCreateWindow(g_level.arrWidth * 35, g_level.arrHeight * 35, "Pac-Man", nullptr, nullptr);
 	//setting the OpenGL context to the window
 	glfwMakeContextCurrent(window);
+	//enable transparency on texture
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//branch if window isn't created
+	//branch if window isn't created and kill the application
 	if (window == nullptr) {
 		std::cerr << "GLFW failed on window creation.\n";
-		std::cin.get();
 		glfwTerminate();
+		std::cin.get();
 		return EXIT_FAILURE;
 	}
-	//branch if GLEW isn't initialized
+	//branch if GLEW isn't initialized and kill the application
 	if(glewInit() != GLEW_OK) {
 		std::cerr << "GLEW initialization failuare.\n";
+		glfwTerminate();
 		std::cin.get();
 		return EXIT_FAILURE;
 	}
@@ -74,6 +76,7 @@ int main() {
 	//construct ghosts
 	int ghostStartRow, ghostStartCol;
 	std::vector<Ghost*> ghostArr(4, nullptr);
+	//branch if there are too many ghosts and kill the application
 	if(!getGhostPos(ghostArr.size(), ghostStartRow, ghostStartCol)){
 		std::cerr << "Get ghost position failed.\n";
 		glfwTerminate();

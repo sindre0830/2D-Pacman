@@ -101,8 +101,29 @@ bool getGhostPos(const int size, int &row, int &col) {
 	return false;
 }
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    // make sure the viewport matches the new window dimensions; note that width and 
+    // height will be significantly larger than specified on retina displays.
+    glViewport(0, 0, width, height);
+	get_resolution(width, height);
+}
+
 void get_resolution(int &width, int &height) {
-    const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    width = mode->width;
-    height = mode->height;
+    const float aspectRatio = ((float)width) / height;
+    float xSpan = 1; // Feel free to change this to any xSpan you need.
+    float ySpan = 1; // Feel free to change this to any ySpan you need.
+
+    if (aspectRatio > 1){
+        // Width > Height, so scale xSpan accordinly.
+        xSpan *= aspectRatio;
+    }
+    else{
+        // Height >= Width, so scale ySpan accordingly.
+        ySpan = xSpan / aspectRatio;
+    }
+
+    glOrtho(-1*xSpan, xSpan, -1*ySpan, ySpan, -1.f, 1.f);
+    // Use the entire window for rendering.
+    glViewport(0, 0, width, height);
+	std::cout << "oi";
 }
