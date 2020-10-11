@@ -104,7 +104,7 @@ bool Character::movUp(int &row, int &col, float &x, float &y, const int speed, c
     } else {
         translatePos(x, y -= (double)(g_level.arrHeight - 1) * g_level.elementHeight, shader);
         col = 0;
-        g_level.ghostPos[g_level.arrHeight - 1][row] = false;
+        g_level.arr[g_level.arrHeight - 1][row] = 3;
         return false;
     }
 }
@@ -120,14 +120,14 @@ bool Character::movLeft(int &row, int &col, float &x, float &y, const int speed,
     } else {
         translatePos(x += (double)(g_level.arrWidth - 1) * g_level.elementWidth, y, shader);
         row = g_level.arrWidth - 1;
-        g_level.ghostPos[col][0] = false;
+        g_level.arr[col][0] = 3;
         return false;
     }
 }
 
 bool Character::movDown(int &row, int &col, float &x, float &y, const int speed, const GLuint &shader) {
 	//check if next location will be a wall or out of bound
-	if(col - 1 > 0) {
+	if(col - 1 >= 0) {
         if(g_level.arr[col - 1][row] != 1) {
             //translate up on the x-axis
             translatePos(x, (y -= g_level.elementHeight / (double)(speed)), shader);
@@ -136,7 +136,7 @@ bool Character::movDown(int &row, int &col, float &x, float &y, const int speed,
     } else {
         translatePos(x, y += (double)(g_level.arrHeight - 1) * g_level.elementHeight, shader);
         col = g_level.arrHeight - 1;
-        g_level.ghostPos[0][row] = false;
+        g_level.arr[0][row] = 3;
         return false;
     }
 }
@@ -152,7 +152,7 @@ bool Character::movRight(int &row, int &col, float &x, float &y, const int speed
 	} else {
         translatePos(x -= (double)(g_level.arrWidth - 1) * g_level.elementWidth, y, shader);
         row = 0;
-        g_level.ghostPos[col][g_level.arrWidth - 1] = false;
+        g_level.arr[col][g_level.arrWidth - 1] = 3;
         return false;
     }
 }

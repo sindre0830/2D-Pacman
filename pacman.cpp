@@ -89,10 +89,6 @@ void Pacman::draw(GLuint &shader, GLuint &vao, GLFWwindow *window) {
  * @param shader
  */
 void Pacman::movObject() {
-	if(g_level.ghostPos[colPos][rowPos]) {
-		g_gameover = true;
-			std::cout << "Better luck next time...\n";
-	}
 	//move up (W)
 	if(direction == 0) {
 		if(movUp(rowPos, colPos, xPos, yPos, speed, pacmanShaderProgram)) {
@@ -101,6 +97,7 @@ void Pacman::movObject() {
 		}
 		//update grid if it has completed one square
 		if(counter == speed) {
+			g_level.arr[colPos][rowPos] = 3;
 			//check if there is a pellet
 			if(g_level.arr[++colPos][rowPos] == 0) {
 				g_level.score++;
@@ -116,6 +113,7 @@ void Pacman::movObject() {
 		}
 		//update grid if it has completed one square
 		if(counter == speed) {
+			g_level.arr[colPos][rowPos] = 3;
 			//check if there is a pellet
 			if(g_level.arr[colPos][--rowPos] == 0) {
 				g_level.score++;
@@ -131,6 +129,7 @@ void Pacman::movObject() {
 		}
 		//update grid if it has completed one square
 		if(counter == speed) {
+			g_level.arr[colPos][rowPos] = 3;
 			//check if there is a pellet
 			if(g_level.arr[--colPos][rowPos] == 0) {
 				g_level.score++;
@@ -146,6 +145,7 @@ void Pacman::movObject() {
 		}
 		//update grid if it has completed one square
 		if(counter == speed) {
+			g_level.arr[colPos][rowPos] = 3;
 			//check if there is a pellet
 			if(g_level.arr[colPos][++rowPos] == 0) {
 				g_level.score++;

@@ -18,20 +18,20 @@ bool readFile() {
 		file.ignore();
 		for (int i = 0; i < g_level.arrHeight; i++) {
 			std::vector<int> arrRow;
-			std::vector<bool> boolRow;
 			for (int j = 0; j < g_level.arrWidth; j++) {
 				file >> buffer;
 				if (buffer == 1) {
 					g_level.wallSize++;
 				} else if (buffer == 0) {
-					g_level.pelletSize++;
+					//branch if position is a teleportation entrence
+					if(i == 0 || i == g_level.arrHeight - 1 || j == 0 || j == g_level.arrWidth - 1) {
+						buffer = 3;
+					} else g_level.pelletSize++;
 				}
 				arrRow.push_back(buffer);
-				boolRow.push_back(false);
 				file.ignore();
 			}
 			g_level.arr.push_back(arrRow);
-			g_level.ghostPos.push_back(boolRow);
 		}
 		file.close();
 		//reverse order of array

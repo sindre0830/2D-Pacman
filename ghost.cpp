@@ -2,8 +2,10 @@
 #include "header/ghost.h"
 #include "shader/character.h"
 #include "header/levelData.h"
+#include <iostream>
 /* global variables */
 extern LevelData g_level;
+extern bool g_gameover;
 /**
  * @brief Destroy the Ghost object
  */
@@ -62,80 +64,68 @@ void Ghost::draw(GLuint &shader, GLuint &vao) {
 void Ghost::movObject() {
 	//move up (W)
 	if(direction == 0) {
+		checkCoalition();
 		yTex = 0.5f;
 		if(movUp(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
 		if(counter == speed) {
 			//update the character position in array
-			g_level.ghostPos[colPos][rowPos] = false;
-			g_level.ghostPos[++colPos][rowPos] = true;
+			colPos++;
 			//branch if character isn't going to teleport
-			if(colPos + 1 <= g_level.arrHeight) {
+			if(colPos + 1 < g_level.arrHeight) {
 				//store all possible directions in an array
-				std::vector<int> possiblePaths;
-				if(g_level.arr[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
-				if(g_level.arr[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
-				if(g_level.arr[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
+				std::vector<int> possiblePaths = findPath();
 				//pick direction randomly
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
 	//move left (A)
 	} else if (direction == 1) {
+		checkCoalition();
 		yTex = 0.25f;
 		if(movLeft(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
 		if(counter == speed) {
 			//update the character position in array
-			g_level.ghostPos[colPos][rowPos] = false;
-			g_level.ghostPos[colPos][--rowPos] = true;
+			rowPos--;
 			//branch if character isn't going to teleport
 			if(rowPos - 1 >= 0) {
 				//store all possible directions in an array
-				std::vector<int> possiblePaths;
-				if(g_level.arr[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
-				if(g_level.arr[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
-				if(g_level.arr[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
+				std::vector<int> possiblePaths = findPath();
 				//pick direction randomly
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
 	//move down (S)
 	} else if (direction == 2) {
+		checkCoalition();
 		yTex = 0.75f;
 		if(movDown(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
 		if(counter == speed) {
 			//update the character position in array
-			g_level.ghostPos[colPos][rowPos] = false;
-			g_level.ghostPos[--colPos][rowPos] = true;
+			colPos--;
 			//branch if character isn't going to teleport
 			if(colPos - 1 >= 0) {
 				//store all possible directions in an array
-				std::vector<int> possiblePaths;
-				if(g_level.arr[colPos][rowPos - 1] != 1) possiblePaths.push_back(1);
-				if(g_level.arr[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
-				if(g_level.arr[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
+				std::vector<int> possiblePaths = findPath();
 				//pick direction randomly
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
 		}
 	//move right (D)
 	} else if (direction == 3) {
+		checkCoalition();
 		yTex = 0.0f;
 		if(movRight(rowPos, colPos, xPos, yPos, speed, ghostShaderProgram)) counter++;
 		//update grid if it has completed one square
 		if(counter == speed) {
 			//update the character position in array
-			g_level.ghostPos[colPos][rowPos] = false;
-			g_level.ghostPos[colPos][++rowPos] = true;
+			rowPos++;
 			//branch if character isn't going to teleport
 			if(rowPos + 1 < g_level.arrWidth) {
 				//store all possible directions in an array
-				std::vector<int> possiblePaths;
-				if(g_level.arr[colPos + 1][rowPos] != 1) possiblePaths.push_back(0);
-				if(g_level.arr[colPos - 1][rowPos] != 1) possiblePaths.push_back(2);
-				if(g_level.arr[colPos][rowPos + 1] != 1) possiblePaths.push_back(3);
+				std::vector<int> possiblePaths = findPath();
 				//pick direction randomly
 				direction = possiblePaths[rand() % possiblePaths.size()];
 			}
@@ -151,5 +141,22 @@ void Ghost::movObject() {
 	} else if (counter >= speed) {
 		translateTex(5.0f / 6.0f, yTex, ghostShaderProgram);
 		counter = 0;
+	}
+}
+
+std::vector<int> Ghost::findPath() {
+	//store all possible directions in an array, ghost can't do a u-turn
+	std::vector<int> arr;
+	if(direction != 2 && g_level.arr[colPos + 1][rowPos] != 1) arr.push_back(0);
+	if(direction != 3 && g_level.arr[colPos][rowPos - 1] != 1) arr.push_back(1);
+	if(direction != 0 && g_level.arr[colPos - 1][rowPos] != 1) arr.push_back(2);
+	if(direction != 1 && g_level.arr[colPos][rowPos + 1] != 1) arr.push_back(3);
+	return arr;
+}
+
+void Ghost::checkCoalition() {
+	if(g_level.arr[colPos][rowPos] == 2) {
+		g_gameover = true;
+		std::cout << "Better luck next time...\n";
 	}
 }

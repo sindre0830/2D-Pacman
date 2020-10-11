@@ -12,11 +12,13 @@ class Ghost : public Character {
         GLuint ghostShaderProgram;
         /* private functionality */
         void draw(GLuint &shader, GLuint &vao);
+        std::vector<int> findPath();
     public:
         /* public functionality */
         ~Ghost();
         Ghost(int row, int col);
         void drawObject();
         void movObject();
+        void checkCoalition();
 };
 #endif
