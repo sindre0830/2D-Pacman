@@ -14,7 +14,6 @@ extern enum Target {PELLET, WALL, PACMAN};
 extern LevelData g_level;
 
 Character::~Character() {
-    glDeleteTextures(1, &texture);
 }
 /**
  * @brief Draw asset according to the direction it is facing.

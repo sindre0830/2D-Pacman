@@ -78,7 +78,7 @@ int main() {
 	//construct scoreboard
 	std::vector<Scoreboard*> scoreboardArr(4, nullptr);
 	for(int i = 0; i < scoreboardArr.size(); i++) {
-		scoreboardArr[i] = new Scoreboard(0, (g_level.arrWidth - 1) - i);
+		scoreboardArr[i] = new Scoreboard(1, (g_level.arrWidth - 1) - i);
 	}
 	//construct pacman
 	Pacman pacman;
@@ -104,6 +104,9 @@ int main() {
 	}
 	//construct pellets
 	Pellet pellet;
+    //load the texture image, create OpenGL texture, and bind it to the current context
+	GLuint characterTex = loadTexture("sprite/pacman.png", 0);
+    GLuint numberTex = loadTexture("sprite/number.png", 1);
 	//set background color black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//setup timer
@@ -194,6 +197,8 @@ int main() {
 	}
 	ghostArr.clear();
 	glUseProgram(0);
+    glDeleteTextures(1, &characterTex);
+    glDeleteTextures(1, &numberTex);
 	glfwTerminate();
 	return EXIT_SUCCESS;
 }

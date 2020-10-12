@@ -41,8 +41,6 @@ Pacman::Pacman() {
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-    //load the texture image, create OpenGL texture, and bind it to the current context
-    texture = loadTexture("sprite/pacman.png", 0);
 }
 
 void Pacman::getPosition() {
@@ -124,6 +122,8 @@ void Pacman::eat(Pellet &pellet) {
 	//increment score
 	g_level.score++;
 	g_level.scoreChanged = true;
+	//hide pellet
+	pellet.hidePellet(g_level.pacmanCol, g_level.pacmanRow);
 	if(g_level.score == g_level.pelletSize) {
 		g_gameover = true;
 		std::cout << "Congratulations, you won...\n";

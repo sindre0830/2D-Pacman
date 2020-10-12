@@ -39,8 +39,6 @@ Ghost::Ghost(const int row, const int col) {
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-    //load the texture image, create OpenGL texture, and bind it to the current context
-    texture = loadTexture("sprite/pacman.png", 0);
 	//translate texture to show ghost
 	translateTex(4.0f / 6.0f, yTex);
 }

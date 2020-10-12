@@ -15,7 +15,6 @@ class Character : public Entity {
         void draw();
     protected:
         /* protected data */
-        GLuint texture;
         int direction, counter = 0, speed = 20;
         float xPos = 0.f, yPos = 0.f, yTex = 0.f;
         /* protected functionality */

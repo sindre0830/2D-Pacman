@@ -16,7 +16,6 @@ extern enum Target {PELLET, WALL, PACMAN, EMPTY};
 extern LevelData g_level;
 
 Scoreboard::~Scoreboard() {
-    glDeleteTextures(1, &texture);
 }
 
 Scoreboard::Scoreboard(const int col, const int row) {
@@ -28,8 +27,6 @@ Scoreboard::Scoreboard(const int col, const int row) {
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-    //load the texture image, create OpenGL texture, and bind it to the current context
-    texture = loadTexture("sprite/number.png", 1);
 }
 
 void Scoreboard::draw() {
@@ -41,7 +38,7 @@ void Scoreboard::draw() {
 }
 
 void Scoreboard::update(int num) {
-    if(num != lastScore) translateTex(texturePos[num]);
+    if(num != lastScore) translateTex((float)(num) / 10.f);
     lastScore = num;
 }
 
