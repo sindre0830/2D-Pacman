@@ -20,7 +20,7 @@ Ghost::Ghost(const int row, const int col) {
 	//set starting postions
 	rowPos = row;
 	colPos = col;
-	//set starting direction compared to row position
+	/*//set starting direction compared to row position
 	if(g_level.arrWidth / 2 <= row) {
 		if(g_level.arr[col][row + 1] != WALL) {
 			direction = RIGHT;
@@ -29,7 +29,8 @@ Ghost::Ghost(const int row, const int col) {
 		if(g_level.arr[col][row - 1] != WALL) {
 			direction = LEFT;
 		} else direction = RIGHT;
-	}
+	}*/
+	findRandomPath();
 	//generate VAO and shader program
     entityVAO = genObject(rowPos, colPos);
     entityShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
@@ -130,7 +131,7 @@ void Ghost::findRandomPath() {
 }
 
 void Ghost::pathfinding() {
-	if(!g_level.magicPellet) {
+	if(!g_level.magicEffect) {
 		//branch if path isn't opposite of current direction and there isn't a wall
 		if(direction != DOWN && g_level.arr[colPos + 1][rowPos] != WALL && colPos < g_level.pacmanCol) {
 			direction = UP;
@@ -146,7 +147,7 @@ void Ghost::pathfinding() {
 
 void Ghost::checkCoalition(const int row, const int col) {
 	if(row == g_level.pacmanRow && col == g_level.pacmanCol) {
-		if(g_level.magicPellet) {
+		if(g_level.magicEffect) {
 			dead = true;
 		} else {
 			g_gameover = true;

@@ -43,7 +43,6 @@ int main() {
 	//set window hints
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-	glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -79,16 +78,23 @@ int main() {
 	Pacman pacman;
 	//construct ghosts
 	int ghostStartRow, ghostStartCol;
-	std::vector<Ghost*> ghostArr(4, nullptr);
-	//branch if there are too many ghosts and kill the application
-	if(!getGhostPos(ghostArr.size(), ghostStartRow, ghostStartCol)){
-		std::cerr << "Get ghost position failed.\n";
-		glfwTerminate();
-		std::cin.get();
-		return EXIT_FAILURE;
+	std::vector<std::vector<int>> possibleStartingPos;
+	for(int i = 0; i < g_level.arrHeight; i++) {
+		for(int j = 0; j < g_level.arrWidth; j++) {
+			if(g_level.arr[i][j] == PELLET) possibleStartingPos.push_back({i, j});
+		}
 	}
+	std::vector<Ghost*> ghostArr(4, nullptr);
 	for(int i = 0; i < ghostArr.size(); i++) {
-		ghostArr[i] = new Ghost(ghostStartRow + i, ghostStartCol);
+		//branch if there are too many ghosts and kill the application
+		if(ghostArr.size() > possibleStartingPos.size()) {
+			std::cerr << "Get ghost position failed.\n";
+			glfwTerminate();
+			std::cin.get();
+			return EXIT_FAILURE;
+		}
+		getGhostPos(possibleStartingPos, ghostStartRow, ghostStartCol);
+		ghostArr[i] = new Ghost(ghostStartRow, ghostStartCol);
 	}
 	//construct pellets
 	Pellet pellet;
@@ -138,7 +144,7 @@ int main() {
 		if (!g_gameover && deltaTime >= 1.0) deltaTime -= 1.0;
 		if(!g_gameover && glfwGetTime() - timer > 1.0f) {
 			timer++;
-			if(g_level.magicPellet) {
+			if(g_level.magicEffect) {
 				if(counter == 0) {
 					for(int i = 0; i < ghostArr.size(); i++) {
 						if(!ghostArr[i]->dead) ghostArr[i]->changeColor(1);
@@ -147,7 +153,7 @@ int main() {
 				counter++;
 				if(counter >= 5) {
 					counter = 0;
-					g_level.magicPellet = false;
+					g_level.magicEffect = false;
 					for(int i = 0; i < ghostArr.size(); i++) {
 						if(!ghostArr[i]->dead) ghostArr[i]->changeColor(0);
 					}

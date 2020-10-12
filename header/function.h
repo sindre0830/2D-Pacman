@@ -12,6 +12,6 @@
 bool readFile();
 void enableDebug();
 void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
-bool getGhostPos(const int size, int &row, int &col);
+void getGhostPos(std::vector<std::vector<int>> &arr, int &row, int &col);
 void get_resolution(GLFWwindow* window, int &width, int &height);
 #endif

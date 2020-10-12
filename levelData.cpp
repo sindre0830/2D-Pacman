@@ -21,7 +21,3 @@ LevelData::LevelData() {
     }
     filePath.append(filePathArr[index]);
 }
-
-void LevelData::magicEffect() {
-
-}

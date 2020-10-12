@@ -69,7 +69,7 @@ void Pacman::mov(Pellet &pellet) {
 				//check if there is a pellet
 				if(g_level.arr[++g_level.pacmanCol][g_level.pacmanRow] == 4) {
 					eat(pellet);
-					g_level.magicPellet = true;
+					g_level.magicEffect = true;
 				} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
 			} else if(g_level.arr[g_level.pacmanCol + 1][g_level.pacmanRow] == WALL) changeDirection = true;
 			break;
@@ -78,7 +78,7 @@ void Pacman::mov(Pellet &pellet) {
 				//check if there is a pellet
 				if(g_level.arr[g_level.pacmanCol][--g_level.pacmanRow] == 4) {
 					eat(pellet);
-					g_level.magicPellet = true;
+					g_level.magicEffect = true;
 				} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
 			} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow - 1] == WALL) changeDirection = true;	
 			break;
@@ -87,7 +87,7 @@ void Pacman::mov(Pellet &pellet) {
 				//check if there is a pellet
 				if(g_level.arr[--g_level.pacmanCol][g_level.pacmanRow] == 4) {
 					eat(pellet);
-					g_level.magicPellet = true;
+					g_level.magicEffect = true;
 				} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
 			} else if(g_level.arr[g_level.pacmanCol - 1][g_level.pacmanRow] == WALL) changeDirection = true;
 			break;
@@ -96,7 +96,7 @@ void Pacman::mov(Pellet &pellet) {
 				//check if there is a pellet
 				if(g_level.arr[g_level.pacmanCol][++g_level.pacmanRow] == 4) {
 					eat(pellet);
-					g_level.magicPellet = true;
+					g_level.magicEffect = true;
 				} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
 			} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow + 1] == WALL) changeDirection = true;
 			break;
