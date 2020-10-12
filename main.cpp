@@ -141,7 +141,7 @@ int main() {
 			if(g_level.magicPellet) {
 				if(counter == 0) {
 					for(int i = 0; i < ghostArr.size(); i++) {
-						ghostArr[i]->changeColor(1);
+						if(!ghostArr[i]->dead) ghostArr[i]->changeColor(1);
 					}
 				}
 				counter++;
@@ -149,7 +149,7 @@ int main() {
 					counter = 0;
 					g_level.magicPellet = false;
 					for(int i = 0; i < ghostArr.size(); i++) {
-						ghostArr[i]->changeColor(0);
+						if(!ghostArr[i]->dead) ghostArr[i]->changeColor(0);
 					}
 				}
 			}
