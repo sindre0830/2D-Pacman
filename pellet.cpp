@@ -29,7 +29,7 @@ Pellet::Pellet() {
 	//set buffer position in refrence to position in level
 	for(int i = 0, n = 0; i < g_level.arrHeight; i++) {
 		for(int j = 0; j < g_level.arrWidth; j++) {
-			if(g_level.arr[i][j] == PELLET) {
+			if(g_level.arr[i][j] == PELLET || g_level.arr[i][j] == 4) {
 				bufferPos[std::make_pair(i, j)] = n * pelletByteSize;
 				n++;
 			}
@@ -61,10 +61,10 @@ void Pellet::draw() {
  * @param y 
  * @param x 
  */
-void Pellet::hidePellet(const int yPos, const int xPos) {
+void Pellet::hidePellet(const int col, const int row) {
 	GLfloat display = 0.f;
 	for(int i = 8; i < pelletByteSize; i += 12) {
-		glBufferSubData(GL_ARRAY_BUFFER, bufferPos[std::make_pair(yPos, xPos)] +  i, sizeof(GLfloat), &display);
+		glBufferSubData(GL_ARRAY_BUFFER, bufferPos[std::make_pair(col, row)] +  i, sizeof(GLfloat), &display);
 	}
 }
 /**
@@ -98,6 +98,18 @@ std::vector<GLfloat> Pellet::genCoordinates() {
 					g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X] - xResize, g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yRotate, display,
 					//middle top coordinate
 					g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X] - xRotate, g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize, display
+				});
+			}
+			if (g_level.arr[i][j] == 4) {
+				arr.insert(arr.end(), {
+					//middle left coordinate
+					g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X] + (xResize * 2.f), g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y] - yRotate, display,
+					//middle down coordinate
+					g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X] + xRotate, g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y] + (yResize * 2.f), display,
+					//middle right coordinate
+					g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X] - (xResize * 2.f), g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yRotate, display,
+					//middle top coordinate
+					g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X] - xRotate, g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y] - (yResize * 2.f), display
 				});
 			}
 		}

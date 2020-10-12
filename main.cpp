@@ -98,6 +98,7 @@ int main() {
 	static double limitFPS = 1.0 / 60.0;
     double lastTime = glfwGetTime(), nowTime = 0, timer = lastTime;
     double deltaTime = 0;
+	int counter = 0;
 	//loop until user closes window
 	while(!glfwWindowShouldClose(window)) {
 		//processes all pending events - source: https://www.glfw.org/docs/3.3/group__window.html#ga37bd57223967b4211d60ca1a0bf3c832
@@ -120,15 +121,39 @@ int main() {
 			pacman.inputDirection(window);
 		}
 		//draw ghosts
+		bool flag = true;
 		for(int i = 0; i < ghostArr.size(); i++) {
-			ghostArr[i]->draw();
-			if (!g_gameover && deltaTime >= 1.0){
-				//translate ghosts
-				ghostArr[i]->mov();
+			if(!ghostArr[i]->dead) {
+				flag = false;
+				ghostArr[i]->draw();
+				if (!g_gameover && deltaTime >= 1.0){
+					//translate ghosts
+					ghostArr[i]->mov();
+				}
 			}
 		}
+		if(flag) g_gameover = true;
+		
 		//reset time control
 		if (!g_gameover && deltaTime >= 1.0) deltaTime -= 1.0;
+		if(!g_gameover && glfwGetTime() - timer > 1.0f) {
+			timer++;
+			if(g_level.magicPellet) {
+				if(counter == 0) {
+					for(int i = 0; i < ghostArr.size(); i++) {
+						ghostArr[i]->changeColor(1);
+					}
+				}
+				counter++;
+				if(counter >= 5) {
+					counter = 0;
+					g_level.magicPellet = false;
+					for(int i = 0; i < ghostArr.size(); i++) {
+						ghostArr[i]->changeColor(0);
+					}
+				}
+			}
+		}
 		//go to next buffer
 		glfwSwapBuffers(window);
 		glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height) {

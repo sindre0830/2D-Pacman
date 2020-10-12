@@ -36,6 +36,34 @@ bool readFile() {
 			g_level.arr.push_back(arrRow);
 		}
 		file.close();
+		//set top left magicpellet
+		for (int i = 0, j = 0; i < g_level.arrHeight && j < g_level.arrWidth; i++, j++) {
+			if(g_level.arr[i][j] == 0) {
+				g_level.arr[i][j] = 4;
+				break;
+			}
+		}
+		//set bottom left magicpellet
+		for (int i = g_level.arrHeight - 1, j = 0; i >= 0 && j < g_level.arrWidth; i--, j++) {
+			if(g_level.arr[i][j] == 0) {
+				g_level.arr[i][j] = 4;
+				break;
+			}
+		}
+		//set bottom right magicpellet
+		for (int i = g_level.arrHeight - 1, j = g_level.arrWidth - 1; i >= 0 && j >= 0; i--, j--) {
+			if(g_level.arr[i][j] == 0) {
+				g_level.arr[i][j] = 4;
+				break;
+			}
+		}
+		//set top right magicpellet
+		for (int i = 0, j = g_level.arrWidth - 1; i < g_level.arrHeight && j >= 0; i++, j--) {
+			if(g_level.arr[i][j] == 0) {
+				g_level.arr[i][j] = 4;
+				break;
+			}
+		}
 		//reverse order of array
 		std::reverse(g_level.arr.begin(), g_level.arr.end());
 		//set element value

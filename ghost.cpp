@@ -130,21 +130,35 @@ void Ghost::findRandomPath() {
 }
 
 void Ghost::pathfinding() {
-	//branch if path isn't opposite of current direction and there isn't a wall
-	if(direction != DOWN && g_level.arr[colPos + 1][rowPos] != WALL && colPos < g_level.pacmanCol) {
-		direction = UP;
-	} else if(direction != UP && g_level.arr[colPos - 1][rowPos] != WALL && colPos > g_level.pacmanCol) {
-		direction = DOWN;
-	} else if(direction != RIGHT && g_level.arr[colPos][rowPos - 1] != WALL && rowPos > g_level.pacmanRow) {
-		direction = LEFT;
-	} else if(direction != LEFT && g_level.arr[colPos][rowPos + 1] != WALL && rowPos < g_level.pacmanRow) {
-		direction = RIGHT;
+	if(!g_level.magicPellet) {
+		//branch if path isn't opposite of current direction and there isn't a wall
+		if(direction != DOWN && g_level.arr[colPos + 1][rowPos] != WALL && colPos < g_level.pacmanCol) {
+			direction = UP;
+		} else if(direction != UP && g_level.arr[colPos - 1][rowPos] != WALL && colPos > g_level.pacmanCol) {
+			direction = DOWN;
+		} else if(direction != RIGHT && g_level.arr[colPos][rowPos - 1] != WALL && rowPos > g_level.pacmanRow) {
+			direction = LEFT;
+		} else if(direction != LEFT && g_level.arr[colPos][rowPos + 1] != WALL && rowPos < g_level.pacmanRow) {
+			direction = RIGHT;
+		} else findRandomPath();
 	} else findRandomPath();
 }
 
 void Ghost::checkCoalition(const int row, const int col) {
 	if(row == g_level.pacmanRow && col == g_level.pacmanCol) {
-		g_gameover = true;
-		std::cout << "Better luck next time...\n";
+		if(g_level.magicPellet) {
+			dead = true;
+		} else {
+			g_gameover = true;
+			std::cout << "Better luck next time...\n";
+		}
 	}
+}
+
+void Ghost::changeColor(const int flag) {
+	//Translation moves our object
+	GLuint color = glGetUniformLocation(entityShaderProgram, "u_ChangeColor");
+	//Send data from matrices to uniform
+	glUniform1i(color, flag);
+	draw();
 }

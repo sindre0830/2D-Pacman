@@ -6,7 +6,7 @@ LevelData::LevelData() {
     int index = 0;
     bool flag = true;
     //array with all possible levels
-    std::vector<std::string> filePathArr = {"level0", "level1"};
+    std::vector<std::string> filePathArr = {"level0"/*, "level1"*/};
     if(filePathArr.size() > 1) {
         std::cout << "Choose a level:\t";
         for(int i = 0; i < filePathArr.size(); i++) {
@@ -20,4 +20,8 @@ LevelData::LevelData() {
         std::cout << std::endl;
     }
     filePath.append(filePathArr[index]);
+}
+
+void LevelData::magicEffect() {
+
 }

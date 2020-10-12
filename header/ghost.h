@@ -14,10 +14,13 @@ class Ghost : public Character {
         void findRandomPath();
         void animate();
     public:
+        /* public data */
+        bool dead = false;
         /* public functionality */
         ~Ghost();
         Ghost(const int row, const int col);
         void mov();
         void checkCoalition(const int row, const int col);
+        void changeColor(const int flag);
 };
 #endif

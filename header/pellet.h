@@ -19,6 +19,6 @@ class Pellet : public Entity {
         ~Pellet();
         Pellet();
         void draw();
-        void hidePellet(const int xPos, const int yPos);
+        void hidePellet(const int col, const int row);
 };
 #endif

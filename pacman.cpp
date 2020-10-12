@@ -67,25 +67,37 @@ void Pacman::mov(Pellet &pellet) {
 		case UP:
 			if(movUp(g_level.pacmanRow, g_level.pacmanCol)) {
 				//check if there is a pellet
-				if(g_level.arr[++g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
+				if(g_level.arr[++g_level.pacmanCol][g_level.pacmanRow] == 4) {
+					eat(pellet);
+					g_level.magicPellet = true;
+				} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
 			} else if(g_level.arr[g_level.pacmanCol + 1][g_level.pacmanRow] == WALL) changeDirection = true;
 			break;
 		case LEFT:
 			if(movLeft(g_level.pacmanRow, g_level.pacmanCol)) {
 				//check if there is a pellet
-				if(g_level.arr[g_level.pacmanCol][--g_level.pacmanRow] == PELLET) eat(pellet);
+				if(g_level.arr[g_level.pacmanCol][--g_level.pacmanRow] == 4) {
+					eat(pellet);
+					g_level.magicPellet = true;
+				} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
 			} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow - 1] == WALL) changeDirection = true;	
 			break;
 		case DOWN:
 			if(movDown(g_level.pacmanRow, g_level.pacmanCol)) {
 				//check if there is a pellet
-				if(g_level.arr[--g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
+				if(g_level.arr[--g_level.pacmanCol][g_level.pacmanRow] == 4) {
+					eat(pellet);
+					g_level.magicPellet = true;
+				} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
 			} else if(g_level.arr[g_level.pacmanCol - 1][g_level.pacmanRow] == WALL) changeDirection = true;
 			break;
 		case RIGHT:
 			if(movRight(g_level.pacmanRow, g_level.pacmanCol)) {
 				//check if there is a pellet
-				if(g_level.arr[g_level.pacmanCol][++g_level.pacmanRow] == PELLET) eat(pellet);
+				if(g_level.arr[g_level.pacmanCol][++g_level.pacmanRow] == 4) {
+					eat(pellet);
+					g_level.magicPellet = true;
+				} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
 			} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow + 1] == WALL) changeDirection = true;
 			break;
 	}
