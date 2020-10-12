@@ -5,7 +5,6 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <string>
-#include <set>
 /**
  * @brief Root class with shared data and functionality
  * 
@@ -16,13 +15,12 @@ class Entity {
         ~Entity();
     protected:
         /* protected data */
-        GLuint entityVAO;
         GLuint entityShaderProgram;
+        GLuint entityVAO;
         /* protected functionality */
-        GLuint createVAO(const std::vector<GLfloat> &arr, const std::vector<GLuint> &arr_indices);
         GLuint compileShader(const std::string &vertexShaderSrc, const std::string &fragmentShaderSrc);
-        void cleanVAO(GLuint &vao);
+        GLuint createVAO(const std::vector<GLfloat> &arr, const std::vector<GLuint> &arr_indices);
         std::vector<GLuint> genIndices(const int size);
-        GLuint loadTexture(const std::string &filepath, GLuint slot);
+        void destroyVAO(GLuint &vao);
 };
 #endif

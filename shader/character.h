@@ -41,7 +41,7 @@ uniform int u_ChangeColor = 0;
 void main() {
 	vec4 textColorA = texture(uTexture, vsTexcoord);
 	if(u_ChangeColor == 1) {
-		color = textColorA * vec4(1.f, 0.f, 0.5f, 1.f);
+		color = textColorA * vec4(0.5f, 1.f, 0.5f, 1.f);
 	} else color = textColorA * vec4(1.f, 1.f, 1.f, 1.f);
 }
 )";

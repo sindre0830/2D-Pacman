@@ -1,10 +1,11 @@
 /* library */
 #include "header/function.h"
 #include "header/levelData.h"
-#include <GLFW/glfw3.h>
 #include <stb_image.h>
+#include <fstream>
+#include <iostream>
 /* dictionary */
-extern enum Target {PELLET, WALL, PACMAN, EMPTY};
+extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
 extern LevelData g_level;
 /**
@@ -23,9 +24,7 @@ bool readFile() {
 			std::vector<int> arrRow;
 			for (int j = 0; j < g_level.arrWidth; j++) {
 				file >> buffer;
-				if (buffer == WALL) {
-					g_level.wallSize++;
-				} else if (buffer == PELLET) {
+				if (buffer == PELLET) {
 					//branch if position is a teleportation entrence
 					if(i == 0 || i == g_level.arrHeight - 1 || j == 0 || j == g_level.arrWidth - 1) {
 						buffer = EMPTY;
@@ -39,29 +38,29 @@ bool readFile() {
 		file.close();
 		//set top left magicpellet
 		for (int i = 0, j = 0; i < g_level.arrHeight && j < g_level.arrWidth; i++, j++) {
-			if(g_level.arr[i][j] == 0) {
-				g_level.arr[i][j] = 4;
+			if(g_level.arr[i][j] == PELLET) {
+				g_level.arr[i][j] = MAGICPELLET;
 				break;
 			}
 		}
 		//set bottom left magicpellet
 		for (int i = g_level.arrHeight - 1, j = 0; i >= 0 && j < g_level.arrWidth; i--, j++) {
-			if(g_level.arr[i][j] == 0) {
-				g_level.arr[i][j] = 4;
+			if(g_level.arr[i][j] == PELLET) {
+				g_level.arr[i][j] = MAGICPELLET;
 				break;
 			}
 		}
 		//set bottom right magicpellet
 		for (int i = g_level.arrHeight - 1, j = g_level.arrWidth - 1; i >= 0 && j >= 0; i--, j--) {
-			if(g_level.arr[i][j] == 0) {
-				g_level.arr[i][j] = 4;
+			if(g_level.arr[i][j] == PELLET) {
+				g_level.arr[i][j] = MAGICPELLET;
 				break;
 			}
 		}
 		//set top right magicpellet
 		for (int i = 0, j = g_level.arrWidth - 1; i < g_level.arrHeight && j >= 0; i++, j--) {
-			if(g_level.arr[i][j] == 0) {
-				g_level.arr[i][j] = 4;
+			if(g_level.arr[i][j] == PELLET) {
+				g_level.arr[i][j] = MAGICPELLET;
 				break;
 			}
 		}
@@ -90,63 +89,12 @@ bool readFile() {
 		return true;
 	} else return false;
 }
-/**
- * @brief Eanable capture of debug output.
- */
-void enableDebug() {
-    glEnable(GL_DEBUG_OUTPUT);
-	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-	glDebugMessageCallback(messageCallback, 0);
-	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
-	//glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-}
-/**
- * @brief Customize the error message.
- * 
- * @param source 
- * @param type 
- * @param id 
- * @param severity 
- * @param length 
- * @param message 
- * @param userParam 
- */
-void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam ) {
-	std::cerr 
-		<< "GL CALLBACK:" << ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ) 
-		<< "type = 0x" << type 
-		<< ", severity = 0x" << severity 
-		<< ", message =" << message << '\n';
-}
 
 void getGhostPos(std::vector<std::vector<int>> &arr, int &row, int &col) {
 	int index = rand() % arr.size();
 	col = arr[index][0];
 	row = arr[index][1];
 	arr.erase(arr.begin() + index);
-}
-
-void get_resolution(GLFWwindow* window, int &width, int &height) {
-    glViewport(0, 0, width, height);
-	glMatrixMode(GL_PROJECTION);
-  	glLoadIdentity();
-	const float aspectRatio = ((float)width) / height;
-    float xSpan = 1.f; // Feel free to change this to any xSpan you need.
-    float ySpan = 1.f; // Feel free to change this to any ySpan you need.
-
-    if (aspectRatio > 1){
-        // Width > Height, so scale xSpan accordinly.
-        xSpan *= aspectRatio;
-    }
-    else{
-        // Height >= Width, so scale ySpan accordingly.
-        ySpan = xSpan / aspectRatio;
-    }
-    glOrtho(0.f, xSpan, 0.f, ySpan, 1.f, -1.f);
-    // Use the entire window for rendering.*/
-    //glViewport(0, 0, width, height);
-	glMatrixMode(GL_MODELVIEW);
-  	glLoadIdentity();
 }
 /**
  * @brief Loads texture from filepath through CMake.
@@ -176,4 +124,32 @@ GLuint loadTexture(const std::string& filepath, GLuint slot) {
     //free the memory returned by STBI
     if(pixels) stbi_image_free(pixels);
     return tex;
+}
+/**
+ * @brief Eanable capture of debug output.
+ */
+void enableDebug() {
+    glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	glDebugMessageCallback(messageCallback, 0);
+	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
+	//glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+}
+/**
+ * @brief Customize the error message.
+ * 
+ * @param source 
+ * @param type 
+ * @param id 
+ * @param severity 
+ * @param length 
+ * @param message 
+ * @param userParam 
+ */
+void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam ) {
+	std::cerr 
+		<< "GL CALLBACK:" << ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ) 
+		<< "type = 0x" << type 
+		<< ", severity = 0x" << severity 
+		<< ", message =" << message << '\n';
 }

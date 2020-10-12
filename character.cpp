@@ -5,16 +5,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <iostream>
 /* dictionary */
 extern enum Corner {TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT};
 extern enum Position {X, Y};
-extern enum Target {PELLET, WALL, PACMAN};
+extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
 extern LevelData g_level;
 
-Character::~Character() {
-}
+Character::~Character() {}
 /**
  * @brief Draw asset according to the direction it is facing.
  * 

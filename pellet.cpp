@@ -5,7 +5,7 @@
 /* dictionary */
 extern enum Corner {TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT};
 extern enum Position {X, Y};
-extern enum Target {PELLET, WALL, PACMAN, EMPTY};
+extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
 extern LevelData g_level;
 /**
@@ -29,7 +29,7 @@ Pellet::Pellet() {
 	//set buffer position in refrence to position in level
 	for(int i = 0, n = 0; i < g_level.arrHeight; i++) {
 		for(int j = 0; j < g_level.arrWidth; j++) {
-			if(g_level.arr[i][j] == PELLET || g_level.arr[i][j] == 4) {
+			if(g_level.arr[i][j] == PELLET || g_level.arr[i][j] == MAGICPELLET) {
 				bufferPos[std::make_pair(i, j)] = n * pelletByteSize;
 				n++;
 			}
@@ -99,8 +99,7 @@ std::vector<GLfloat> Pellet::genCoordinates() {
 					//middle top coordinate
 					g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X] - xRotate, g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize, display
 				});
-			}
-			if (g_level.arr[i][j] == 4) {
+			} else if (g_level.arr[i][j] == MAGICPELLET) {
 				arr.insert(arr.end(), {
 					//middle left coordinate
 					g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X] + (xResize * 2.f), g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y] - yRotate, display,

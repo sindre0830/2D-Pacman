@@ -2,8 +2,6 @@
 #define __CHARACTER_H
 /* library */
 #include "header/Entity.h"
-#include <map>
-#include <string>
 /**
  * @brief Child class of 'Entity' with shared data and functionality
  * 
