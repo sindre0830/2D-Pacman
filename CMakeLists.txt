@@ -20,6 +20,9 @@ add_executable(${PROJECT_NAME}
 	function.cpp
 	header/entity.h
 	entity.cpp
+		header/scoreboard.h
+		shader/scoreboard.h
+		scoreboard.cpp
 		header/wall.h
 		shader/wall.h
 		wall.cpp
@@ -54,6 +57,12 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy
 	${CMAKE_SOURCE_DIR}/sprite/pacman.png
 	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/sprite/pacman.png)
+
+add_custom_command(
+	TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy
+	${CMAKE_SOURCE_DIR}/sprite/number.png
+	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/sprite/number.png)
 
 add_custom_command(
 	TARGET ${PROJECT_NAME} POST_BUILD

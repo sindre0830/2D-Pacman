@@ -64,7 +64,7 @@ void Pellet::draw() {
 void Pellet::hidePellet(const int col, const int row) {
 	GLfloat display = 0.f;
 	for(int i = 8; i < pelletByteSize; i += 12) {
-		glBufferSubData(GL_ARRAY_BUFFER, bufferPos[std::make_pair(col, row)] +  i, sizeof(GLfloat), &display);
+		glBufferSubData(GL_ARRAY_BUFFER, bufferPos[std::make_pair(col, row)] + i, sizeof(GLfloat), &display);
 	}
 }
 /**

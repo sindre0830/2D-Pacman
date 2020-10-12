@@ -27,6 +27,5 @@ class Character : public Entity {
         bool movLeft(int &row, int &col);
         bool movDown(int &row, int &col);
         bool movRight(int &row, int &col);
-        GLuint loadTexture(const std::string &filepath, GLuint slot);
 };
 #endif

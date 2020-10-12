@@ -21,3 +21,18 @@ LevelData::LevelData() {
     }
     filePath.append(filePathArr[index]);
 }
+
+int LevelData::getScore(const int index) {
+    std::string str = "0000";
+    std::string buffer = std::to_string(score);
+    if(buffer.size() < str.size()) {
+        int num = str.size() - buffer.size();
+        str = "";
+        for(int i = 0; i < num; i++) {
+            str.append("0");
+        }
+        str.append(buffer);
+    } else str = buffer;
+    std::reverse(str.begin(), str.end());
+    return (int)(str[index]) - '0';
+}

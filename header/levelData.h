@@ -10,11 +10,13 @@ struct LevelData {
     int arrWidth, arrHeight, wallSize, pelletSize, score, pacmanCol, pacmanRow;
     double elementWidth, elementHeight;
     bool magicEffect = false;
+    bool scoreChanged = false;
     std::map<std::pair<int, int>, std::vector<std::vector<float>>> gridElement;
     std::vector<std::vector<int>> arr;
     std::string filePath = "level/";
     /* functionality */
     LevelData();
+    int getScore(const int index);
 };
 
 #endif

@@ -123,8 +123,7 @@ void Pacman::eat(Pellet &pellet) {
 	g_level.arr[g_level.pacmanCol][g_level.pacmanRow] = EMPTY;
 	//increment score
 	g_level.score++;
-	//hide pellet
-	pellet.hidePellet(g_level.pacmanCol, g_level.pacmanRow);
+	g_level.scoreChanged = true;
 	if(g_level.score == g_level.pelletSize) {
 		g_gameover = true;
 		std::cout << "Congratulations, you won...\n";

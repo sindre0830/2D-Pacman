@@ -8,6 +8,7 @@
  */
 /* library */
 #include "header/levelData.h"
+#include "header/scoreboard.h"
 #include "header/wall.h"
 #include "header/pellet.h"
 #include "header/pacman.h"
@@ -74,6 +75,11 @@ int main() {
 	enableDebug();
 	//construct wall
 	Wall wall;
+	//construct scoreboard
+	std::vector<Scoreboard*> scoreboardArr(4, nullptr);
+	for(int i = 0; i < scoreboardArr.size(); i++) {
+		scoreboardArr[i] = new Scoreboard(0, (g_level.arrWidth - 1) - i);
+	}
 	//construct pacman
 	Pacman pacman;
 	//construct ghosts
@@ -117,6 +123,15 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 		//draw wall
 		wall.draw();
+		//draw scoreboard
+		for(int i = 0; i < scoreboardArr.size(); i++) {
+			scoreboardArr[i]->draw();
+			if (g_level.scoreChanged) {
+				//translate ghosts
+				scoreboardArr[i]->update(g_level.getScore(i));
+			}
+		}
+		g_level.scoreChanged = false;
 		//draw pellets
 		pellet.draw();
 		//draw pacman
@@ -170,6 +185,10 @@ int main() {
 	}
 	std::cout << "\nFinal score was: " << g_level.score << '/' << g_level.pelletSize << '\n';
 	//clear memory
+	for(int i = 0; i < scoreboardArr.size(); i++) {
+		delete scoreboardArr[i];
+	}
+	scoreboardArr.clear();
 	for(int i = 0; i < ghostArr.size(); i++) {
 		delete ghostArr[i];
 	}

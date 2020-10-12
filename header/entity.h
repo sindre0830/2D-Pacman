@@ -23,5 +23,6 @@ class Entity {
         GLuint compileShader(const std::string &vertexShaderSrc, const std::string &fragmentShaderSrc);
         void cleanVAO(GLuint &vao);
         std::vector<GLuint> genIndices(const int size);
+        GLuint loadTexture(const std::string &filepath, GLuint slot);
 };
 #endif
