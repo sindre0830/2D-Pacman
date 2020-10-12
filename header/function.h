@@ -8,6 +8,7 @@
 /* functionality */
 bool readFile();
 void getGhostPos(std::vector<std::vector<int>> &arr, int &row, int &col);
+int randomIndex(const int min, const int max);
 GLuint loadTexture(const std::string &filepath, GLuint slot);
 void enableDebug();
 void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);

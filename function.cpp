@@ -4,6 +4,8 @@
 #include <stb_image.h>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
+#include <random>
 /* dictionary */
 extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
@@ -91,10 +93,23 @@ bool readFile() {
 }
 
 void getGhostPos(std::vector<std::vector<int>> &arr, int &row, int &col) {
-	int index = rand() % arr.size();
+	//get random index
+	int index = randomIndex(0, arr.size() - 1);
+	//set position
 	col = arr[index][0];
 	row = arr[index][1];
+	//remove position from array so ghosts don't spawn on same tile
 	arr.erase(arr.begin() + index);
+}
+
+int randomIndex(const int min, const int max) {
+	//initialise (seed) engine
+	std::random_device rd;
+	//random-number engine (Mersenne-Twister)
+	std::mt19937 rng(rd());
+	//ubiased integer between 0 and array size
+	std::uniform_int_distribution<int> uni(min, max);
+	return uni(rng);
 }
 /**
  * @brief Loads texture from filepath through CMake.

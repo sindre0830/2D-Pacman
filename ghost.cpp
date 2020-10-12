@@ -2,6 +2,7 @@
 #include "header/ghost.h"
 #include "shader/character.h"
 #include "header/levelData.h"
+#include "header/function.h"
 #include <iostream>
 /* dictionary */
 extern enum Direction {UP, LEFT, DOWN, RIGHT};
@@ -49,6 +50,7 @@ void Ghost::pathfinding() {
 }
 
 void Ghost::findRandomPath() {
+	int index = 0;
 	//store all possible directions in an array
 	std::vector<int> possiblePaths;
 	//branch if path isn't opposite of current direction and there isn't a wall
@@ -57,7 +59,8 @@ void Ghost::findRandomPath() {
 	if(direction != UP && g_level.arr[colPos - 1][rowPos] != WALL) possiblePaths.push_back(DOWN);
 	if(direction != LEFT && g_level.arr[colPos][rowPos + 1] != WALL) possiblePaths.push_back(RIGHT);
 	//pick direction randomly
-	direction = possiblePaths[rand() % possiblePaths.size()];
+	if(possiblePaths.size() > 1) index = randomIndex(0, possiblePaths.size() - 1);
+	direction = possiblePaths[index];
 }
 
 /**
