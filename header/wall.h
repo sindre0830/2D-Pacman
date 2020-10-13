@@ -3,7 +3,7 @@
 /* library */
 #include "header/geometricShape.h"
 /**
- * @brief Child class of 'Entity' with shared data and functionality
+ * @brief Leaf class
  * 
  */
 class Wall : public GeometricShape {

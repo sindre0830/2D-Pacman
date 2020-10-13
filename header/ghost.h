@@ -3,7 +3,8 @@
 /* library */
 #include "header/character.h"
 /**
- * 'Pacman' class.
+ * @brief Leaf class
+ * 
  */
 class Ghost : public Character {
     private:

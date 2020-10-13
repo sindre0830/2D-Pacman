@@ -4,48 +4,67 @@
 #include <fstream>
 /* dictionary */
 extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
-
+/**
+ * @brief Construct a new Level Data:: Level Data object
+ * 
+ */
 LevelData::LevelData() {
     int index = 0;
     bool flag = true;
     //array with all possible levels
-    std::vector<std::string> filePathArr = {"level0", "level1"};
-    if(filePathArr.size() > 1) {
+    std::vector<std::string> possibleLevelsArr = {"level0", "level1"};
+    //branch if there is only 1 level in the array
+    if(possibleLevelsArr.size() > 1) {
+        //print out all possible levels to the terminal
         std::cout << "Choose a level:\t";
-        for(int i = 0; i < filePathArr.size(); i++) {
-            std::cout << i << (i < filePathArr.size() - 1 ? ", " : "\n");
+        for(int i = 0; i < possibleLevelsArr.size(); i++) {
+            std::cout << i << (i < possibleLevelsArr.size() - 1 ? ", " : "\n");
         }
+        //loop until user has inputed a valid integer 
         do {
-            std::cout << "Level(0-" << filePathArr.size() - 1 << "): ";
+            std::cout << "Level(0-" << possibleLevelsArr.size() - 1 << "): ";
             std::cin >> index;
-            if(index <= filePathArr.size() - 1) flag = false;
+            //branch if integer is valid
+            if(index <= possibleLevelsArr.size() - 1) flag = false;
         } while(flag);
         std::cout << std::endl;
     }
-    filePath.append(filePathArr[index]);
+    //append filename to the filepath
+    filePath.append(possibleLevelsArr[index]);
 }
-
+/**
+ * @brief Converts score to string and makes sure it has as many characters as there are numbers in scoreboard
+ * 
+ * @param index 
+ * @return int 
+ */
 int LevelData::getScore(const int index) {
     std::string str = "0000";
     std::string buffer = std::to_string(score);
+    //branch if buffer has less integers then 1000
     if(buffer.size() < str.size()) {
+        //get the difference
         int num = str.size() - buffer.size();
         str = "";
+        //append as many integers as was missing in buffer
         for(int i = 0; i < num; i++) {
             str.append("0");
         }
+        //append buffer
         str.append(buffer);
     } else str = buffer;
+    //reverse string
     std::reverse(str.begin(), str.end());
     return (int)(str[index]) - '0';
 }
 /**
- * @brief Reads data from level file.
+ * @brief inputs data from level file.
+ * 
  */
 bool LevelData::inputData() {
     std::ifstream file;
 	file.open(filePath);
-    //branch if file is open else tell program to not run
+    //branch if file is open else end program
 	if (file) {
 		int buffer;
         //input grid width from file
@@ -92,11 +111,10 @@ bool LevelData::inputData() {
 		//set element value
 		gridElementWidth = 1.f / ((float)(gridWidth) / 2.f);
 		gridElementHeight = 1.f / ((float)(gridHeight) / 2.f);
-		
+		//fills in map based on column and row (key) with a 2D vector of each corner coordinate (value)
 		float
 			x = -1.f,
 			y = -1.f;
-		//fills in array with coordinates
 		for (int i = 0; i < gridHeight; i++, x = -1.f, y += gridElementHeight) {
 			for (int j = 0; j < gridWidth; j++, x += gridElementWidth) {
 				//top left

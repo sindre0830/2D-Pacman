@@ -6,13 +6,10 @@
 #include <vector>
 #include <string>
 /**
- * @brief Root class with shared data and functionality
+ * @brief Root class
  * 
  */
 class GeometricShape {
-    public:
-        /* public functionality */
-        ~GeometricShape();
     protected:
         /* protected data */
         GLuint shapeShaderProgram;
@@ -23,5 +20,8 @@ class GeometricShape {
         GLuint createVAO(const std::vector<GLfloat> &arr, const std::vector<GLuint> &arr_indices);
         std::vector<GLuint> genIndices(const int size);
         void destroyVAO(GLuint &vao);
+    public:
+        /* public functionality */
+        ~GeometricShape();
 };
 #endif

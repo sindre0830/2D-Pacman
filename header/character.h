@@ -3,14 +3,10 @@
 /* library */
 #include "header/geometricShape.h"
 /**
- * @brief Child class of 'Entity' with shared data and functionality
+ * @brief Internal class
  * 
  */
 class Character : public GeometricShape {
-    public:
-        /* public functionality */
-        ~Character();
-        void draw();
     protected:
         /* protected data */
         int direction, counter = 0, speed = 20;
@@ -23,5 +19,9 @@ class Character : public GeometricShape {
         bool movLeft(int &row, int &col);
         bool movDown(int &row, int &col);
         bool movRight(int &row, int &col);
+    public:
+        /* public functionality */
+        ~Character();
+        void draw();
 };
 #endif

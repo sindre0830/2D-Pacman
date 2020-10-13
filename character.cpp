@@ -11,14 +11,14 @@ extern enum Position {X, Y};
 extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
 extern LevelData *g_level;
-
+/**
+ * @brief Destroy the Character:: Character object
+ * 
+ */
 Character::~Character() {}
 /**
- * @brief Draw asset according to the direction it is facing.
+ * @brief Draw object by installing the shader program and binding the VAO and texture to the current rendering state
  * 
- * @param shader
- * @param vao
- * @param window
  */
 void Character::draw() {
     auto samplerSlotLocation = glGetUniformLocation(shapeShaderProgram, "uTexture");
@@ -27,7 +27,13 @@ void Character::draw() {
 	glUniform1i(samplerSlotLocation, 0);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
 }
-
+/**
+ * @brief Generate array of grid positions and texture coordinates
+ * 
+ * @param row 
+ * @param col 
+ * @return std::vector<GLfloat> 
+ */
 std::vector<GLfloat> Character::genCoordinates(const int row, const int col) {
     GLfloat texPos = 0.f;
     std::vector<GLfloat> arr = {
@@ -47,88 +53,138 @@ std::vector<GLfloat> Character::genCoordinates(const int row, const int col) {
     return arr;
 }
 /**
- * @brief Translate the shader on the y- and x-axis.
+ * @brief Translate the character position on the x- and y-axis
  * 
  * @param x 
  * @param y 
  * @param shader 
  */
 void Character::translatePos(const float xPos, const float yPos) {
-    //Translation moves our object
+    //Generate matrix to translate
     glm::mat4 translation = glm::translate(glm::mat4(1), glm::vec3(xPos, yPos, 0.f));
-    //Create transformation matrix
-    GLuint transformationmat = glGetUniformLocation(shapeShaderProgram, "u_TransformationMat");
-    //Send data from matrices to uniform
-    glUniformMatrix4fv(transformationmat, 1, false, glm::value_ptr(translation));
+    //get uniform to transform
+    GLuint uniform = glGetUniformLocation(shapeShaderProgram, "u_TransformationMat");
+    //send data from matrix to the uniform
+    glUniformMatrix4fv(uniform, 1, false, glm::value_ptr(translation));
 }
-
+/**
+ * @brief Translate the texture on the x- and y-axis
+ * 
+ * @param xPos 
+ * @param yPos
+ */
 void Character::translateTex(const float xPos, const float yPos) {
-	//Translation moves our object
+	//Generate matrix to translate
 	glm::mat3 translation = glm::translate(glm::mat3(1), glm::vec2(xPos, yPos));
-	GLuint transformationmat = glGetUniformLocation(shapeShaderProgram, "u_TransformationTex");
-	//Send data from matrices to uniform
-	glUniformMatrix3fv(transformationmat, 1, false, glm::value_ptr(translation));
+    //get uniform to transform
+	GLuint uniform = glGetUniformLocation(shapeShaderProgram, "u_TransformationTex");
+	//Send data from matrix to the uniform
+	glUniformMatrix3fv(uniform, 1, false, glm::value_ptr(translation));
 }
-
+/**
+ * @brief Move character up the grid if possible and update position
+ * 
+ * @param row 
+ * @param col 
+ * @return true if character has reached the next location
+ * @return false if character is still moving
+ */
 bool Character::movUp(int &row, int &col) {
-	//check if next location will be a wall or out of bound
+    //branch if character isn't about to teleport
 	if(col + 1 < g_level->gridHeight) {
+        //branch if next location wont be a wall
         if(g_level->grid[col + 1][row] != WALL) {
-            //translate up on the x-axis
-            translatePos(xPos, (yPos += g_level->gridElementHeight / (float)(speed)));
             counter++;
+            //translate position
+            translatePos(xPos, (yPos += g_level->gridElementHeight / (float)(speed)));
+            //branch if character has reached the next location
             if(counter == speed) return true;
         }
     } else {
+        //update position
         col = 0;
+        //teleport to the opposite side of the grid
         translatePos(xPos, yPos -= (float)(g_level->gridHeight - 1) * g_level->gridElementHeight);
     }
     return false;
 }
-
+/**
+ * @brief Move character to the left of the grid if possible and update position
+ * 
+ * @param row 
+ * @param col 
+ * @return true if character has reached the next location
+ * @return false if character is still moving
+ */
 bool Character::movLeft(int &row, int &col) {
-	//check if next location will be a wall or out of bound
+    //branch if character isn't about to teleport
 	if(row - 1 >= 0) {
+        //branch if next location wont be a wall
         if(g_level->grid[col][row - 1] != WALL) {
-            //translate up on the x-axis
-            translatePos((xPos -= g_level->gridElementWidth / (float)(speed)), yPos);
             counter++;
+            //translate position
+            translatePos((xPos -= g_level->gridElementWidth / (float)(speed)), yPos);
+            //branch if character has reached the next location
             if(counter == speed) return true;
         }
     } else {
+        //update position
         row = g_level->gridWidth - 1;
+        //teleport to the opposite side of the grid
         translatePos(xPos += (float)(g_level->gridWidth - 1) * g_level->gridElementWidth, yPos);
     }
     return false;
 }
-
+/**
+ * @brief Move character down the grid if possible and update position
+ * 
+ * @param row 
+ * @param col 
+ * @return true if character has reached the next location
+ * @return false if character is still moving
+ */
 bool Character::movDown(int &row, int &col) {
-	//check if next location will be a wall or out of bound
+    //branch if character isn't about to teleport
 	if(col - 1 >= 0) {
+        //branch if next location wont be a wall
         if(g_level->grid[col - 1][row] != WALL) {
-            //translate up on the x-axis
-            translatePos(xPos, (yPos -= g_level->gridElementHeight / (float)(speed)));
             counter++;
+            //translate position
+            translatePos(xPos, (yPos -= g_level->gridElementHeight / (float)(speed)));
+            //branch if character has reached the next location
             if(counter == speed) return true;
         }
     } else {
+        //update position
         col = g_level->gridHeight - 1;
+        //teleport to the opposite side of the grid
         translatePos(xPos, yPos += (float)(g_level->gridHeight - 1) * g_level->gridElementHeight);
     }
     return false;
 }
-
+/**
+ * @brief Move character to the right of the grid if possible and update position
+ * 
+ * @param row 
+ * @param col 
+ * @return true if character has reached the next location
+ * @return false if character is still moving
+ */
 bool Character::movRight(int &row, int &col) {
-	//check if next location will be a wall or out of bound
+    //branch if character isn't about to teleport
 	if(row + 1 < g_level->gridWidth) {
+        //branch if next location wont be a wall
         if(g_level->grid[col][row + 1] != WALL) {
-            //translate up on the x-axis
-            translatePos((xPos += g_level->gridElementWidth / (float)(speed)), yPos);
             counter++;
+            //translate position
+            translatePos((xPos += g_level->gridElementWidth / (float)(speed)), yPos);
+            //branch if character has reached the next location
             if(counter == speed) return true;
         }
 	} else {
+        //update position
         row = 0;
+        //teleport to the opposite side of the grid
         translatePos(xPos -= (float)(g_level->gridWidth - 1) * g_level->gridElementWidth, yPos);
     }
     return false;

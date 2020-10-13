@@ -2,18 +2,19 @@
 #include "header/pacman.h"
 #include "shader/character.h"
 #include "header/levelData.h"
-#include <iostream>
 /* dictionary */
 extern enum Direction {UP, LEFT, DOWN, RIGHT};
 extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
 extern LevelData *g_level;
 /**
- * @brief Destroy the Pacman object
+ * @brief Destroy the Pacman:: Pacman object
+ * 
  */
 Pacman::~Pacman() {}
 /**
- * @brief Declare variables on construction of Pacman object.
+ * @brief Construct a new Pacman:: Pacman object
+ * 
  */
 Pacman::Pacman() {
 	//set starting postions
@@ -32,8 +33,9 @@ Pacman::Pacman() {
 		yTex = 0.0f;
 		direction = RIGHT;
 	}
-	//generate VAO and shader program
+    //compile pacman shader
     shapeShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
+    //create VAO
 	std::vector<GLfloat> arr = genCoordinates(g_level->pacmanRow, g_level->pacmanCol);
     shapeVAO = genObject(arr, 1);
 	//specify the layout of the vertex data
@@ -42,7 +44,10 @@ Pacman::Pacman() {
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
 }
-
+/**
+ * @brief Get starting position in the grid
+ * 
+ */
 void Pacman::getPosition() {
 	for (int i = 0; i < g_level->gridHeight; i++) {
 		for (int j = 0; j < g_level->gridWidth; j++) {
@@ -55,16 +60,18 @@ void Pacman::getPosition() {
 	}
 }
 /**
- * @brief Move the asset to a direction until collision.
+ * @brief Move Pacman to the current direction if possible
  * 
  * @param shader
  */
 void Pacman::mov(Pellet &pellet) {
+	//branch if pacman can change direction and pacman is moving set change direction to false
 	if(changeDirection && counter < speed) changeDirection = false;
 	switch (direction) {
 		case UP:
+			//branch if pacman has reached the next location or if the next location will be a wall
 			if(movUp(g_level->pacmanRow, g_level->pacmanCol)) {
-				//check if there is a pellet
+				//branch if location has a magic pellet or if the next location has a pellet and eat it
 				if(g_level->grid[++g_level->pacmanCol][g_level->pacmanRow] == MAGICPELLET) {
 					g_level->magicEffect = true;
 					eat(pellet);
@@ -72,8 +79,9 @@ void Pacman::mov(Pellet &pellet) {
 			} else if(g_level->grid[g_level->pacmanCol + 1][g_level->pacmanRow] == WALL) changeDirection = true;
 			break;
 		case LEFT:
+			//branch if pacman has reached the next location or if the next location will be a wall
 			if(movLeft(g_level->pacmanRow, g_level->pacmanCol)) {
-				//check if there is a pellet
+				//branch if location has a magic pellet or if the next location has a pellet and eat it
 				if(g_level->grid[g_level->pacmanCol][--g_level->pacmanRow] == MAGICPELLET) {
 					g_level->magicEffect = true;
 					eat(pellet);
@@ -81,8 +89,9 @@ void Pacman::mov(Pellet &pellet) {
 			} else if(g_level->grid[g_level->pacmanCol][g_level->pacmanRow - 1] == WALL) changeDirection = true;	
 			break;
 		case DOWN:
+			//branch if pacman has reached the next location or if the next location will be a wall
 			if(movDown(g_level->pacmanRow, g_level->pacmanCol)) {
-				//check if there is a pellet
+				//branch if location has a magic pellet or if the next location has a pellet and eat it
 				if(g_level->grid[--g_level->pacmanCol][g_level->pacmanRow] == MAGICPELLET) {
 					g_level->magicEffect = true;
 					eat(pellet);
@@ -90,8 +99,9 @@ void Pacman::mov(Pellet &pellet) {
 			} else if(g_level->grid[g_level->pacmanCol - 1][g_level->pacmanRow] == WALL) changeDirection = true;
 			break;
 		case RIGHT:
+			//branch if pacman has reached the next location or if the next location will be a wall
 			if(movRight(g_level->pacmanRow, g_level->pacmanCol)) {
-				//check if there is a pellet
+				//branch if location has a magic pellet or if the next location has a pellet and eat it
 				if(g_level->grid[g_level->pacmanCol][++g_level->pacmanRow] == MAGICPELLET) {
 					g_level->magicEffect = true;
 					eat(pellet);
@@ -99,37 +109,48 @@ void Pacman::mov(Pellet &pellet) {
 			} else if(g_level->grid[g_level->pacmanCol][g_level->pacmanRow + 1] == WALL) changeDirection = true;
 			break;
 	}
+	//animate pacman
 	animate();
 }
-
+/**
+ * @brief Animate pacman
+ * 
+ */
 void Pacman::animate() {
+	//animate pacman according to the percentage of movement left till it has reached the next location
 	if (counter == speed * 0.25f) {
-		translateTex(0.167f, yTex);
+		translateTex(1.f / 6.f, yTex);
 	} else if (counter == speed * 0.5f) {
-		translateTex(0.333f, yTex);
+		translateTex(2.f / 6.f, yTex);
 	} else if (counter == speed * 0.75f) {
-		translateTex(0.5f, yTex);
+		translateTex(3.f / 6.f, yTex);
 	} else if (counter >= speed) {
 		counter = 0;
 		changeDirection = true;
 		translateTex(0.f, yTex);
 	}
 }
-
+/**
+ * @brief Update score and hide the pellet
+ * 
+ * @param pellet 
+ */
 void Pacman::eat(Pellet &pellet) {
-	//replace pellet in array
+	//remove pellet in array
 	g_level->grid[g_level->pacmanCol][g_level->pacmanRow] = EMPTY;
 	//increment score
 	g_level->score++;
 	g_level->scoreChanged = true;
 	//hide pellet
 	pellet.hidePellet(g_level->pacmanCol, g_level->pacmanRow);
-	if(g_level->score == g_level->pelletSize) {
-		g_level->gameover = true;
-		std::cout << "Congratulations, you won...\n";
-	}
+	//branch if there isn't any more pellets in the game and end it
+	if(g_level->score == g_level->pelletSize) g_level->gameover = true;
 }
-
+/**
+ * @brief Change direction according to user input
+ * 
+ * @param window 
+ */
 void Pacman::inputDirection(GLFWwindow *window) {
 	//change direction on key press if pacman has completed a translation and it wont hit a wall
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && changeDirection && g_level->pacmanCol + 1 < g_level->gridHeight && g_level->grid[g_level->pacmanCol + 1][g_level->pacmanRow] != WALL) {

@@ -8,11 +8,17 @@ extern enum Position {X, Y};
 extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
 extern LevelData *g_level;
-
+/**
+ * @brief Destroy the Wall:: Wall object
+ * 
+ */
 Wall::~Wall() {
     destroyVAO(cornerVAO);
 }
-
+/**
+ * @brief Construct a new Wall:: Wall object
+ * 
+ */
 Wall::Wall() {
 	//create shader program
     shapeShaderProgram = compileShader(wallVertexShaderSrc, wallFragmentShaderSrc);
@@ -28,7 +34,10 @@ Wall::Wall() {
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLuint), (const void*)0);
 	glEnableVertexAttribArray(0);
 }
-
+/**
+ * @brief Draw object by installing the shader program and binding the VAO to the current rendering state
+ * 
+ */
 void Wall::draw() {
 	glUseProgram(shapeShaderProgram);
 	//draw walls
@@ -38,7 +47,12 @@ void Wall::draw() {
 	glBindVertexArray(cornerVAO);
 	glDrawArrays(GL_TRIANGLES, 0, (3 * cornerSize));
 }
-
+/**
+ * @brief Generate buffer array (x, y) * 4
+ * 
+ * @param target 
+ * @return std::vector<GLfloat> 
+ */
 std::vector<GLfloat> Wall::genWallCoordinates() {
 	float
 		xResize = g_level->gridElementWidth / 1.2f,
@@ -48,8 +62,9 @@ std::vector<GLfloat> Wall::genWallCoordinates() {
 	//fills in array with coordinates
 	for (int i = 0; i < g_level->gridHeight; i++) {
 		for (int j = 0; j < g_level->gridWidth; j++) {
+			//branch if target is a wall
 			if (g_level->grid[i][j] == WALL) {
-				//check if there can be a wall above the target
+				//branch if there can be a wall above the target
 				if(i + 1 < g_level->gridHeight && g_level->grid[i + 1][j] != WALL) {
 					wallSize++;
 					arr.insert(arr.end(), {
@@ -59,7 +74,7 @@ std::vector<GLfloat> Wall::genWallCoordinates() {
 						g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][Y]
 					});
 				}
-				//check if there can be a wall under the target
+				//branch if there can be a wall under the target
 				if(i - 1 >= 0 && g_level->grid[i - 1][j] != WALL) {
 					wallSize++;
 					arr.insert(arr.end(), {
@@ -69,7 +84,7 @@ std::vector<GLfloat> Wall::genWallCoordinates() {
 						g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize
 					});
 				}
-				//check if there can be a wall left of the target
+				//branch if there can be a wall left of the target
 				if(j - 1 >= 0 && g_level->grid[i][j - 1] != WALL) {
 					wallSize++;
 					arr.insert(arr.end(), {
@@ -79,7 +94,7 @@ std::vector<GLfloat> Wall::genWallCoordinates() {
 						g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][X] - xResize, g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][Y]
 					});
 				}
-				//check if there can be a wall right of the target
+				//branch if there can be a wall right of the target
 				if(j + 1 < g_level->gridWidth && g_level->grid[i][j + 1] != WALL) {
 					wallSize++;
 					arr.insert(arr.end(), {
@@ -94,7 +109,12 @@ std::vector<GLfloat> Wall::genWallCoordinates() {
 	}
 	return arr;
 }
-
+/**
+ * @brief Generate buffer array (x, y) * 3
+ * 
+ * @param target 
+ * @return std::vector<GLfloat> 
+ */
 GLuint Wall::genCornerVAO() {
 	float
 		//resize corner acording to size of wall
@@ -105,8 +125,9 @@ GLuint Wall::genCornerVAO() {
 	//fills in array with coordinates
 	for (int i = 0; i < g_level->gridHeight; i++) {
 		for (int j = 0; j < g_level->gridWidth; j++) {
+			//branch if target is a wall
 			if (g_level->grid[i][j] == WALL) {
-				//check if there can be a corner top left of the target
+				//branch if there can be a corner top left of the target
 				if(i + 1 < g_level->gridHeight && g_level->grid[i + 1][j] != WALL && j - 1 >= 0 && g_level->grid[i + 1][j - 1] == WALL) {
 					cornerSize++;
 					arr.insert(arr.end(), {
@@ -118,7 +139,7 @@ GLuint Wall::genCornerVAO() {
 						g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][Y]
 					});
 				}
-				//check if there can be a corner bottom left of the target
+				//branch if there can be a corner bottom left of the target
 				if(i - 1 >= 0 && g_level->grid[i - 1][j] != WALL && j - 1 >= 0 && g_level->grid[i - 1][j - 1] == WALL) {
 					cornerSize++;
 					arr.insert(arr.end(), {
@@ -130,7 +151,7 @@ GLuint Wall::genCornerVAO() {
 						g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y]
 					});
 				}
-				//check if there can be a corner bottom right of the target
+				//branch if there can be a corner bottom right of the target
 				if(i - 1 >= 0 && g_level->grid[i - 1][j] != WALL && j + 1 < g_level->gridWidth && g_level->grid[i - 1][j + 1] == WALL) {
 					cornerSize++;
 					arr.insert(arr.end(), {
@@ -142,7 +163,7 @@ GLuint Wall::genCornerVAO() {
 						g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X] + xResize, g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y]
 					});
 				}
-				//check if there can be a corner top right of the target
+				//branch if there can be a corner top right of the target
 				if(i + 1 < g_level->gridHeight && g_level->grid[i + 1][j] != WALL && j + 1 < g_level->gridWidth && g_level->grid[i + 1][j + 1] == WALL) {
 					cornerSize++;
 					arr.insert(arr.end(), {

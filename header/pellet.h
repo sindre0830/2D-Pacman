@@ -4,7 +4,8 @@
 #include "header/geometricShape.h"
 #include <map>
 /**
- * 'Pellet' class.
+ * @brief Leaf class
+ * 
  */
 class Pellet : public GeometricShape {
     private:

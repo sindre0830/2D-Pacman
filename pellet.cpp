@@ -18,8 +18,9 @@ Pellet::~Pellet() {}
  * 
  */
 Pellet::Pellet() {
-	//create shader program and VAO
+    //compile pellet shader
 	shapeShaderProgram = compileShader(pelletVertexShaderSrc, pelletFragmentShaderSrc);
+    //create VAO
 	std::vector<GLfloat> arr = genCoordinates();
     shapeVAO = genObject(arr, g_level->pelletSize);
 	//set the vertex attribute
@@ -30,6 +31,7 @@ Pellet::Pellet() {
 	//set buffer position in refrence to position in level
 	for(int i = 0, n = 0; i < g_level->gridHeight; i++) {
 		for(int j = 0; j < g_level->gridWidth; j++) {
+			//branch if target is either a pellet or a magic pellet
 			if(g_level->grid[i][j] == PELLET || g_level->grid[i][j] == MAGICPELLET) {
 				bufferPos[std::make_pair(i, j)] = n * pelletByteSize;
 				n++;
@@ -38,7 +40,7 @@ Pellet::Pellet() {
 	}
 }
 /**
- * @brief Draw object by installing the shader program and binding the VAO to the current rendering state.
+ * @brief Draw object by installing the shader program and binding the VAO to the current rendering state
  * 
  */
 void Pellet::draw() {
@@ -47,7 +49,7 @@ void Pellet::draw() {
 	glDrawElements(GL_TRIANGLES, (6 * g_level->pelletSize), GL_UNSIGNED_INT, (const void*)0);
 }
 /**
- * @brief Hide pellet by modifying the buffer array.
+ * @brief Hide pellet by modifying the buffer array
  * 
  * @param y 
  * @param x 
@@ -59,7 +61,7 @@ void Pellet::hidePellet(const int col, const int row) {
 	}
 }
 /**
- * @brief Generate buffer array(x, y, display).
+ * @brief Generate buffer array (x, y, display) * 4
  * 
  * @param target 
  * @return std::vector<GLfloat> 
@@ -79,26 +81,19 @@ std::vector<GLfloat> Pellet::genCoordinates() {
 	//fills in array with coordinates
 	for (int i = 0; i < g_level->gridHeight; i++) {
 		for (int j = 0; j < g_level->gridWidth; j++) {
+			//branch if target is pellet and insert data or if target is a magic pellet and make it twice as big
 			if (g_level->grid[i][j] == PELLET) {
 				arr.insert(arr.end(), {
-					//middle left coordinate
 					g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][X] + xResize, g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][Y] - yRotate, display,
-					//middle down coordinate
 					g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X] + xRotate, g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y] + yResize, display,
-					//middle right coordinate
 					g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X] - xResize, g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yRotate, display,
-					//middle top coordinate
 					g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][X] - xRotate, g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize, display
 				});
 			} else if (g_level->grid[i][j] == MAGICPELLET) {
 				arr.insert(arr.end(), {
-					//middle left coordinate
 					g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][X] + (xResize * 2.f), g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][Y] - yRotate, display,
-					//middle down coordinate
 					g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X] + xRotate, g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y] + (yResize * 2.f), display,
-					//middle right coordinate
 					g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X] - (xResize * 2.f), g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yRotate, display,
-					//middle top coordinate
 					g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][X] - xRotate, g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][Y] - (yResize * 2.f), display
 				});
 			}

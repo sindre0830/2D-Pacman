@@ -3,7 +3,8 @@
 /* library */
 #include "header/geometricShape.h"
 /**
- * 'Pellet' class.
+ * @brief Leaf class
+ * 
  */
 class Gameover : public GeometricShape {
     private:

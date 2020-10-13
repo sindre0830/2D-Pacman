@@ -4,7 +4,7 @@
 #include "header/character.h"
 #include "header/pellet.h"
 /**
- * 'Pacman' class.
+ * Leaf class
  */
 class Pacman : public Character {
     private:

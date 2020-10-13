@@ -1,7 +1,10 @@
 /* library */
 #include "header/geometricShape.h"
 #include <set>
-
+/**
+ * @brief Destroy the Geometric Shape:: Geometric Shape object
+ * 
+ */
 GeometricShape::~GeometricShape() {
 	glDeleteProgram(shapeShaderProgram);
     destroyVAO(shapeVAO);
