@@ -1,12 +1,12 @@
 #ifndef __PELLET_H
 #define __PELLET_H
 /* library */
-#include "header/entity.h"
+#include "header/geometricShape.h"
 #include <map>
 /**
  * 'Pellet' class.
  */
-class Pellet : public Entity {
+class Pellet : public GeometricShape {
     private:
         /* private data */
         std::map<std::pair<int, int>, int> bufferPos;

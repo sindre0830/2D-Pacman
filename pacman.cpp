@@ -33,9 +33,9 @@ Pacman::Pacman() {
 		direction = RIGHT;
 	}
 	//generate VAO and shader program
-    entityShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
+    shapeShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
 	std::vector<GLfloat> arr = genCoordinates(g_level->pacmanRow, g_level->pacmanCol);
-    entityVAO = genObject(arr, 1);
+    shapeVAO = genObject(arr, 1);
 	//specify the layout of the vertex data
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);

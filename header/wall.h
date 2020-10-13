@@ -1,12 +1,12 @@
 #ifndef __WALL_H
 #define __WALL_H
 /* library */
-#include "header/entity.h"
+#include "header/geometricShape.h"
 /**
  * @brief Child class of 'Entity' with shared data and functionality
  * 
  */
-class Wall : public Entity {
+class Wall : public GeometricShape {
     private:
         /* private data */
         GLuint cornerVAO;

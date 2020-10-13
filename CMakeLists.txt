@@ -18,8 +18,8 @@ add_executable(${PROJECT_NAME}
 	levelData.cpp
 	header/function.h
 	function.cpp
-	header/entity.h
-	entity.cpp
+	header/geometricShape.h
+	geometricShape.cpp
 		header/scoreboard.h
 		shader/scoreboard.h
 		scoreboard.cpp

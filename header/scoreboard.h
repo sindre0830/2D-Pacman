@@ -1,11 +1,11 @@
 #ifndef __SCOREBOARD_H
 #define __SCOREBOARD_H
 /* library */
-#include "header/entity.h"
+#include "header/geometricShape.h"
 /**
  * 'Pellet' class.
  */
-class Scoreboard : public Entity {
+class Scoreboard : public GeometricShape {
     private:
         /* private data */
         const int numberByteSize = 4 * 4 * sizeof(GLfloat);

@@ -1,12 +1,12 @@
 #ifndef __CHARACTER_H
 #define __CHARACTER_H
 /* library */
-#include "header/Entity.h"
+#include "header/geometricShape.h"
 /**
  * @brief Child class of 'Entity' with shared data and functionality
  * 
  */
-class Character : public Entity {
+class Character : public GeometricShape {
     public:
         /* public functionality */
         ~Character();

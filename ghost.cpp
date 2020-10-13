@@ -23,9 +23,9 @@ Ghost::Ghost(const int row, const int col) {
 	//set random direction
 	findRandomPath();
 	//generate VAO and shader program
-    entityShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
+    shapeShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
 	std::vector<GLfloat> arr = genCoordinates(rowPos, colPos);
-    entityVAO = genObject(arr, 1);
+    shapeVAO = genObject(arr, 1);
 	//specify the layout of the vertex data
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
@@ -150,7 +150,7 @@ void Ghost::animate() {
 
 void Ghost::changeColor(const int flag) {
 	//Translation moves our object
-	GLuint color = glGetUniformLocation(entityShaderProgram, "u_ChangeColor");
+	GLuint color = glGetUniformLocation(shapeShaderProgram, "u_ChangeColor");
 	//Send data from matrices to uniform
 	glUniform1i(color, flag);
 	draw();

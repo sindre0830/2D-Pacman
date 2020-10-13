@@ -19,9 +19,9 @@ Pellet::~Pellet() {}
  */
 Pellet::Pellet() {
 	//create shader program and VAO
-	entityShaderProgram = compileShader(pelletVertexShaderSrc, pelletFragmentShaderSrc);
+	shapeShaderProgram = compileShader(pelletVertexShaderSrc, pelletFragmentShaderSrc);
 	std::vector<GLfloat> arr = genCoordinates();
-    entityVAO = genObject(arr, g_level->pelletSize);
+    shapeVAO = genObject(arr, g_level->pelletSize);
 	//set the vertex attribute
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void*)0);
@@ -42,8 +42,8 @@ Pellet::Pellet() {
  * 
  */
 void Pellet::draw() {
-	glUseProgram(entityShaderProgram);
-	glBindVertexArray(entityVAO);
+	glUseProgram(shapeShaderProgram);
+	glBindVertexArray(shapeVAO);
 	glDrawElements(GL_TRIANGLES, (6 * g_level->pelletSize), GL_UNSIGNED_INT, (const void*)0);
 }
 /**

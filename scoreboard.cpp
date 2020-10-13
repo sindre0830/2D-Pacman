@@ -1,7 +1,7 @@
 /* library */
 #include "header/scoreboard.h"
-#include "header/levelData.h"
 #include "shader/scoreboard.h"
+#include "header/levelData.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
@@ -17,8 +17,8 @@ extern LevelData *g_level;
 Scoreboard::~Scoreboard() {}
 
 Scoreboard::Scoreboard(const int col, const int row) {
-    entityShaderProgram = compileShader(scoreboardVertexShaderSrc, scoreboardFragmentShaderSrc);
-    entityVAO = genObject(col, row);
+    shapeShaderProgram = compileShader(scoreboardVertexShaderSrc, scoreboardFragmentShaderSrc);
+    shapeVAO = genObject(col, row);
     //specify the layout of the vertex data
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
@@ -57,9 +57,9 @@ std::vector<GLfloat> Scoreboard::genCoordinates(const int col, const int row) {
 }
 
 void Scoreboard::draw() {
-    auto samplerSlotLocation = glGetUniformLocation(entityShaderProgram, "uTexture");
-    glUseProgram(entityShaderProgram);
-    glBindVertexArray(entityVAO);
+    auto samplerSlotLocation = glGetUniformLocation(shapeShaderProgram, "uTexture");
+    glUseProgram(shapeShaderProgram);
+    glBindVertexArray(shapeVAO);
     glUniform1i(samplerSlotLocation, 1);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
 }
@@ -72,7 +72,7 @@ void Scoreboard::update(int num) {
 void Scoreboard::translateTex(const float xPos) {
     //Translation moves our object
 	glm::mat3 translation = glm::translate(glm::mat3(1), glm::vec2(xPos, 0.f));
-	GLuint transformationmat = glGetUniformLocation(entityShaderProgram, "u_TransformationTex");
+	GLuint transformationmat = glGetUniformLocation(shapeShaderProgram, "u_TransformationTex");
 	//Send data from matrices to uniform
 	glUniformMatrix3fv(transformationmat, 1, false, glm::value_ptr(translation));
 }

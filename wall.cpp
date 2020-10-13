@@ -15,10 +15,10 @@ Wall::~Wall() {
 
 Wall::Wall() {
 	//create shader program
-    entityShaderProgram = compileShader(wallVertexShaderSrc, wallFragmentShaderSrc);
+    shapeShaderProgram = compileShader(wallVertexShaderSrc, wallFragmentShaderSrc);
 	//generate wall VAO
 	std::vector<GLfloat> arr = genWallCoordinates();
-    entityVAO = genObject(arr, wallSize);
+    shapeVAO = genObject(arr, wallSize);
 	//set the vertex attribute
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLuint), (const void*)0);
 	glEnableVertexAttribArray(0);
@@ -30,9 +30,9 @@ Wall::Wall() {
 }
 
 void Wall::draw() {
-	glUseProgram(entityShaderProgram);
+	glUseProgram(shapeShaderProgram);
 	//draw walls
-	glBindVertexArray(entityVAO);
+	glBindVertexArray(shapeVAO);
 	glDrawElements(GL_TRIANGLES, (6 * wallSize), GL_UNSIGNED_INT, (const void*)0);
 	//draw corners
 	glBindVertexArray(cornerVAO);
