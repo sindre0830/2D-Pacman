@@ -163,13 +163,6 @@ int main() {
 			timer++;
 			//branch if pacman has eaten a magic pellet
 			if(g_level->magicEffect) {
-				//branch if the magic effect just started
-				if(counter == 0) {
-					for(int i = 0; i < ghostArr.size(); i++) {
-						//branch if ghost isn't dead and change the color
-						if(!ghostArr[i]->dead) ghostArr[i]->changeColor(1);
-					}
-				}
 				counter++;
 				//branch if 5 seconds have gone since magic pellet was eaten
 				if(counter >= 5) {
@@ -181,6 +174,13 @@ int main() {
 						if(!ghostArr[i]->dead) ghostArr[i]->changeColor(0);
 					}
 				}
+			}
+		}
+		//branch if the magic effect just started
+		if(counter == 0 && g_level->magicEffect) {
+			for(int i = 0; i < ghostArr.size(); i++) {
+				//branch if ghost isn't dead and change the color
+				if(!ghostArr[i]->dead) ghostArr[i]->changeColor(1);
 			}
 		}
 		//reset delta time 

@@ -16,7 +16,6 @@ class Character : public Entity {
         int direction, counter = 0, speed = 20;
         float xPos = 0.f, yPos = 0.f, yTex = 0.f;
         /* protected functionality */
-        GLuint genObject(const int row, const int col);
         std::vector<GLfloat> genCoordinates(const int row, const int col);
         void translatePos(const float xPos, const float yPos);
         void translateTex(const float xPos, const float yPos);

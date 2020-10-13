@@ -27,16 +27,6 @@ void Character::draw() {
 	glUniform1i(samplerSlotLocation, 0);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
 }
-/**
- * @brief Generate Pac-Man from the 2D array to the window.
- * 
- * @return GLuint 
- */
-GLuint Character::genObject(const int row, const int col) {
-    std::vector<GLfloat> arr = genCoordinates(row, col);
-    std::vector<GLuint> arrIndices = genIndices(1);
-    return createVAO(arr, arrIndices);
-}
 
 std::vector<GLfloat> Character::genCoordinates(const int row, const int col) {
     GLfloat texPos = 0.f;
@@ -85,13 +75,13 @@ bool Character::movUp(int &row, int &col) {
 	if(col + 1 < g_level->gridHeight) {
         if(g_level->grid[col + 1][row] != WALL) {
             //translate up on the x-axis
-            translatePos(xPos, (yPos += g_level->gridElementHeight / (double)(speed)));
+            translatePos(xPos, (yPos += g_level->gridElementHeight / (float)(speed)));
             counter++;
             if(counter == speed) return true;
         }
     } else {
         col = 0;
-        translatePos(xPos, yPos -= (double)(g_level->gridHeight - 1) * g_level->gridElementHeight);
+        translatePos(xPos, yPos -= (float)(g_level->gridHeight - 1) * g_level->gridElementHeight);
     }
     return false;
 }
@@ -101,13 +91,13 @@ bool Character::movLeft(int &row, int &col) {
 	if(row - 1 >= 0) {
         if(g_level->grid[col][row - 1] != WALL) {
             //translate up on the x-axis
-            translatePos((xPos -= g_level->gridElementWidth / (double)(speed)), yPos);
+            translatePos((xPos -= g_level->gridElementWidth / (float)(speed)), yPos);
             counter++;
             if(counter == speed) return true;
         }
     } else {
         row = g_level->gridWidth - 1;
-        translatePos(xPos += (double)(g_level->gridWidth - 1) * g_level->gridElementWidth, yPos);
+        translatePos(xPos += (float)(g_level->gridWidth - 1) * g_level->gridElementWidth, yPos);
     }
     return false;
 }
@@ -117,13 +107,13 @@ bool Character::movDown(int &row, int &col) {
 	if(col - 1 >= 0) {
         if(g_level->grid[col - 1][row] != WALL) {
             //translate up on the x-axis
-            translatePos(xPos, (yPos -= g_level->gridElementHeight / (double)(speed)));
+            translatePos(xPos, (yPos -= g_level->gridElementHeight / (float)(speed)));
             counter++;
             if(counter == speed) return true;
         }
     } else {
         col = g_level->gridHeight - 1;
-        translatePos(xPos, yPos += (double)(g_level->gridHeight - 1) * g_level->gridElementHeight);
+        translatePos(xPos, yPos += (float)(g_level->gridHeight - 1) * g_level->gridElementHeight);
     }
     return false;
 }
@@ -133,13 +123,13 @@ bool Character::movRight(int &row, int &col) {
 	if(row + 1 < g_level->gridWidth) {
         if(g_level->grid[col][row + 1] != WALL) {
             //translate up on the x-axis
-            translatePos((xPos += g_level->gridElementWidth / (double)(speed)), yPos);
+            translatePos((xPos += g_level->gridElementWidth / (float)(speed)), yPos);
             counter++;
             if(counter == speed) return true;
         }
 	} else {
         row = 0;
-        translatePos(xPos -= (double)(g_level->gridWidth - 1) * g_level->gridElementWidth, yPos);
+        translatePos(xPos -= (float)(g_level->gridWidth - 1) * g_level->gridElementWidth, yPos);
     }
     return false;
 }

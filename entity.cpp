@@ -41,6 +41,15 @@ GLuint Entity::compileShader(const std::string &vertexShaderSrc, const std::stri
 	return shaderProgram;
 }
 /**
+ * @brief Generate Pac-Man from the 2D array to the window.
+ * 
+ * @return GLuint 
+ */
+GLuint Entity::genObject(const std::vector<GLfloat> arr, const int size) {
+    std::vector<GLuint> arrIndices = genIndices(size);
+    return createVAO(arr, arrIndices);
+}
+/**
  * @brief Create the VAO, VBO and EBO. Bind the objects to memory.
  * 
  * @param arr

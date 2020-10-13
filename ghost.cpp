@@ -24,7 +24,8 @@ Ghost::Ghost(const int row, const int col) {
 	findRandomPath();
 	//generate VAO and shader program
     entityShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
-    entityVAO = genObject(rowPos, colPos);
+	std::vector<GLfloat> arr = genCoordinates(rowPos, colPos);
+    entityVAO = genObject(arr, 1);
 	//specify the layout of the vertex data
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);

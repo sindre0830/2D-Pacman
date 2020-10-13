@@ -17,7 +17,8 @@ Wall::Wall() {
 	//create shader program
     entityShaderProgram = compileShader(wallVertexShaderSrc, wallFragmentShaderSrc);
 	//generate wall VAO
-    entityVAO = genObject();
+	std::vector<GLfloat> arr = genWallCoordinates();
+    entityVAO = genObject(arr, wallSize);
 	//set the vertex attribute
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLuint), (const void*)0);
 	glEnableVertexAttribArray(0);
@@ -26,13 +27,6 @@ Wall::Wall() {
 	//set the vertex attribute
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLuint), (const void*)0);
 	glEnableVertexAttribArray(0);
-}
-
-GLuint Wall::genObject() {
-	//target value 1, don't change size of x and y, don't add a display value
-	std::vector<GLfloat> arr = genWallCoordinates();
-	std::vector<GLuint> arrIndices = genIndices(wallSize);
-	return createVAO(arr, arrIndices);
 }
 
 void Wall::draw() {
@@ -47,8 +41,8 @@ void Wall::draw() {
 
 std::vector<GLfloat> Wall::genWallCoordinates() {
 	float
-		xResize = (float)(g_level->gridElementWidth / 1.2f),
-		yResize = (float)(g_level->gridElementHeight / 1.2f);
+		xResize = g_level->gridElementWidth / 1.2f,
+		yResize = g_level->gridElementHeight / 1.2f;
 	//buffer array
 	std::vector<GLfloat> arr;
 	//fills in array with coordinates
@@ -104,8 +98,8 @@ std::vector<GLfloat> Wall::genWallCoordinates() {
 GLuint Wall::genCornerVAO() {
 	float
 		//resize corner acording to size of wall
-		xResize = (float)(g_level->gridElementWidth / 1.2f) / 5.f,
-		yResize = (float)(g_level->gridElementHeight / 1.2f) / 5.f;
+		xResize = (g_level->gridElementWidth / 1.2f) / 5.f,
+		yResize = (g_level->gridElementHeight / 1.2f) / 5.f;
 	//buffer array
 	std::vector<GLfloat> arr;
 	//fills in array with coordinates

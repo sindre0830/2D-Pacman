@@ -20,7 +20,8 @@ Pellet::~Pellet() {}
 Pellet::Pellet() {
 	//create shader program and VAO
 	entityShaderProgram = compileShader(pelletVertexShaderSrc, pelletFragmentShaderSrc);
-    entityVAO = genObject();
+	std::vector<GLfloat> arr = genCoordinates();
+    entityVAO = genObject(arr, g_level->pelletSize);
 	//set the vertex attribute
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const void*)0);
@@ -35,16 +36,6 @@ Pellet::Pellet() {
 			}
 		}
 	}
-}
-/**
- * @brief Generate the VAO by buffer array and indicies.
- * 
- * @return GLuint 
- */
-GLuint Pellet::genObject() {
-	std::vector<GLfloat> arr = genCoordinates();
-	std::vector<GLuint> arrIndices = genIndices(g_level->pelletSize);
-	return createVAO(arr, arrIndices);
 }
 /**
  * @brief Draw object by installing the shader program and binding the VAO to the current rendering state.
@@ -78,11 +69,11 @@ std::vector<GLfloat> Pellet::genCoordinates() {
 		//display pellet
 		display = 1.f,
 		//resize pellet
-		xResize = (float)(g_level->gridElementWidth / 2.8f),
-		yResize = (float)(g_level->gridElementHeight / 2.8f),
+		xResize = g_level->gridElementWidth / 2.8f,
+		yResize = g_level->gridElementHeight / 2.8f,
 		//rotate pellet
-		xRotate = (float)(g_level->gridElementWidth / 2.f),
-		yRotate = (float)(g_level->gridElementHeight / 2.f);
+		xRotate = g_level->gridElementWidth / 2.f,
+		yRotate = g_level->gridElementHeight / 2.f;
 	//buffer array
 	std::vector<GLfloat> arr;
 	//fills in array with coordinates

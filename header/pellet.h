@@ -12,7 +12,6 @@ class Pellet : public Entity {
         std::map<std::pair<int, int>, int> bufferPos;
         const int pelletByteSize = 3 * 4 * sizeof(GLfloat);
         /* private functionality */
-        GLuint genObject();
         std::vector<GLfloat> genCoordinates();
     public:
         /* public functionality */
