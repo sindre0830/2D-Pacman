@@ -47,6 +47,7 @@ int main() {
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//create window
 	GLFWwindow *window = glfwCreateWindow(g_level->gridWidth * 30, g_level->gridHeight * 30, "Pac-Man", nullptr, nullptr);
@@ -104,6 +105,8 @@ int main() {
 	}
 	//construct pellets
 	Pellet pellet;
+	//enable anti-aliasing
+	glEnable(GL_MULTISAMPLE);
 	//enable transparency on texture
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
