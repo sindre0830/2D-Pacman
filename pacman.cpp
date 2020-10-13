@@ -34,7 +34,7 @@ Pacman::Pacman() {
 		direction = RIGHT;
 	}
     //compile pacman shader
-    shapeShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
+    shapeShaderProgram = compileShader(characterVertexShader, characterFragmentShader);
     //create VAO
 	std::vector<GLfloat> arr = genCoordinates(g_level->pacmanRow, g_level->pacmanCol);
     shapeVAO = genObject(arr, 1);

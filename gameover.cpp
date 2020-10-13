@@ -19,7 +19,7 @@ Gameover::~Gameover() {}
  */
 Gameover::Gameover() {
     //compile gameover shader
-    shapeShaderProgram = compileShader(gameoverVertexShaderSrc, gameoverFragmentShaderSrc);
+    shapeShaderProgram = compileShader(gameoverVertexShader, gameoverFragmentShader);
     //create VAO
 	std::vector<GLfloat> arr = genCoordinates();
     shapeVAO = genObject(arr, 1);
@@ -34,7 +34,7 @@ Gameover::Gameover() {
  * 
  */
 void Gameover::draw() {
-    auto samplerSlotLocation = glGetUniformLocation(shapeShaderProgram, "uTexture");
+    auto samplerSlotLocation = glGetUniformLocation(shapeShaderProgram, "u_texture");
     glUseProgram(shapeShaderProgram);
     glBindVertexArray(shapeVAO);
     glUniform1i(samplerSlotLocation, 2);

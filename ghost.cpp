@@ -26,7 +26,7 @@ Ghost::Ghost(const int row, const int col) {
 	//set random direction
 	findRandomPath();
     //compile ghost shader
-    shapeShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
+    shapeShaderProgram = compileShader(characterVertexShader, characterFragmentShader);
     //create VAO
 	std::vector<GLfloat> arr = genCoordinates(rowPos, colPos);
     shapeVAO = genObject(arr, 1);
@@ -179,7 +179,7 @@ void Ghost::animate() {
  */
 void Ghost::changeColor(const int flag) {
 	//get uniform to transform
-	GLuint color = glGetUniformLocation(shapeShaderProgram, "u_ChangeColor");
+	GLuint color = glGetUniformLocation(shapeShaderProgram, "u_changeColor");
 	//send data to uniform
 	glUniform1i(color, flag);
 	//update to the new color

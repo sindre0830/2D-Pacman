@@ -21,7 +21,7 @@ Wall::~Wall() {
  */
 Wall::Wall() {
 	//create shader program
-    shapeShaderProgram = compileShader(wallVertexShaderSrc, wallFragmentShaderSrc);
+    shapeShaderProgram = compileShader(wallVertexShader, wallFragmentShader);
 	//generate wall VAO
 	std::vector<GLfloat> arr = genWallCoordinates();
     shapeVAO = genObject(arr, wallSize);

@@ -19,7 +19,7 @@ Pellet::~Pellet() {}
  */
 Pellet::Pellet() {
     //compile pellet shader
-	shapeShaderProgram = compileShader(pelletVertexShaderSrc, pelletFragmentShaderSrc);
+	shapeShaderProgram = compileShader(pelletVertexShader, pelletFragmentShader);
     //create VAO
 	std::vector<GLfloat> arr = genCoordinates();
     shapeVAO = genObject(arr, g_level->pelletSize);

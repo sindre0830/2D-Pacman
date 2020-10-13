@@ -24,7 +24,7 @@ Number::~Number() {}
  */
 Number::Number(const int col, const int row) {
     //compile scoreboard shader
-    shapeShaderProgram = compileShader(numberVertexShaderSrc, numberFragmentShaderSrc);
+    shapeShaderProgram = compileShader(numberVertexShader, numberFragmentShader);
     //create VAO
 	std::vector<GLfloat> arr = genCoordinates(col, row);
     shapeVAO = genObject(arr, 1);
@@ -39,7 +39,7 @@ Number::Number(const int col, const int row) {
  * 
  */
 void Number::draw() {
-    GLint samplerSlotLocation = glGetUniformLocation(shapeShaderProgram, "uTexture");
+    GLint samplerSlotLocation = glGetUniformLocation(shapeShaderProgram, "u_texture");
     glUseProgram(shapeShaderProgram);
     glBindVertexArray(shapeVAO);
     glUniform1i(samplerSlotLocation, 1);
@@ -94,7 +94,7 @@ void Number::translateTex(const float xPos) {
     //Generate matrix to translate
 	glm::mat3 translation = glm::translate(glm::mat3(1), glm::vec2(xPos, 0.f));
     //get uniform to transform
-	GLuint uniform = glGetUniformLocation(shapeShaderProgram, "u_TransformationTex");
+	GLuint uniform = glGetUniformLocation(shapeShaderProgram, "u_transformationTex");
 	//send data from matrix to the uniform
 	glUniformMatrix3fv(uniform, 1, false, glm::value_ptr(translation));
 }

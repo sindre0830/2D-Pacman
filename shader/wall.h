@@ -2,25 +2,25 @@
 #define __WALLSHADER_H_
 /* library */
 #include <string>
-
-static const std::string wallVertexShaderSrc = R"(
+//vertex shader
+static const std::string wallVertexShader = R"(
 #version 430 core
-
+//input
 layout(location = 0) in vec2 a_Position;
 
 void main() {
 	gl_Position = vec4(a_Position, 0.f, 1.f);
 }
 )";
-
-static const std::string wallFragmentShaderSrc = R"(
+//fragment shader
+static const std::string wallFragmentShader = R"(
 #version 430 core
-
+//output
 out vec4 color;
 
 void main() {
     //set color blue
-    color = vec4(.09f, .09f, .4f, 1.f);
+    color = vec4(0.09f, 0.09f, 0.4f, 1.f);
 }
 )";
 

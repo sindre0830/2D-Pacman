@@ -2,49 +2,43 @@
 #define __CHARACTERSHADER_H_
 /* library */
 #include <string>
-
-static const std::string characterVertexShaderSrc = R"(
+//vertex shader
+static const std::string characterVertexShader = R"(
 #version 430 core
-
-/** Inputs */
-layout(location = 0) in vec2 aPosition;
-layout(location = 1) in vec2 aTexcoord;
-
-/** Outputs */
-out vec2 vsTexcoord;
-
-uniform mat4 u_TransformationMat = mat4(1);
-uniform mat3 u_TransformationTex = mat3(1);
+//input
+layout(location = 0) in vec2 gridPos;
+layout(location = 1) in vec2 texPos;
+//output
+out vec2 vs_texPos;
+//uniform
+uniform mat4 u_transformationPos = mat4(1);
+uniform mat3 u_transformationTex = mat3(1);
 
 void main() {
-	vec3 new_texture_coordinates = u_TransformationTex * vec3(aTexcoord, 1.0f);
-	vsTexcoord = vec2(new_texture_coordinates);
-	
-	//We multiply our matrices with our position to change the positions of vertices to their final destinations.
-	gl_Position = u_TransformationMat * vec4(aPosition, 0.0f, 1.0f);
+	//transform texture coordinates
+	vec3 newTexPos = u_transformationTex * vec3(texPos, 1.0f);
+	vs_texPos = vec2(newTexPos);
+	//transform grid coordinates
+	gl_Position = u_transformationPos * vec4(gridPos, 0.0f, 1.0f);
 }
 )";
-
-static const std::string characterFragmentShaderSrc = R"(
+//fragment shader
+static const std::string characterFragmentShader = R"(
 #version 430 core
-
-/** Inputs */
-in vec2 vsTexcoord;
-
-/** Outputs */
+//input
+in vec2 vs_texPos;
+//output
 out vec4 color;
-
-/** Binding specifies what texture slot the texture should be at (in this case TEXTURE0) */
-uniform sampler2D uTexture;
-uniform int u_ChangeColor = 0;
+//uniform
+uniform sampler2D u_texture;
+uniform int u_changeColor = 0;
 
 void main() {
-	vec4 textColorA = texture(uTexture, vsTexcoord);
-	if(u_ChangeColor == 1) {
+	vec4 textColorA = texture(u_texture, vs_texPos);
+	//branch if color should change
+	if(u_changeColor == 1) {
 		color = textColorA * vec4(0.5f, 1.f, 0.5f, 1.f);
 	} else color = textColorA * vec4(1.f, 1.f, 1.f, 1.f);
 }
 )";
-
-
 #endif

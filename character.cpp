@@ -21,7 +21,7 @@ Character::~Character() {}
  * 
  */
 void Character::draw() {
-    auto samplerSlotLocation = glGetUniformLocation(shapeShaderProgram, "uTexture");
+    auto samplerSlotLocation = glGetUniformLocation(shapeShaderProgram, "u_texture");
 	glUseProgram(shapeShaderProgram);
 	glBindVertexArray(shapeVAO);
 	glUniform1i(samplerSlotLocation, 0);
@@ -63,7 +63,7 @@ void Character::translatePos(const float xPos, const float yPos) {
     //Generate matrix to translate
     glm::mat4 translation = glm::translate(glm::mat4(1), glm::vec3(xPos, yPos, 0.f));
     //get uniform to transform
-    GLuint uniform = glGetUniformLocation(shapeShaderProgram, "u_TransformationMat");
+    GLuint uniform = glGetUniformLocation(shapeShaderProgram, "u_transformationPos");
     //send data from matrix to the uniform
     glUniformMatrix4fv(uniform, 1, false, glm::value_ptr(translation));
 }
@@ -77,7 +77,7 @@ void Character::translateTex(const float xPos, const float yPos) {
 	//Generate matrix to translate
 	glm::mat3 translation = glm::translate(glm::mat3(1), glm::vec2(xPos, yPos));
     //get uniform to transform
-	GLuint uniform = glGetUniformLocation(shapeShaderProgram, "u_TransformationTex");
+	GLuint uniform = glGetUniformLocation(shapeShaderProgram, "u_transformationTex");
 	//Send data from matrix to the uniform
 	glUniformMatrix3fv(uniform, 1, false, glm::value_ptr(translation));
 }

@@ -2,37 +2,32 @@
 #define __GAMEOVERSHADER_H
 /* library */
 #include <string>
-
-static const std::string gameoverVertexShaderSrc = R"(
+//vertex shader
+static const std::string gameoverVertexShader = R"(
 #version 430 core
-
-/** Inputs */
-layout(location = 0) in vec2 aPosition;
-layout(location = 1) in vec2 aTexcoord;
-
-/** Outputs */
-out vec2 vsTexcoord;
+//input
+layout(location = 0) in vec2 gridPos;
+layout(location = 1) in vec2 texPos;
+//output
+out vec2 vs_texPos;
 
 void main() {
-	vsTexcoord = aTexcoord;
-	gl_Position = vec4(aPosition, 0.0f, 1.0f);
+	vs_texPos = texPos;
+	gl_Position = vec4(gridPos, 0.0f, 1.0f);
 }
 )";
-
-static const std::string gameoverFragmentShaderSrc = R"(
+//fragment shader
+static const std::string gameoverFragmentShader = R"(
 #version 430 core
-
-/** Inputs */
-in vec2 vsTexcoord;
-
-/** Outputs */
+//input
+in vec2 vs_texPos;
+//output
 out vec4 color;
-
-/** Binding specifies what texture slot the texture should be at (in this case TEXTURE0) */
-uniform sampler2D uTexture;
+//uniform
+uniform sampler2D u_texture;
 
 void main() {
-	vec4 textColorA = texture(uTexture, vsTexcoord);
+	vec4 textColorA = texture(u_texture, vs_texPos);
 	color = textColorA * vec4(1.f, 1.f, 1.f, 1.f);
 }
 )";
