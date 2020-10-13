@@ -23,6 +23,9 @@ add_executable(${PROJECT_NAME}
 		header/scoreboard.h
 		shader/scoreboard.h
 		scoreboard.cpp
+		header/gameover.h
+		shader/gameover.h
+		gameover.cpp
 		header/wall.h
 		shader/wall.h
 		wall.cpp

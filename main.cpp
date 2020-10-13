@@ -10,6 +10,7 @@
 #include "header/levelData.h"
 #include "header/function.h"
 #include "header/scoreboard.h"
+#include "header/gameover.h"
 #include "header/wall.h"
 #include "header/pellet.h"
 #include "header/pacman.h"
@@ -74,6 +75,8 @@ int main() {
 	for(int i = 0; i < scoreboardArr.size(); i++) {
 		scoreboardArr[i] = new Scoreboard(0, (g_level->gridWidth - 2) - i);
 	}
+	//construct gameover
+	Gameover displayGameover;
 	//construct pacman
 	Pacman pacman;
 	//create an array filled with all possible starting positions for ghosts
@@ -107,6 +110,7 @@ int main() {
     //load the texture, create OpenGL texture, and bind it to the current context
 	GLuint characterTex = loadTexture("sprite/pacman.png", 0);
     GLuint numberTex = loadTexture("sprite/number.png", 1);
+    GLuint gameoverTex = loadTexture("sprite/gameover.png", 2);
 	//set background color black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//setup timer
@@ -146,23 +150,25 @@ int main() {
 			pacman.inputDirection(window);
 		}
 		//draw ghosts
-		bool flag = true;
+		bool noActiveGhosts = true;
 		for(int i = 0; i < ghostArr.size(); i++) {
 			//branch if ghost isn't dead
 			if(!ghostArr[i]->dead) {
-				flag = false;
+				noActiveGhosts = false;
 				ghostArr[i]->draw();
 				//branch if game isn't over and translate the ghost
 				if (!g_level->gameover && deltaTime >= 1.0) ghostArr[i]->mov();
 			}
 		}
-		//branch if there are no more ghosts on the level left and end the game
-		if(flag) g_level->gameover = true;
-		//branch if game isn't over and one second since game loop started
-		if(!g_level->gameover && glfwGetTime() - timer > 1.0f) {
+		//branch if there are no more ghosts on the level and end the game
+		if(noActiveGhosts) g_level->gameover = true;
+		//branch if game is over and 1 second has gone since game is over and display "GAME OVER" to the screen
+		if(g_level->gameover && counter > 0) displayGameover.draw();
+		//branch if there has been one second since game loop started
+		if(glfwGetTime() - timer > 1.0f) {
 			timer++;
-			//branch if pacman has eaten a magic pellet
-			if(g_level->magicEffect) {
+			//branch if game isn't over and pacman has eaten a magic pellet
+			if(!g_level->gameover && g_level->magicEffect) {
 				counter++;
 				//branch if 5 seconds have gone since magic pellet was eaten
 				if(counter >= 5) {
@@ -173,6 +179,15 @@ int main() {
 						//branch if ghost isn't dead and change the color
 						if(!ghostArr[i]->dead) ghostArr[i]->changeColor(0);
 					}
+				}
+			}
+			//branch if the game is over
+			if(g_level->gameover) {
+				counter++;
+				//branch if 2 seconds have gone since game was over
+				if(counter >= 2) {
+					//reset data
+					counter = 0;
 				}
 			}
 		}
@@ -202,6 +217,7 @@ int main() {
 	glUseProgram(0);
     glDeleteTextures(1, &characterTex);
     glDeleteTextures(1, &numberTex);
+    glDeleteTextures(1, &gameoverTex);
 	glfwTerminate();
 	return EXIT_SUCCESS;
 }
