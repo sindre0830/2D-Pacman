@@ -8,10 +8,8 @@
 class Scoreboard : public GeometricShape {
     private:
         /* private data */
-        const int numberByteSize = 4 * 4 * sizeof(GLfloat);
         int lastScore = 0;
         /* private functionality */
-        GLuint genObject(const int col, const int row);
         std::vector<GLfloat> genCoordinates(const int col, const int row);
         void translateTex(const float xPos);
     public:
@@ -19,6 +17,6 @@ class Scoreboard : public GeometricShape {
         ~Scoreboard();
         Scoreboard(const int col, const int row);
         void draw();
-        void update(int num);
+        void update(const int num);
 };
 #endif

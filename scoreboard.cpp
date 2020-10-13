@@ -18,18 +18,13 @@ Scoreboard::~Scoreboard() {}
 
 Scoreboard::Scoreboard(const int col, const int row) {
     shapeShaderProgram = compileShader(scoreboardVertexShaderSrc, scoreboardFragmentShaderSrc);
-    shapeVAO = genObject(col, row);
+	std::vector<GLfloat> arr = genCoordinates(col, row);
+    shapeVAO = genObject(arr, 1);
     //specify the layout of the vertex data
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-}
-
-GLuint Scoreboard::genObject(const int col, const int row) {
-    std::vector<GLfloat> arr = genCoordinates(col, row);
-    std::vector<GLuint> arrIndices = genIndices(1);
-    return createVAO(arr, arrIndices);
 }
 
 std::vector<GLfloat> Scoreboard::genCoordinates(const int col, const int row) {
@@ -64,7 +59,7 @@ void Scoreboard::draw() {
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const void*)0);
 }
 
-void Scoreboard::update(int num) {
+void Scoreboard::update(const int num) {
     if(num != lastScore) translateTex((float)(num) / 10.f);
     lastScore = num;
 }
