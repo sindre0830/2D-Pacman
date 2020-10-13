@@ -23,13 +23,14 @@ enum Corner {TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT};
 enum Position {X, Y};
 enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
-LevelData g_level;
+LevelData level;
+LevelData *g_level = &level;
 /**
  * Main program.
  */
 int main() {
 	//branch if file isn't initialized and kill the application
-	if (!readFile()) {
+	if (!g_level->inputData()) {
 		std::cerr << "File initialization failed.\n";
 		std::cin.get();
 		return EXIT_FAILURE;
@@ -47,7 +48,7 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//create window
-	GLFWwindow *window = glfwCreateWindow(g_level.arrWidth * 30, g_level.arrHeight * 30, "Pac-Man", nullptr, nullptr);
+	GLFWwindow *window = glfwCreateWindow(g_level->gridWidth * 30, g_level->gridHeight * 30, "Pac-Man", nullptr, nullptr);
 	//setting the OpenGL context to the window
 	glfwMakeContextCurrent(window);
 	//branch if window isn't created and kill the application
@@ -71,17 +72,17 @@ int main() {
 	//construct array of scoreboard classes
 	std::vector<Scoreboard*> scoreboardArr(4, nullptr);
 	for(int i = 0; i < scoreboardArr.size(); i++) {
-		scoreboardArr[i] = new Scoreboard(0, (g_level.arrWidth - 2) - i);
+		scoreboardArr[i] = new Scoreboard(0, (g_level->gridWidth - 2) - i);
 	}
 	//construct pacman
 	Pacman pacman;
 	//create an array filled with all possible starting positions for ghosts
 	int ghostStartRow, ghostStartCol;
 	std::vector<std::vector<int>> possibleStartingPos;
-	for(int i = 0; i < g_level.arrHeight; i++) {
-		for(int j = 0; j < g_level.arrWidth; j++) {
+	for(int i = 0; i < g_level->gridHeight; i++) {
+		for(int j = 0; j < g_level->gridWidth; j++) {
 			//branch if ghost can spawn
-			if(g_level.arr[i][j] == PELLET) possibleStartingPos.push_back({i, j});
+			if(g_level->grid[i][j] == PELLET) possibleStartingPos.push_back({i, j});
 		}
 	}
 	//construct array of ghost classes
@@ -129,16 +130,16 @@ int main() {
 		for(int i = 0; i < scoreboardArr.size(); i++) {
 			scoreboardArr[i]->draw();
 			//branch if score has changed and update the scoreboard
-			if (g_level.scoreChanged) scoreboardArr[i]->update(g_level.getScore(i));
+			if (g_level->scoreChanged) scoreboardArr[i]->update(g_level->getScore(i));
 		}
-		//branch if scoreChanged is active and reset it
-		if(g_level.scoreChanged) g_level.scoreChanged = false;
+		//branch if scoreboard has been updated and reset it
+		if(g_level->scoreChanged) g_level->scoreChanged = false;
 		//draw pellets
 		pellet.draw();
 		//draw pacman
 		pacman.draw();
 		//branch if game isn't over
-		if (!g_level.gameover && deltaTime >= 1.0){
+		if (!g_level->gameover && deltaTime >= 1.0){
 			//translate pacman
 			pacman.mov(pellet);
 			//check for user input and change direction accordingly
@@ -152,16 +153,16 @@ int main() {
 				flag = false;
 				ghostArr[i]->draw();
 				//branch if game isn't over and translate the ghost
-				if (!g_level.gameover && deltaTime >= 1.0) ghostArr[i]->mov();
+				if (!g_level->gameover && deltaTime >= 1.0) ghostArr[i]->mov();
 			}
 		}
 		//branch if there are no more ghosts on the level left and end the game
-		if(flag) g_level.gameover = true;
+		if(flag) g_level->gameover = true;
 		//branch if game isn't over and one second since game loop started
-		if(!g_level.gameover && glfwGetTime() - timer > 1.0f) {
+		if(!g_level->gameover && glfwGetTime() - timer > 1.0f) {
 			timer++;
 			//branch if pacman has eaten a magic pellet
-			if(g_level.magicEffect) {
+			if(g_level->magicEffect) {
 				//branch if the magic effect just started
 				if(counter == 0) {
 					for(int i = 0; i < ghostArr.size(); i++) {
@@ -174,7 +175,7 @@ int main() {
 				if(counter >= 5) {
 					//reset data
 					counter = 0;
-					g_level.magicEffect = false;
+					g_level->magicEffect = false;
 					for(int i = 0; i < ghostArr.size(); i++) {
 						//branch if ghost isn't dead and change the color
 						if(!ghostArr[i]->dead) ghostArr[i]->changeColor(0);
@@ -183,7 +184,7 @@ int main() {
 			}
 		}
 		//reset delta time 
-		if (!g_level.gameover && deltaTime >= 1.0) deltaTime -= 1.0;
+		if (!g_level->gameover && deltaTime >= 1.0) deltaTime -= 1.0;
 		//go to next buffer
 		glfwSwapBuffers(window);
 		//break loop if 'ESC' key is pressed

@@ -7,7 +7,7 @@ extern enum Corner {TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT};
 extern enum Position {X, Y};
 extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
-extern LevelData g_level;
+extern LevelData *g_level;
 
 Wall::~Wall() {
     destroyVAO(cornerVAO);
@@ -47,52 +47,52 @@ void Wall::draw() {
 
 std::vector<GLfloat> Wall::genWallCoordinates() {
 	float
-		xResize = (float)(g_level.elementWidth / 1.2f),
-		yResize = (float)(g_level.elementHeight / 1.2f);
+		xResize = (float)(g_level->gridElementWidth / 1.2f),
+		yResize = (float)(g_level->gridElementHeight / 1.2f);
 	//buffer array
 	std::vector<GLfloat> arr;
 	//fills in array with coordinates
-	for (int i = 0; i < g_level.arrHeight; i++) {
-		for (int j = 0; j < g_level.arrWidth; j++) {
-			if (g_level.arr[i][j] == WALL) {
+	for (int i = 0; i < g_level->gridHeight; i++) {
+		for (int j = 0; j < g_level->gridWidth; j++) {
+			if (g_level->grid[i][j] == WALL) {
 				//check if there can be a wall above the target
-				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != WALL) {
+				if(i + 1 < g_level->gridHeight && g_level->grid[i + 1][j] != WALL) {
 					wallSize++;
 					arr.insert(arr.end(), {
-						g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y],
-						g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y] + yResize,
-						g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yResize,
-						g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y]
+						g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][Y],
+						g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y] + yResize,
+						g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yResize,
+						g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][Y]
 					});
 				}
 				//check if there can be a wall under the target
-				if(i - 1 >= 0 && g_level.arr[i - 1][j] != WALL) {
+				if(i - 1 >= 0 && g_level->grid[i - 1][j] != WALL) {
 					wallSize++;
 					arr.insert(arr.end(), {
-						g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y] - yResize,
-						g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y],
-						g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
-						g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize
+						g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][Y] - yResize,
+						g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y],
+						g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
+						g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize
 					});
 				}
 				//check if there can be a wall left of the target
-				if(j - 1 >= 0 && g_level.arr[i][j - 1] != WALL) {
+				if(j - 1 >= 0 && g_level->grid[i][j - 1] != WALL) {
 					wallSize++;
 					arr.insert(arr.end(), {
-						g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y],
-						g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y],
-						g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X] - xResize, g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
-						g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X] - xResize, g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y]
+						g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][Y],
+						g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y],
+						g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X] - xResize, g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
+						g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][X] - xResize, g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][Y]
 					});
 				}
 				//check if there can be a wall right of the target
-				if(j + 1 < g_level.arrWidth && g_level.arr[i][j + 1] != WALL) {
+				if(j + 1 < g_level->gridWidth && g_level->grid[i][j + 1] != WALL) {
 					wallSize++;
 					arr.insert(arr.end(), {
-						g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X] + xResize, g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y],
-						g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X] + xResize, g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y],
-						g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
-						g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y]
+						g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][X] + xResize, g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][Y],
+						g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X] + xResize, g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y],
+						g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
+						g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][Y]
 					});
 				}
 			}
@@ -104,60 +104,60 @@ std::vector<GLfloat> Wall::genWallCoordinates() {
 GLuint Wall::genCornerVAO() {
 	float
 		//resize corner acording to size of wall
-		xResize = (float)(g_level.elementWidth / 1.2f) / 5.f,
-		yResize = (float)(g_level.elementHeight / 1.2f) / 5.f;
+		xResize = (float)(g_level->gridElementWidth / 1.2f) / 5.f,
+		yResize = (float)(g_level->gridElementHeight / 1.2f) / 5.f;
 	//buffer array
 	std::vector<GLfloat> arr;
 	//fills in array with coordinates
-	for (int i = 0; i < g_level.arrHeight; i++) {
-		for (int j = 0; j < g_level.arrWidth; j++) {
-			if (g_level.arr[i][j] == WALL) {
+	for (int i = 0; i < g_level->gridHeight; i++) {
+		for (int j = 0; j < g_level->gridWidth; j++) {
+			if (g_level->grid[i][j] == WALL) {
 				//check if there can be a corner top left of the target
-				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != WALL && j - 1 >= 0 && g_level.arr[i + 1][j - 1] == WALL) {
+				if(i + 1 < g_level->gridHeight && g_level->grid[i + 1][j] != WALL && j - 1 >= 0 && g_level->grid[i + 1][j - 1] == WALL) {
 					cornerSize++;
 					arr.insert(arr.end(), {
 						//top left coordinate
-						g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X] - xResize, g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y],
+						g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][X] - xResize, g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][Y],
 						//bottom right coordinate
-						g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y] - yResize,
+						g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][Y] - yResize,
 						//top right coordinate
-						g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level.gridElement[std::make_pair(i, j)][TOP_LEFT][Y]
+						g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][X], g_level->gridElement[std::make_pair(i, j)][TOP_LEFT][Y]
 					});
 				}
 				//check if there can be a corner bottom left of the target
-				if(i - 1 >= 0 && g_level.arr[i - 1][j] != WALL && j - 1 >= 0 && g_level.arr[i - 1][j - 1] == WALL) {
+				if(i - 1 >= 0 && g_level->grid[i - 1][j] != WALL && j - 1 >= 0 && g_level->grid[i - 1][j - 1] == WALL) {
 					cornerSize++;
 					arr.insert(arr.end(), {
 						//top left coordinate
-						g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X] - xResize, g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y],
+						g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X] - xResize, g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y],
 						//bottom right coordinate
-						g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y] + yResize,
+						g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y] + yResize,
 						//top right coordinate
-						g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y]
+						g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][X], g_level->gridElement[std::make_pair(i, j)][BOTTOM_LEFT][Y]
 					});
 				}
 				//check if there can be a corner bottom right of the target
-				if(i - 1 >= 0 && g_level.arr[i - 1][j] != WALL && j + 1 < g_level.arrWidth && g_level.arr[i - 1][j + 1] == WALL) {
+				if(i - 1 >= 0 && g_level->grid[i - 1][j] != WALL && j + 1 < g_level->gridWidth && g_level->grid[i - 1][j + 1] == WALL) {
 					cornerSize++;
 					arr.insert(arr.end(), {
 						//top left coordinate
-						g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
+						g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y],
 						//bottom left coordinate
-						g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yResize,
+						g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X], g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y] + yResize,
 						//top right coordinate
-						g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X] + xResize, g_level.gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y]
+						g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][X] + xResize, g_level->gridElement[std::make_pair(i, j)][BOTTOM_RIGHT][Y]
 					});
 				}
 				//check if there can be a corner top right of the target
-				if(i + 1 < g_level.arrHeight && g_level.arr[i + 1][j] != WALL && j + 1 < g_level.arrWidth && g_level.arr[i + 1][j + 1] == WALL) {
+				if(i + 1 < g_level->gridHeight && g_level->grid[i + 1][j] != WALL && j + 1 < g_level->gridWidth && g_level->grid[i + 1][j + 1] == WALL) {
 					cornerSize++;
 					arr.insert(arr.end(), {
 						//top left coordinate
-						g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y],
+						g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][Y],
 						//bottom left coordinate
-						g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize,
+						g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][X], g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][Y] - yResize,
 						//top right coordinate
-						g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][X] + xResize, g_level.gridElement[std::make_pair(i, j)][TOP_RIGHT][Y]
+						g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][X] + xResize, g_level->gridElement[std::make_pair(i, j)][TOP_RIGHT][Y]
 					});
 				}
 			}

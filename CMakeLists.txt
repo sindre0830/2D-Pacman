@@ -67,6 +67,12 @@ add_custom_command(
 add_custom_command(
 	TARGET ${PROJECT_NAME} POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
+	${CMAKE_SOURCE_DIR}/sprite/gameover.png
+	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/sprite/gameover.png)
+
+add_custom_command(
+	TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy
 	${CMAKE_SOURCE_DIR}/level/level0
 	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/level/level0)
 

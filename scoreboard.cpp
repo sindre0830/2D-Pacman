@@ -12,7 +12,7 @@ extern enum Corner {TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT};
 extern enum Position {X, Y};
 extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
-extern LevelData g_level;
+extern LevelData *g_level;
 
 Scoreboard::~Scoreboard() {}
 
@@ -36,21 +36,21 @@ std::vector<GLfloat> Scoreboard::genCoordinates(const int col, const int row) {
     GLfloat texPos = 0.f;
     float
 		//resize pellet
-		xResize = (float)(g_level.elementWidth / 5.f),
-		yResize = (float)(g_level.elementHeight / 5.f);
+		xResize = (float)(g_level->gridElementWidth / 5.f),
+		yResize = (float)(g_level->gridElementHeight / 5.f);
     
     std::vector<GLfloat> arr = {
         //top left grid and texture coordinate
-        g_level.gridElement[std::make_pair(col, row)][TOP_LEFT][X] + xResize, g_level.gridElement[std::make_pair(col, row)][TOP_LEFT][Y] - yResize,	
+        g_level->gridElement[std::make_pair(col, row)][TOP_LEFT][X] + xResize, g_level->gridElement[std::make_pair(col, row)][TOP_LEFT][Y] - yResize,	
         texPos, texPos + 1.f,
         //bottom left grid and texture coordinate
-        g_level.gridElement[std::make_pair(col, row)][BOTTOM_LEFT][X] + xResize, g_level.gridElement[std::make_pair(col, row)][BOTTOM_LEFT][Y] + yResize, 
+        g_level->gridElement[std::make_pair(col, row)][BOTTOM_LEFT][X] + xResize, g_level->gridElement[std::make_pair(col, row)][BOTTOM_LEFT][Y] + yResize, 
         texPos, texPos,
         //bottom right rid and texture coordinate
-        g_level.gridElement[std::make_pair(col, row)][BOTTOM_RIGHT][X] - xResize, g_level.gridElement[std::make_pair(col, row)][BOTTOM_RIGHT][Y] + yResize, 
+        g_level->gridElement[std::make_pair(col, row)][BOTTOM_RIGHT][X] - xResize, g_level->gridElement[std::make_pair(col, row)][BOTTOM_RIGHT][Y] + yResize, 
         texPos + (1.f / 10.f), texPos,
         //top right grid and texture coordinate
-        g_level.gridElement[std::make_pair(col, row)][TOP_RIGHT][X] - xResize, g_level.gridElement[std::make_pair(col, row)][TOP_RIGHT][Y] - yResize,	
+        g_level->gridElement[std::make_pair(col, row)][TOP_RIGHT][X] - xResize, g_level->gridElement[std::make_pair(col, row)][TOP_RIGHT][Y] - yResize,	
         texPos + (1.f / 10.f), texPos + 1.f
     };
     return arr;

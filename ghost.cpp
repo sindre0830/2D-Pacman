@@ -8,7 +8,7 @@
 extern enum Direction {UP, LEFT, DOWN, RIGHT};
 extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
-extern LevelData g_level;
+extern LevelData *g_level;
 /**
  * @brief Destroy the Ghost object
  */
@@ -35,15 +35,15 @@ Ghost::Ghost(const int row, const int col) {
 }
 
 void Ghost::pathfinding() {
-	if(!g_level.magicEffect) {
+	if(!g_level->magicEffect) {
 		//branch if path isn't opposite of current direction and there isn't a wall
-		if(direction != DOWN && g_level.arr[colPos + 1][rowPos] != WALL && colPos < g_level.pacmanCol) {
+		if(direction != DOWN && g_level->grid[colPos + 1][rowPos] != WALL && colPos < g_level->pacmanCol) {
 			direction = UP;
-		} else if(direction != UP && g_level.arr[colPos - 1][rowPos] != WALL && colPos > g_level.pacmanCol) {
+		} else if(direction != UP && g_level->grid[colPos - 1][rowPos] != WALL && colPos > g_level->pacmanCol) {
 			direction = DOWN;
-		} else if(direction != RIGHT && g_level.arr[colPos][rowPos - 1] != WALL && rowPos > g_level.pacmanRow) {
+		} else if(direction != RIGHT && g_level->grid[colPos][rowPos - 1] != WALL && rowPos > g_level->pacmanRow) {
 			direction = LEFT;
-		} else if(direction != LEFT && g_level.arr[colPos][rowPos + 1] != WALL && rowPos < g_level.pacmanRow) {
+		} else if(direction != LEFT && g_level->grid[colPos][rowPos + 1] != WALL && rowPos < g_level->pacmanRow) {
 			direction = RIGHT;
 		} else findRandomPath();
 	} else findRandomPath();
@@ -54,10 +54,10 @@ void Ghost::findRandomPath() {
 	//store all possible directions in an array
 	std::vector<int> possiblePaths;
 	//branch if path isn't opposite of current direction and there isn't a wall
-	if(direction != DOWN && g_level.arr[colPos + 1][rowPos] != WALL) possiblePaths.push_back(UP);
-	if(direction != RIGHT && g_level.arr[colPos][rowPos - 1] != WALL) possiblePaths.push_back(LEFT);
-	if(direction != UP && g_level.arr[colPos - 1][rowPos] != WALL) possiblePaths.push_back(DOWN);
-	if(direction != LEFT && g_level.arr[colPos][rowPos + 1] != WALL) possiblePaths.push_back(RIGHT);
+	if(direction != DOWN && g_level->grid[colPos + 1][rowPos] != WALL) possiblePaths.push_back(UP);
+	if(direction != RIGHT && g_level->grid[colPos][rowPos - 1] != WALL) possiblePaths.push_back(LEFT);
+	if(direction != UP && g_level->grid[colPos - 1][rowPos] != WALL) possiblePaths.push_back(DOWN);
+	if(direction != LEFT && g_level->grid[colPos][rowPos + 1] != WALL) possiblePaths.push_back(RIGHT);
 	//pick direction randomly
 	if(possiblePaths.size() > 1) index = randomIndex(0, possiblePaths.size() - 1);
 	direction = possiblePaths[index];
@@ -81,7 +81,7 @@ void Ghost::mov() {
 				colPos++;
 				checkCoalition(rowPos, colPos);
 				//branch if character isn't going to teleport
-				if(colPos + 1 < g_level.arrHeight) pathfinding();
+				if(colPos + 1 < g_level->gridHeight) pathfinding();
 			} else if(counter >= speed / 4) checkCoalition(rowPos, colPos + 1);
 			break;
 		case LEFT:
@@ -117,18 +117,18 @@ void Ghost::mov() {
 				rowPos++;
 				checkCoalition(rowPos, colPos);
 				//branch if character isn't going to teleport and find a path
-				if(rowPos + 1 < g_level.arrWidth) pathfinding();
+				if(rowPos + 1 < g_level->gridWidth) pathfinding();
 			} else if(counter >= speed / 4) checkCoalition(rowPos + 1, colPos);
 			break;
 	}
 }
 
 void Ghost::checkCoalition(const int row, const int col) {
-	if(row == g_level.pacmanRow && col == g_level.pacmanCol) {
-		if(g_level.magicEffect) {
+	if(row == g_level->pacmanRow && col == g_level->pacmanCol) {
+		if(g_level->magicEffect) {
 			dead = true;
 		} else {
-			g_level.gameover = true;
+			g_level->gameover = true;
 			std::cout << "Better luck next time...\n";
 		}
 	}

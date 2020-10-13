@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 /* functionality */
-bool readFile();
 void getGhostPos(std::vector<std::vector<int>> &arr, int &row, int &col);
 int randomIndex(const int min, const int max);
 GLuint loadTexture(const std::string &filepath, GLuint slot);

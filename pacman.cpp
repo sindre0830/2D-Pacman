@@ -7,7 +7,7 @@
 extern enum Direction {UP, LEFT, DOWN, RIGHT};
 extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
-extern LevelData g_level;
+extern LevelData *g_level;
 /**
  * @brief Destroy the Pacman object
  */
@@ -19,22 +19,22 @@ Pacman::Pacman() {
 	//set starting postions
     getPosition();
 	//set starting direction
-	if (g_level.pacmanCol == 0) {
+	if (g_level->pacmanCol == 0) {
 		yTex = 0.5f;
 		direction = UP;
-	} else if (g_level.pacmanRow == g_level.arrWidth - 1) {
+	} else if (g_level->pacmanRow == g_level->gridWidth - 1) {
 		yTex = 0.25f;
 		direction = LEFT;
-	} else if (g_level.pacmanCol == g_level.arrHeight - 1) {
+	} else if (g_level->pacmanCol == g_level->gridHeight - 1) {
 		yTex = 0.75f;
 		direction = DOWN;
-	} else if(g_level.pacmanRow == 0) {
+	} else if(g_level->pacmanRow == 0) {
 		yTex = 0.0f;
 		direction = RIGHT;
 	}
 	//generate VAO and shader program
     entityShaderProgram = compileShader(characterVertexShaderSrc, characterFragmentShaderSrc);
-    entityVAO = genObject(g_level.pacmanRow, g_level.pacmanCol);
+    entityVAO = genObject(g_level->pacmanRow, g_level->pacmanCol);
 	//specify the layout of the vertex data
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
@@ -43,11 +43,11 @@ Pacman::Pacman() {
 }
 
 void Pacman::getPosition() {
-	for (int i = 0; i < g_level.arrHeight; i++) {
-		for (int j = 0; j < g_level.arrWidth; j++) {
-			if (g_level.arr[i][j] == PACMAN) {
-				g_level.pacmanCol = i;
-				g_level.pacmanRow = j;
+	for (int i = 0; i < g_level->gridHeight; i++) {
+		for (int j = 0; j < g_level->gridWidth; j++) {
+			if (g_level->grid[i][j] == PACMAN) {
+				g_level->pacmanCol = i;
+				g_level->pacmanRow = j;
 				return;
 			}
 		}
@@ -62,40 +62,40 @@ void Pacman::mov(Pellet &pellet) {
 	if(changeDirection && counter < speed) changeDirection = false;
 	switch (direction) {
 		case UP:
-			if(movUp(g_level.pacmanRow, g_level.pacmanCol)) {
+			if(movUp(g_level->pacmanRow, g_level->pacmanCol)) {
 				//check if there is a pellet
-				if(g_level.arr[++g_level.pacmanCol][g_level.pacmanRow] == MAGICPELLET) {
-					g_level.magicEffect = true;
+				if(g_level->grid[++g_level->pacmanCol][g_level->pacmanRow] == MAGICPELLET) {
+					g_level->magicEffect = true;
 					eat(pellet);
-				} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
-			} else if(g_level.arr[g_level.pacmanCol + 1][g_level.pacmanRow] == WALL) changeDirection = true;
+				} else if(g_level->grid[g_level->pacmanCol][g_level->pacmanRow] == PELLET) eat(pellet);
+			} else if(g_level->grid[g_level->pacmanCol + 1][g_level->pacmanRow] == WALL) changeDirection = true;
 			break;
 		case LEFT:
-			if(movLeft(g_level.pacmanRow, g_level.pacmanCol)) {
+			if(movLeft(g_level->pacmanRow, g_level->pacmanCol)) {
 				//check if there is a pellet
-				if(g_level.arr[g_level.pacmanCol][--g_level.pacmanRow] == MAGICPELLET) {
-					g_level.magicEffect = true;
+				if(g_level->grid[g_level->pacmanCol][--g_level->pacmanRow] == MAGICPELLET) {
+					g_level->magicEffect = true;
 					eat(pellet);
-				} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
-			} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow - 1] == WALL) changeDirection = true;	
+				} else if(g_level->grid[g_level->pacmanCol][g_level->pacmanRow] == PELLET) eat(pellet);
+			} else if(g_level->grid[g_level->pacmanCol][g_level->pacmanRow - 1] == WALL) changeDirection = true;	
 			break;
 		case DOWN:
-			if(movDown(g_level.pacmanRow, g_level.pacmanCol)) {
+			if(movDown(g_level->pacmanRow, g_level->pacmanCol)) {
 				//check if there is a pellet
-				if(g_level.arr[--g_level.pacmanCol][g_level.pacmanRow] == MAGICPELLET) {
-					g_level.magicEffect = true;
+				if(g_level->grid[--g_level->pacmanCol][g_level->pacmanRow] == MAGICPELLET) {
+					g_level->magicEffect = true;
 					eat(pellet);
-				} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
-			} else if(g_level.arr[g_level.pacmanCol - 1][g_level.pacmanRow] == WALL) changeDirection = true;
+				} else if(g_level->grid[g_level->pacmanCol][g_level->pacmanRow] == PELLET) eat(pellet);
+			} else if(g_level->grid[g_level->pacmanCol - 1][g_level->pacmanRow] == WALL) changeDirection = true;
 			break;
 		case RIGHT:
-			if(movRight(g_level.pacmanRow, g_level.pacmanCol)) {
+			if(movRight(g_level->pacmanRow, g_level->pacmanCol)) {
 				//check if there is a pellet
-				if(g_level.arr[g_level.pacmanCol][++g_level.pacmanRow] == MAGICPELLET) {
-					g_level.magicEffect = true;
+				if(g_level->grid[g_level->pacmanCol][++g_level->pacmanRow] == MAGICPELLET) {
+					g_level->magicEffect = true;
 					eat(pellet);
-				} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow] == PELLET) eat(pellet);
-			} else if(g_level.arr[g_level.pacmanCol][g_level.pacmanRow + 1] == WALL) changeDirection = true;
+				} else if(g_level->grid[g_level->pacmanCol][g_level->pacmanRow] == PELLET) eat(pellet);
+			} else if(g_level->grid[g_level->pacmanCol][g_level->pacmanRow + 1] == WALL) changeDirection = true;
 			break;
 	}
 	animate();
@@ -117,33 +117,33 @@ void Pacman::animate() {
 
 void Pacman::eat(Pellet &pellet) {
 	//replace pellet in array
-	g_level.arr[g_level.pacmanCol][g_level.pacmanRow] = EMPTY;
+	g_level->grid[g_level->pacmanCol][g_level->pacmanRow] = EMPTY;
 	//increment score
-	g_level.score++;
-	g_level.scoreChanged = true;
+	g_level->score++;
+	g_level->scoreChanged = true;
 	//hide pellet
-	pellet.hidePellet(g_level.pacmanCol, g_level.pacmanRow);
-	if(g_level.score == g_level.pelletSize) {
-		g_level.gameover = true;
+	pellet.hidePellet(g_level->pacmanCol, g_level->pacmanRow);
+	if(g_level->score == g_level->pelletSize) {
+		g_level->gameover = true;
 		std::cout << "Congratulations, you won...\n";
 	}
 }
 
 void Pacman::inputDirection(GLFWwindow *window) {
 	//change direction on key press if pacman has completed a translation and it wont hit a wall
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && changeDirection && g_level.pacmanCol + 1 < g_level.arrHeight && g_level.arr[g_level.pacmanCol + 1][g_level.pacmanRow] != WALL) {
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && changeDirection && g_level->pacmanCol + 1 < g_level->gridHeight && g_level->grid[g_level->pacmanCol + 1][g_level->pacmanRow] != WALL) {
 		direction = UP;
 		yTex = 0.5f;
 		translateTex(0.f, yTex);
-	} else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && changeDirection && g_level.pacmanRow - 1 >= 0 && g_level.arr[g_level.pacmanCol][g_level.pacmanRow - 1] != WALL) {
+	} else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && changeDirection && g_level->pacmanRow - 1 >= 0 && g_level->grid[g_level->pacmanCol][g_level->pacmanRow - 1] != WALL) {
 		direction = LEFT;
 		yTex = 0.25f;
 		translateTex(0.f, yTex);
-	} else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && changeDirection && g_level.pacmanCol - 1 >= 0 && g_level.arr[g_level.pacmanCol - 1][g_level.pacmanRow] != WALL) {
+	} else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && changeDirection && g_level->pacmanCol - 1 >= 0 && g_level->grid[g_level->pacmanCol - 1][g_level->pacmanRow] != WALL) {
 		direction = DOWN;
 		yTex = 0.75f;
 		translateTex(0.f, yTex);
-	} else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && changeDirection && g_level.pacmanRow + 1 < g_level.arrWidth && g_level.arr[g_level.pacmanCol][g_level.pacmanRow + 1] != WALL) {
+	} else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && changeDirection && g_level->pacmanRow + 1 < g_level->gridWidth && g_level->grid[g_level->pacmanCol][g_level->pacmanRow + 1] != WALL) {
 		direction = RIGHT;
 		yTex = 0.0f;
 		translateTex(0.f, yTex);

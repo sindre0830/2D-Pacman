@@ -10,7 +10,7 @@ extern enum Corner {TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT};
 extern enum Position {X, Y};
 extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
-extern LevelData g_level;
+extern LevelData *g_level;
 
 Character::~Character() {}
 /**
@@ -42,16 +42,16 @@ std::vector<GLfloat> Character::genCoordinates(const int row, const int col) {
     GLfloat texPos = 0.f;
     std::vector<GLfloat> arr = {
         //top left grid and texture coordinate
-        g_level.gridElement[std::make_pair(col, row)][TOP_LEFT][X], g_level.gridElement[std::make_pair(col, row)][TOP_LEFT][Y],	
+        g_level->gridElement[std::make_pair(col, row)][TOP_LEFT][X], g_level->gridElement[std::make_pair(col, row)][TOP_LEFT][Y],	
         texPos, texPos + 0.25f,
         //bottom left grid and texture coordinate
-        g_level.gridElement[std::make_pair(col, row)][BOTTOM_LEFT][X], g_level.gridElement[std::make_pair(col, row)][BOTTOM_LEFT][Y], 
+        g_level->gridElement[std::make_pair(col, row)][BOTTOM_LEFT][X], g_level->gridElement[std::make_pair(col, row)][BOTTOM_LEFT][Y], 
         texPos, texPos,
         //bottom right rid and texture coordinate
-        g_level.gridElement[std::make_pair(col, row)][BOTTOM_RIGHT][X], g_level.gridElement[std::make_pair(col, row)][BOTTOM_RIGHT][Y], 
+        g_level->gridElement[std::make_pair(col, row)][BOTTOM_RIGHT][X], g_level->gridElement[std::make_pair(col, row)][BOTTOM_RIGHT][Y], 
         texPos + 0.16f, texPos,
         //top right grid and texture coordinate
-        g_level.gridElement[std::make_pair(col, row)][TOP_RIGHT][X], g_level.gridElement[std::make_pair(col, row)][TOP_RIGHT][Y],	
+        g_level->gridElement[std::make_pair(col, row)][TOP_RIGHT][X], g_level->gridElement[std::make_pair(col, row)][TOP_RIGHT][Y],	
         texPos + 0.16f, texPos + 0.25f
     };
     return arr;
@@ -82,16 +82,16 @@ void Character::translateTex(const float xPos, const float yPos) {
 
 bool Character::movUp(int &row, int &col) {
 	//check if next location will be a wall or out of bound
-	if(col + 1 < g_level.arrHeight) {
-        if(g_level.arr[col + 1][row] != WALL) {
+	if(col + 1 < g_level->gridHeight) {
+        if(g_level->grid[col + 1][row] != WALL) {
             //translate up on the x-axis
-            translatePos(xPos, (yPos += g_level.elementHeight / (double)(speed)));
+            translatePos(xPos, (yPos += g_level->gridElementHeight / (double)(speed)));
             counter++;
             if(counter == speed) return true;
         }
     } else {
         col = 0;
-        translatePos(xPos, yPos -= (double)(g_level.arrHeight - 1) * g_level.elementHeight);
+        translatePos(xPos, yPos -= (double)(g_level->gridHeight - 1) * g_level->gridElementHeight);
     }
     return false;
 }
@@ -99,15 +99,15 @@ bool Character::movUp(int &row, int &col) {
 bool Character::movLeft(int &row, int &col) {
 	//check if next location will be a wall or out of bound
 	if(row - 1 >= 0) {
-        if(g_level.arr[col][row - 1] != WALL) {
+        if(g_level->grid[col][row - 1] != WALL) {
             //translate up on the x-axis
-            translatePos((xPos -= g_level.elementWidth / (double)(speed)), yPos);
+            translatePos((xPos -= g_level->gridElementWidth / (double)(speed)), yPos);
             counter++;
             if(counter == speed) return true;
         }
     } else {
-        row = g_level.arrWidth - 1;
-        translatePos(xPos += (double)(g_level.arrWidth - 1) * g_level.elementWidth, yPos);
+        row = g_level->gridWidth - 1;
+        translatePos(xPos += (double)(g_level->gridWidth - 1) * g_level->gridElementWidth, yPos);
     }
     return false;
 }
@@ -115,31 +115,31 @@ bool Character::movLeft(int &row, int &col) {
 bool Character::movDown(int &row, int &col) {
 	//check if next location will be a wall or out of bound
 	if(col - 1 >= 0) {
-        if(g_level.arr[col - 1][row] != WALL) {
+        if(g_level->grid[col - 1][row] != WALL) {
             //translate up on the x-axis
-            translatePos(xPos, (yPos -= g_level.elementHeight / (double)(speed)));
+            translatePos(xPos, (yPos -= g_level->gridElementHeight / (double)(speed)));
             counter++;
             if(counter == speed) return true;
         }
     } else {
-        col = g_level.arrHeight - 1;
-        translatePos(xPos, yPos += (double)(g_level.arrHeight - 1) * g_level.elementHeight);
+        col = g_level->gridHeight - 1;
+        translatePos(xPos, yPos += (double)(g_level->gridHeight - 1) * g_level->gridElementHeight);
     }
     return false;
 }
 
 bool Character::movRight(int &row, int &col) {
 	//check if next location will be a wall or out of bound
-	if(row + 1 < g_level.arrWidth) {
-        if(g_level.arr[col][row + 1] != WALL) {
+	if(row + 1 < g_level->gridWidth) {
+        if(g_level->grid[col][row + 1] != WALL) {
             //translate up on the x-axis
-            translatePos((xPos += g_level.elementWidth / (double)(speed)), yPos);
+            translatePos((xPos += g_level->gridElementWidth / (double)(speed)), yPos);
             counter++;
             if(counter == speed) return true;
         }
 	} else {
         row = 0;
-        translatePos(xPos -= (double)(g_level.arrWidth - 1) * g_level.elementWidth, yPos);
+        translatePos(xPos -= (double)(g_level->gridWidth - 1) * g_level->gridElementWidth, yPos);
     }
     return false;
 }
