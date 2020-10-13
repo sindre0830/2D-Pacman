@@ -105,7 +105,7 @@ int main() {
 	}
 	//construct pellets
 	Pellet pellet;
-	//enable anti-aliasing
+	//enable MSAA
 	glEnable(GL_MULTISAMPLE);
 	//enable transparency on texture
 	glEnable(GL_BLEND);
