@@ -44,7 +44,7 @@ GLuint GeometricShape::compileShader(const std::string &vertexShaderSrc, const s
 	return shaderProgram;
 }
 /**
- * @brief Generate Pac-Man from the 2D array to the window.
+ * @brief Generate VAO (rectangle shape)
  * 
  * @return GLuint 
  */
@@ -78,7 +78,12 @@ GLuint GeometricShape::createVAO(const std::vector<GLfloat> &arr, const std::vec
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, arr_indices.size() * sizeof(GLuint), arr_indices.data(), GL_STATIC_DRAW);
 	return vao;
 }
-
+/**
+ * @brief Generate indices for rectangle shape
+ * 
+ * @param size 
+ * @return std::vector<GLuint> 
+ */
 std::vector<GLuint> GeometricShape::genIndices(const int size) {
     std::vector<GLuint> arrIndices;
     for (int i = 0, j = 0; i < size; i++, j += 4) {
@@ -109,20 +114,16 @@ void GeometricShape::destroyVAO(GLuint &vao) {
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nAttr);
 	glBindVertexArray(vao);
 
-	for (int iAttr = 0; iAttr < nAttr; ++iAttr)
-	{
+	for (int iAttr = 0; iAttr < nAttr; ++iAttr) {
 		GLint vboId = 0;
 		glGetVertexAttribiv(iAttr, GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, &vboId);
-		if (vboId > 0)
-		{
+		if (vboId > 0) {
 			vbos.insert(vboId);
 		}
-
 		glDisableVertexAttribArray(iAttr);
 	}
 
-	for(auto vbo : vbos)
-	{
+	for(auto vbo : vbos) {
 	  glDeleteBuffers(1, &vbo);
 	}
 
