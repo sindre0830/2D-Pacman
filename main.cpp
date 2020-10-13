@@ -1,10 +1,12 @@
 /**
  * Assignment 1 - Pacman
- * Fully functional pacman game
+ * Fully functional Pacman game
  *
  * @author Sindre Eiklid (sindreik@stud.ntnu.no)
  * @author Casper Melhus
  * @author Brage Heimly N�ss
+ * 
+ * @date 2020/10/13
  */
 /* library */
 #include "header/levelData.h"
