@@ -167,6 +167,13 @@ int main() {
 		}
 		//branch if there are no more ghosts on the level and end the game
 		if(noActiveGhosts) g_level->gameover = true;
+		//branch if the magic effect just started
+		if(counter == 0 && g_level->magicEffect) {
+			for(int i = 0; i < ghostArr.size(); i++) {
+				//branch if ghost isn't dead and change the color
+				if(!ghostArr[i]->dead) ghostArr[i]->changeColor(1);
+			}
+		}
 		//branch if game is over and 1 second has gone since game is over and display "GAME OVER" to the screen
 		if(g_level->gameover && counter > 0) gameover.draw();
 		//branch if there has been one second since game loop started
@@ -194,13 +201,6 @@ int main() {
 					//reset data
 					counter = 0;
 				}
-			}
-		}
-		//branch if the magic effect just started
-		if(counter == 0 && g_level->magicEffect) {
-			for(int i = 0; i < ghostArr.size(); i++) {
-				//branch if ghost isn't dead and change the color
-				if(!ghostArr[i]->dead) ghostArr[i]->changeColor(1);
 			}
 		}
 		//reset delta time 
