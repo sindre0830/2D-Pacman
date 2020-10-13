@@ -1,11 +1,8 @@
 /* library */
-#include "header/levelData.h"
 #include "header/pellet.h"
 #include "shader/pellet.h"
-/* dictionary */
-extern enum Corner {TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT};
-extern enum Position {X, Y};
-extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
+#include "header/dictionary.h"
+#include "header/levelData.h"
 /* global data */
 extern LevelData *g_level;
 /**

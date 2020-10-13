@@ -9,6 +9,7 @@
  * @date 2020/10/13
  */
 /* library */
+#include "header/dictionary.h"
 #include "header/levelData.h"
 #include "header/function.h"
 #include "header/number.h"
@@ -20,11 +21,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-/* dictionary */
-enum Direction {UP, LEFT, DOWN, RIGHT};
-enum Corner {TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT};
-enum Position {X, Y};
-enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
 LevelData level;
 LevelData *g_level = &level;

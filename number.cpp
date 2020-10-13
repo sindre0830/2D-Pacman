@@ -1,14 +1,11 @@
 /* library */
 #include "header/number.h"
 #include "shader/number.h"
+#include "header/dictionary.h"
 #include "header/levelData.h"
 #include <glm/glm.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include <glm/gtc/type_ptr.hpp>
-/* dictionary */
-extern enum Corner {TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT, TOP_RIGHT};
-extern enum Position {X, Y};
-extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
 extern LevelData *g_level;
 /**

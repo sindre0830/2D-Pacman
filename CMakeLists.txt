@@ -13,6 +13,7 @@ add_subdirectory(external/glew-cmake-2.1.0)
 add_subdirectory(external/glm-0.9.9.8)
 
 add_executable(${PROJECT_NAME}
+	header/dictionary.h
 	main.cpp
 	header/levelData.h
 	levelData.cpp

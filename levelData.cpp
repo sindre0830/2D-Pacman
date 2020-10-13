@@ -1,9 +1,8 @@
 /* library */
 #include "header/levelData.h"
+#include "header/dictionary.h"
 #include <iostream>
 #include <fstream>
-/* dictionary */
-extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /**
  * @brief Construct a new Level Data:: Level Data object
  * 

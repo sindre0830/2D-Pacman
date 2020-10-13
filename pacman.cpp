@@ -1,10 +1,8 @@
 /* library */
 #include "header/pacman.h"
 #include "shader/character.h"
+#include "header/dictionary.h"
 #include "header/levelData.h"
-/* dictionary */
-extern enum Direction {UP, LEFT, DOWN, RIGHT};
-extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
 extern LevelData *g_level;
 /**

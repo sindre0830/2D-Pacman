@@ -6,8 +6,6 @@
 #include <iostream>
 #include <algorithm>
 #include <random>
-/* dictionary */
-extern enum Target {PELLET, WALL, PACMAN, EMPTY, MAGICPELLET};
 /* global data */
 extern LevelData *g_level;
 /**
