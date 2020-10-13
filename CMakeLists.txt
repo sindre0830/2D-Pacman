@@ -20,9 +20,9 @@ add_executable(${PROJECT_NAME}
 	function.cpp
 	header/geometricShape.h
 	geometricShape.cpp
-		header/scoreboard.h
-		shader/scoreboard.h
-		scoreboard.cpp
+		header/number.h
+		shader/number.h
+		number.cpp
 		header/gameover.h
 		shader/gameover.h
 		gameover.cpp

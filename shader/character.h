@@ -1,5 +1,5 @@
-#ifndef __CHARACTER_H_
-#define __CHARACTER_H_
+#ifndef __CHARACTERSHADER_H_
+#define __CHARACTERSHADER_H_
 /* library */
 #include <string>
 

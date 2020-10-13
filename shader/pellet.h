@@ -1,5 +1,5 @@
-#ifndef __PELLET_H_
-#define __PELLET_H_
+#ifndef __PELLETSHADER_H_
+#define __PELLETSHADER_H_
 /* library */
 #include <string>
 

@@ -9,7 +9,7 @@
 /* library */
 #include "header/levelData.h"
 #include "header/function.h"
-#include "header/scoreboard.h"
+#include "header/number.h"
 #include "header/gameover.h"
 #include "header/wall.h"
 #include "header/pellet.h"
@@ -72,12 +72,12 @@ int main() {
 	//construct wall
 	Wall wall;
 	//construct array of scoreboard classes
-	std::vector<Scoreboard*> scoreboardArr(4, nullptr);
-	for(int i = 0; i < scoreboardArr.size(); i++) {
-		scoreboardArr[i] = new Scoreboard(0, (g_level->gridWidth - 2) - i);
+	std::vector<Number*> scoreboard(4, nullptr);
+	for(int i = 0; i < scoreboard.size(); i++) {
+		scoreboard[i] = new Number(0, (g_level->gridWidth - 2) - i);
 	}
 	//construct gameover
-	Gameover displayGameover;
+	Gameover gameover;
 	//construct pacman
 	Pacman pacman;
 	//create an array filled with all possible starting positions for ghosts
@@ -134,10 +134,10 @@ int main() {
 		//draw wall
 		wall.draw();
 		//draw scoreboard
-		for(int i = 0; i < scoreboardArr.size(); i++) {
-			scoreboardArr[i]->draw();
+		for(int i = 0; i < scoreboard.size(); i++) {
+			scoreboard[i]->draw();
 			//branch if score has changed and update the scoreboard
-			if (g_level->scoreChanged) scoreboardArr[i]->update(g_level->getScore(i));
+			if (g_level->scoreChanged) scoreboard[i]->update(g_level->getScore(i));
 		}
 		//branch if scoreboard has been updated and reset it
 		if(g_level->scoreChanged) g_level->scoreChanged = false;
@@ -166,7 +166,7 @@ int main() {
 		//branch if there are no more ghosts on the level and end the game
 		if(noActiveGhosts) g_level->gameover = true;
 		//branch if game is over and 1 second has gone since game is over and display "GAME OVER" to the screen
-		if(g_level->gameover && counter > 0) displayGameover.draw();
+		if(g_level->gameover && counter > 0) gameover.draw();
 		//branch if there has been one second since game loop started
 		if(glfwGetTime() - timer > 1.0f) {
 			timer++;
@@ -209,10 +209,10 @@ int main() {
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) break;
 	}
 	//clear memory before ending program
-	for(int i = 0; i < scoreboardArr.size(); i++) {
-		delete scoreboardArr[i];
+	for(int i = 0; i < scoreboard.size(); i++) {
+		delete scoreboard[i];
 	}
-	scoreboardArr.clear();
+	scoreboard.clear();
 	for(int i = 0; i < ghostArr.size(); i++) {
 		delete ghostArr[i];
 	}

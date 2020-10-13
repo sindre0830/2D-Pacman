@@ -1,6 +1,6 @@
 /* library */
-#include "header/scoreboard.h"
-#include "shader/scoreboard.h"
+#include "header/number.h"
+#include "shader/number.h"
 #include "header/levelData.h"
 #include <glm/glm.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
@@ -15,16 +15,16 @@ extern LevelData *g_level;
  * @brief Destroy the Scoreboard:: Scoreboard object
  * 
  */
-Scoreboard::~Scoreboard() {}
+Number::~Number() {}
 /**
  * @brief Construct a new Scoreboard:: Scoreboard object
  * 
  * @param col 
  * @param row 
  */
-Scoreboard::Scoreboard(const int col, const int row) {
+Number::Number(const int col, const int row) {
     //compile scoreboard shader
-    shapeShaderProgram = compileShader(scoreboardVertexShaderSrc, scoreboardFragmentShaderSrc);
+    shapeShaderProgram = compileShader(numberVertexShaderSrc, numberFragmentShaderSrc);
     //create VAO
 	std::vector<GLfloat> arr = genCoordinates(col, row);
     shapeVAO = genObject(arr, 1);
@@ -38,7 +38,7 @@ Scoreboard::Scoreboard(const int col, const int row) {
  * @brief Draw object by installing the shader program and binding the VAO and texture to the current rendering state
  * 
  */
-void Scoreboard::draw() {
+void Number::draw() {
     GLint samplerSlotLocation = glGetUniformLocation(shapeShaderProgram, "uTexture");
     glUseProgram(shapeShaderProgram);
     glBindVertexArray(shapeVAO);
@@ -52,7 +52,7 @@ void Scoreboard::draw() {
  * @param row 
  * @return std::vector<GLfloat> 
  */
-std::vector<GLfloat> Scoreboard::genCoordinates(const int col, const int row) {
+std::vector<GLfloat> Number::genCoordinates(const int col, const int row) {
     GLfloat texPos = 0.f;
     float
 		//resize pellet
@@ -79,7 +79,7 @@ std::vector<GLfloat> Scoreboard::genCoordinates(const int col, const int row) {
  * 
  * @param num 
  */
-void Scoreboard::update(const int num) {
+void Number::update(const int num) {
     //branch if new number is different from the last number and update texture
     if(num != lastNumber) translateTex((float)(num) / 10.f);
     //set new number for next update
@@ -90,7 +90,7 @@ void Scoreboard::update(const int num) {
  * 
  * @param xPos 
  */
-void Scoreboard::translateTex(const float xPos) {
+void Number::translateTex(const float xPos) {
     //Generate matrix to translate
 	glm::mat3 translation = glm::translate(glm::mat3(1), glm::vec2(xPos, 0.f));
     //get uniform to transform

@@ -1,12 +1,12 @@
-#ifndef __SCOREBOARD_H
-#define __SCOREBOARD_H
+#ifndef __NUMBER_H
+#define __NUMBER_H
 /* library */
 #include "header/geometricShape.h"
 /**
  * @brief Leaf class
  * 
  */
-class Scoreboard : public GeometricShape {
+class Number : public GeometricShape {
     private:
         /* private data */
         int lastNumber = 0;
@@ -15,8 +15,8 @@ class Scoreboard : public GeometricShape {
         void translateTex(const float xPos);
     public:
         /* public functionality */
-        ~Scoreboard();
-        Scoreboard(const int col, const int row);
+        ~Number();
+        Number(const int col, const int row);
         void draw();
         void update(const int num);
 };

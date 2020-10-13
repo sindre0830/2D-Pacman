@@ -1,9 +1,9 @@
-#ifndef __SCOREBOARD_H_
-#define __SCOREBOARD_H_
+#ifndef __NUMBERSHADER_H_
+#define __NUMBERSHADER_H_
 /* library */
 #include <string>
 
-static const std::string scoreboardVertexShaderSrc = R"(
+static const std::string numberVertexShaderSrc = R"(
 #version 430 core
 
 /** Inputs */
@@ -25,7 +25,7 @@ void main() {
 }
 )";
 
-static const std::string scoreboardFragmentShaderSrc = R"(
+static const std::string numberFragmentShaderSrc = R"(
 #version 430 core
 
 /** Inputs */

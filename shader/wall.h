@@ -1,5 +1,5 @@
-#ifndef __WALL_H_
-#define __WALL_H_
+#ifndef __WALLSHADER_H_
+#define __WALLSHADER_H_
 /* library */
 #include <string>
 
